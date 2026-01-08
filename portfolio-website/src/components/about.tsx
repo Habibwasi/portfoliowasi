@@ -50,7 +50,7 @@ export function About() {
             </p>
 
             <p className="text-foreground/70 leading-relaxed">
-              Beyond coding, I'm interested in open-source contributions, AI applications, and competitive badminton. 
+              Beyond coding, I'm interested in open-source contributions, AI applications. 
               I value clean code, efficient algorithms, and collaborative development practices.
             </p>
 
