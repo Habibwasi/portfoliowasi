@@ -38,12 +38,7 @@ export function Experience() {
   ];
 
   const testingCategories = [
-    { name: 'Functional', rating: 'P' },
-    { name: 'Usability', rating: 'U' },
-    { name: 'Load', rating: 'U' },
-    { name: 'Security', rating: 'U' },
-    { name: 'Localization', rating: 'U' },
-    { name: 'Accessibility', rating: 'U' }
+    { name: 'Functional', rating: 'S' }
   ];
 
   return (
@@ -157,7 +152,7 @@ export function Experience() {
                   >
                     {category.name}
                     <span className={`ml-2 font-bold ${
-                      category.rating === 'P' ? 'text-blue-500' : 'text-foreground/60'
+                      category.rating === 'S' ? 'text-blue-500' : 'text-foreground/60'
                     }`}>
                       [{category.rating}]
                     </span>
@@ -165,7 +160,7 @@ export function Experience() {
                 ))}
               </div>
               <p className="text-xs text-foreground/50 mt-3">
-                P = Silver • U = Unrated
+                S = Silver
               </p>
             </div>
           </Card>
