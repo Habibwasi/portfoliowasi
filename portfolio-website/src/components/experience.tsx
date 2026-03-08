@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { Award, TrendingUp, Target, CheckCircle2 } from 'lucide-react';
+import { Award, TrendingUp, Target, CheckCircle2, Medal } from 'lucide-react';
 
 export function Experience() {
   const utestStats = [
@@ -71,9 +71,15 @@ export function Experience() {
                 <p className="text-lg text-foreground/80 mb-1">uTest by Applause</p>
                 <p className="text-sm text-foreground/60">Remote • 2024 - Present</p>
               </div>
-              <Badge variant="secondary" className="self-start px-4 py-2 text-sm">
-                Active Contributor
-              </Badge>
+              <div className="flex gap-2 self-start flex-wrap">
+                <Badge variant="secondary" className="px-4 py-2 text-sm">
+                  Active Contributor
+                </Badge>
+                <Badge className="px-4 py-2 text-sm bg-gradient-to-r from-slate-400 to-slate-200 text-slate-900 hover:from-slate-500 hover:to-slate-300 shadow-md">
+                  <Medal className="w-4 h-4 mr-1.5" />
+                  Silver Tier
+                </Badge>
+              </div>
             </div>
 
             <div className="space-y-4 mb-8">
