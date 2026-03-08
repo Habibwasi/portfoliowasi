@@ -10,28 +10,28 @@ export function Experience() {
     {
       icon: Award,
       label: 'Current Rating',
-      value: '74.26%',
+      value: '92.26%',
       description: 'Proven Quality',
       color: 'text-blue-500'
     },
     {
       icon: CheckCircle2,
       label: 'Test Cycles',
-      value: '86',
+      value: '146',
       description: 'Completed',
       color: 'text-green-500'
     },
     {
       icon: Target,
       label: 'Activity Score',
-      value: '51',
+      value: '66',
       description: 'Active Tester',
       color: 'text-purple-500'
     },
     {
       icon: TrendingUp,
       label: 'Quality Score',
-      value: '58',
+      value: '59',
       description: 'High Quality',
       color: 'text-orange-500'
     }
@@ -180,19 +180,19 @@ export function Experience() {
           className="grid md:grid-cols-3 gap-6"
         >
           <Card className="p-6 text-center">
-            <div className="text-3xl font-bold text-blue-500 mb-2">76</div>
+            <div className="text-3xl font-bold text-blue-500 mb-2">131</div>
             <div className="text-sm font-semibold mb-1">Test Cases</div>
             <div className="text-xs text-foreground/60">Successfully Executed</div>
           </Card>
           
           <Card className="p-6 text-center">
-            <div className="text-3xl font-bold text-green-500 mb-2">36</div>
+            <div className="text-3xl font-bold text-green-500 mb-2">57</div>
             <div className="text-sm font-semibold mb-1">Products Tested</div>
             <div className="text-xs text-foreground/60">Across Multiple Industries</div>
           </Card>
           
           <Card className="p-6 text-center">
-            <div className="text-3xl font-bold text-purple-500 mb-2">12</div>
+            <div className="text-3xl font-bold text-purple-500 mb-2">30</div>
             <div className="text-sm font-semibold mb-1">Issues Reported</div>
             <div className="text-xs text-foreground/60">High-Impact Bugs Found</div>
           </Card>
