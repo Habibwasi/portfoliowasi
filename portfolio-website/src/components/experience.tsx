@@ -11,7 +11,7 @@ export function Experience() {
       icon: Award,
       label: 'Current Rating',
       value: '92.26%',
-      description: 'Proven Quality',
+      description: 'Silver Quality',
       color: 'text-blue-500'
     },
     {
@@ -109,7 +109,7 @@ export function Experience() {
                   </li>
                   <li className="flex gap-2">
                     <span className="text-blue-500 mt-1">•</span>
-                    <span>Maintain high-quality standards consistently achieving ratings in the Proven tier</span>
+                    <span>Maintain high-quality standards consistently achieving ratings in the Silver tier</span>
                   </li>
                 </ul>
               </div>
