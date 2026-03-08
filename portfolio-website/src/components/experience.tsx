@@ -165,7 +165,7 @@ export function Experience() {
                 ))}
               </div>
               <p className="text-xs text-foreground/50 mt-3">
-                P = Proven • U = Unrated
+                P = Silver • U = Unrated
               </p>
             </div>
           </Card>
