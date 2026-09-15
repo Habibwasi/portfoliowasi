@@ -74,40 +74,6 @@ export function Skills() {
             </motion.div>
           ))}
         </div>
-
-        {/* Experience Timeline */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="mt-16"
-        >
-          <h3 className="text-2xl font-bold mb-8">Work Experience</h3>
-          <Card className="p-6 border-l-4 border-l-blue-500">
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <h4 className="font-bold text-lg">Pizza Baker</h4>
-                <p className="text-foreground/60">Asbendos</p>
-              </div>
-              <span className="text-sm text-foreground/50">Sep 2023 - May 2025</span>
-            </div>
-            <ul className="mt-4 space-y-2 text-foreground/70">
-              <li className="flex items-start gap-3">
-                <span className="text-blue-500 mt-1">•</span>
-                <span>Onboarded and trained new staff members on food preparation standards and safety protocols</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-blue-500 mt-1">•</span>
-                <span>Managed end-to-end production cycle while maintaining strict hygiene and quality standards under time constraints</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-blue-500 mt-1">•</span>
-                <span>Handled customer orders in a high-paced environment, ensuring timely deliveries and satisfaction</span>
-              </li>
-            </ul>
-          </Card>
-        </motion.div>
       </div>
     </section>
   );
