@@ -1,6 +1,6 @@
 # Spec: Phase 1 — Launch
 
-Roadmap items 1.1–1.13 · Status: built, content pending (see CHANGELOG.md) · 2026-10-21
+Roadmap items 1.1–1.13 · Status: done (closed 2026-10-22; missing content tracked in roadmap Phase 7) · 2026-10-21
 
 ## Goal
 

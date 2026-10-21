@@ -2,9 +2,11 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
-## Phase 1: Launch (2026-10-21)
+## Phase 1: Launch (2026-10-21, closed 2026-10-22)
 
-Spec: [specs/features/phase-1-launch.md](specs/features/phase-1-launch.md) · Roadmap items 1.1–1.12 · Branch `phase-1-launch`
+Spec: [specs/features/phase-1-launch.md](specs/features/phase-1-launch.md) · Roadmap items 1.1–1.12 · Branch `phase-1-launch`, merged into `redesign`
+
+**Status: done.** Every "done when" check passes in CI on `redesign`. The content still missing (CV, Calendly, case study material, testimonial) is tracked in Phase 7, and 1.13 moved there as 7.6.
 
 The old site is gone. Home is now Hero → Featured work → Proof → Contact, and TopicTrail and Validation Portal have case study pages at `/work/<slug>`. Content you haven't supplied yet shows as labelled placeholders.
 
@@ -16,7 +18,21 @@ The old site is gone. Home is now Hero → Featured work → Proof → Contact, 
 | Unit and component tests | 125 passed |
 | E2E + axe, desktop and phone | 38 passed. axe reports zero violations (not only serious ones) on `/` and both case studies |
 | Production build | Pass. `/work/topictrail` and `/work/validation-portal` are static; `/work/ridly` is a 404 |
-| Lighthouse, phone | LCP 2.34 s on `/` and 2.2 s on a case study; CLS ≤ 0.035; TBT about 240 ms. LCP is an **error** again |
+| Lighthouse, phone | LCP 2.34 s on `/` and 2.2 s on a case study; CLS ≤ 0.035; TBT about 240 ms (measured on Windows). LCP is an **error** again |
+| CI on GitHub (`redesign`, commit `294adf6`) | All three jobs pass: check, E2E + axe, Lighthouse (phone) |
+
+### Fix: layout shift on Linux, ChromeOS and Android (2026-10-22)
+
+The first CI run failed Lighthouse: **CLS 0.21** against the 0.1 budget, on every run. On Windows it measured 0.017.
+
+- **Cause:** `next/font` sizes its fallback fonts only against Times New Roman and Arial. Linux, ChromeOS and Android don't have either, so they showed unsized fallback fonts. Those are wider, so the name and intro took more lines until Fraunces and Instrument Sans loaded, and then everything below jumped. This would have hit real Android visitors, not just CI. iPhone and Windows were unaffected.
+- **How it was confirmed:** a local script that blocks the Times New Roman and Arial fallbacks and delays the web fonts reproduced the shift (Home: 0.017 → 0.052 even with Georgia as the stand-in). Linux's DejaVu Serif is wider still.
+- **Fix:** `globals.css` adds size-matched fallback faces to both font stacks:
+  - *Clone:* Liberation Serif/Tinos and Liberation Sans/Arimo, metric clones of Times New Roman and Arial, so they reuse `next/font`'s own values.
+  - *Android:* Noto Serif and Roboto, with values from `next/font`'s formula and its bundled capsize metrics.
+  - IBM Plex Mono is left alone: it's only used for short labels, and its stack falls back to monospace of about the same width.
+- **Guard:** `tokens.test.ts` checks that both stacks list the fallbacks and that each face is sized (131 unit tests in total).
+- **Result:** Lighthouse passes in CI. CI reports only pass or fail; the exact CLS is in the Lighthouse job's artifact.
 
 ### What changed
 

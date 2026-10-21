@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-21 (Phase 1 built)
+Last updated: 2026-10-22 (Phases 0 and 1 done; Phase 2 next)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -13,7 +13,7 @@ Status: `planned` · `specced` · `in progress` · `done`
 - Each phase is built on its own branch (`phase-1-launch`, `phase-2-…`) and merged into `redesign`.
 - After Phase 7, one PR merges `redesign` into `main`, and that is the production launch.
 
-## Phase 0: Foundation
+## Phase 0: Foundation · done
 
 Get the codebase ready to build on: tokens, content layer, tests, CI.
 
@@ -28,7 +28,7 @@ Get the codebase ready to build on: tokens, content layer, tests, CI.
 | 0.7 | Site shell: header with the text nav (Work, About, CV, Contact); footer with GitHub and LinkedIn kept secondary, plus the repo and CI badge; reduced-motion handling; focus ring | G5, P3, P4 | done |
 | 0.8 | Fix the outdated design system pages: ProjectCard order, "Justit" → Just Eat, "Hop" → Ridly in samples, Llama 3.3 out of the AI ring, Testimonial placement | V8 | done |
 
-## Phase 1: Launch (replaces the live site)
+## Phase 1: Launch · done (closed 2026-10-22)
 
 The smallest site that passes the 10-second scan and lets a tech lead click into real work.
 
@@ -38,12 +38,12 @@ The smallest site that passes the 10-second scan and lets a tech lead click into
 | 1.2 | Featured work in this order: TopicTrail (labelled "Bachelor project · in progress · due Jan 2027"), Ridly, Validation Portal. The Ridly card says "Case study coming" until 2.1 ships. | C5, S1 | done |
 | 1.3 | More projects: AI_Workflow_Global, Undershelf, Heat.IT, Deskinct, Medication Adherence App. Links and claims follow the facts table below. | C22 | done |
 | 1.4 | Case study template at `/work/[slug]`: title and context line, problem, my role, AI in the build, solution (screens, demo), architecture, test evidence, impact, stack, code link. It ends with the same primary action as Home, "Next project" (S3). | S2, S3, C6–C12, AI5, V6 | done |
-| 1.5 | **TopicTrail** case study, in progress: problem, architecture diagrams, planned RAG pipeline (keyword + semantic search), evaluation plan, dated progress notes; screens and demo shown as placeholders | C6–C11 | done (content pending) |
-| 1.6 | **Validation Portal** case study with the real demo video, architecture diagrams, screens and live demo link | C6–C11 | done (content pending) |
-| 1.7 | Proof, minimal: one-line uTest QA record (Silver, 92.26%, 268 test cycles, 46 issues reported) and a testimonial placeholder for the Just Eat team leader | C15, C16 | done (content pending) |
+| 1.5 | **TopicTrail** case study, in progress: problem, architecture diagrams, planned RAG pipeline (keyword + semantic search), evaluation plan, dated progress notes; screens and demo shown as placeholders | C6–C11 | done (content in Phase 7) |
+| 1.6 | **Validation Portal** case study with the real demo video, architecture diagrams, screens and live demo link | C6–C11 | done (content in Phase 7) |
+| 1.7 | Proof, minimal: one-line uTest QA record (Silver, 92.26%, 268 test cycles, 46 issues reported) and a testimonial placeholder for the Just Eat team leader | C15, C16 | done (content in Phase 7) |
 | 1.8 | Contact section: "Have a role in mind?", Email me (mailto), Download CV and Book a call (Calendly) as secondary buttons. The form sits below on `paper-raised`, and its submit button is the one primary on that screen. | C20, C21, G4 | done |
 | 1.9 | Contact form that works: Zod validation, escaped email body, Resend error check, `replyTo`, honeypot, rate limit, pending/success/error states | G4 | done |
-| 1.10 | CV PDF in `public/cv/` | C21 | done (content pending) |
+| 1.10 | CV PDF in `public/cv/` | C21 | done (content in Phase 7) |
 | 1.11 | Metadata: new title and description, `metadataBase`, default OG image, sitemap, robots | P5 | done |
 | 1.12 | Phone layout for all of the above. The phone contact section shows all three actions. | P3 | done |
 | 1.13 | Profiles to match (outside the codebase) | — | moved to 7.6 |
