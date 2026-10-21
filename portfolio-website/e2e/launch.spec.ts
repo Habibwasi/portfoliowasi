@@ -15,13 +15,6 @@ test.describe("Home → case study", () => {
     await expect(page).toHaveURL(/\/work\/topictrail$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("TopicTrail, a memory for what you browse");
   });
-
-  test("keeps Ridly unpublished until its case study ships", async ({ page }) => {
-    await page.goto("/");
-    await expect(page.locator("#work").getByText("Case study coming")).toBeVisible();
-    const response = await page.goto("/work/ridly");
-    expect(response?.status()).toBe(404);
-  });
 });
 
 test.describe("Home → contact → CV", () => {
@@ -83,7 +76,7 @@ test.describe("first view without JavaScript", () => {
 });
 
 test.describe("layout", () => {
-  for (const path of ["/", "/work/validation-portal", "/work/topictrail"]) {
+  for (const path of ["/", "/work/validation-portal", "/work/topictrail", "/work/ridly"]) {
     test(`${path} has no horizontal scroll`, async ({ page }) => {
       await page.goto(path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -102,7 +95,6 @@ test.describe("metadata", () => {
   test("serves the sitemap, robots and social preview", async ({ request }) => {
     const sitemap = await (await request.get("/sitemap.xml")).text();
     expect(sitemap).toContain("/work/validation-portal");
-    expect(sitemap).not.toContain("/work/ridly");
     expect(await (await request.get("/robots.txt")).text()).toContain("Sitemap:");
     const og = await request.get("/opengraph-image");
     expect(og.headers()["content-type"]).toBe("image/png");

@@ -87,7 +87,7 @@ src/content/
   site.ts                     Intro, availability, testimonial, QA record, journey, links
   anchors.ts                  Stable section IDs (#work, #ai, #proof, #stack, #contact) for links and guide tools
 public/cv/Habib-Ahmed-Wasi-CV.pdf
-public/fonts/Fraunces-*.ttf   Static TTF files for OG images
+public/fonts/*.ttf            Static Fraunces and IBM Plex Mono TTFs for OG images
 scripts/build-rag-index.ts    Writes src/generated/rag-index.json at build time
 evals/guide/                  Evaluation questions and the eval script
 ```
@@ -95,11 +95,11 @@ evals/guide/                  Evaluation questions and the eval script
 - **Case study URLs:** `/work/topictrail`, `/work/ridly`, `/work/validation-portal`. They are statically generated, each with its own title, description and OG image (P5, P6). In Next 15+ the route `params` is a Promise and must be awaited.
 - **Typed TypeScript instead of MDX.** Every case study follows the same fixed section order, so it is structured data. A type such as `CaseStudy { problem, role, aiInTheBuild, solution, media, architecture, testEvidence, impact, stack, links }` lets the compiler catch a missing section. It also lets the RAG indexer read clean text. MDX can come later if a page needs components in the middle of prose.
 - **Placeholders:** a `Placeholder` component renders a labelled slot (e.g. "[Ridly screens]") in the design system style. Content fields accept a placeholder value, so missing content shows up on the page and in a test report.
-- **OG images:** `next/og` (Satori) can't read WOFF2, so commit static Fraunces TTF files for `opengraph-image.tsx`.
+- **OG images:** `next/og` (Satori) can't read WOFF2, so commit static Fraunces TTF files for `opengraph-image.tsx`. The label uses IBM Plex Mono, as on the site; Satori draws Fraunces' "+" wrongly.
 
 ### Media
 
-- Demo and test-run videos are hosted on YouTube in privacy-enhanced mode, shown behind a lightweight facade with a poster. The YouTube player only loads on click.
+- Demo and test-run videos are hosted on YouTube in privacy-enhanced mode, shown behind a lightweight facade with a poster. The YouTube player only loads on click, and nothing is requested from YouTube or Google before that (the poster is local, not YouTube's thumbnail). The facade is a real link to YouTube, so it works without JavaScript.
 - Vercel Hobby bandwidth isn't spent on video. Captions are on (C11).
 - Screens and diagrams are images in the repo, served through `next/image`.
 

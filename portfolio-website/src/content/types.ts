@@ -37,6 +37,8 @@ export type MediaItem = {
   /** Image path under /public, or a YouTube video id for demo and test-run. */
   src: Content<string>;
   alt?: string;
+  /** Poster image under /public for a video; without one the player shows a plain paper poster. */
+  poster?: string;
 };
 
 export type ProjectStatus = "complete" | "in-progress";

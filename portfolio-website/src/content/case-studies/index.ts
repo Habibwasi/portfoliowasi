@@ -1,11 +1,13 @@
 import { featuredProjects } from "../projects";
 import type { CaseStudy, Project } from "../types";
+import { ridly } from "./ridly";
 import { topictrail } from "./topictrail";
 import { validationPortal } from "./validation-portal";
 
-/** Case studies by slug. Ridly's arrives in Phase 2 (2.1). */
+/** Case studies by slug. */
 export const caseStudies: Record<string, CaseStudy> = {
   topictrail,
+  ridly,
   "validation-portal": validationPortal,
 };
 
@@ -22,4 +24,10 @@ export function getCaseStudy(slug: string): CaseStudy | undefined {
 export function nextCaseStudy(slug: string): Project {
   const index = publishedProjects.findIndex((p) => p.slug === slug);
   return publishedProjects[(index + 1) % publishedProjects.length];
+}
+
+/** "Case study 02 / 03 · Mobile + backend · AI workflow", from the project's eyebrow. */
+export function caseStudyEyebrow(project: Project): string {
+  const [number, ...rest] = project.eyebrow.split(" / ");
+  return `Case study ${number} / ${String(featuredProjects.length).padStart(2, "0")} · ${rest.join(" / ")}`;
 }

@@ -60,6 +60,21 @@ describe("CaseStudyView", () => {
     expect(document.querySelectorAll(".hw-btn--primary")).toHaveLength(1);
   });
 
+  it("renders Ridly as case study 02, built solo, with its test run and code link (2.1)", () => {
+    renderStudy("ridly");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Ridly, carpooling for Android and iOS");
+    expect(screen.getByText("Case study 02 / 03 · Mobile + backend · AI workflow")).toBeInTheDocument();
+    const facts = screen.getByRole("group", { name: "Project facts" });
+    expect(within(facts).getByText("Built solo")).toBeInTheDocument();
+    expect(within(facts).getByText("Android and iOS")).toBeInTheDocument();
+    expect(screen.getByText("Test run")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View the code on GitHub" })).toHaveAttribute("href", "https://github.com/Habibwasi/HOP-KMP");
+    expect(screen.getByRole("link", { name: "Next project: Validation Portal, research for founders" })).toHaveAttribute(
+      "href",
+      "/work/validation-portal",
+    );
+  });
+
   it("marks TopicTrail as in progress and says there's no code link yet", () => {
     renderStudy("topictrail");
     expect(screen.getAllByText("Bachelor project · in progress · due Jan 2027").length).toBeGreaterThan(0);

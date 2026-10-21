@@ -44,7 +44,7 @@ export const projects: Project[] = [
     },
     cover: placeholder("Ridly screens"),
     featured: true,
-    caseStudyReady: false,
+    caseStudyReady: true,
   },
   {
     slug: "validation-portal",

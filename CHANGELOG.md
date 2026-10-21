@@ -2,6 +2,54 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 2: Ridly case study (2026-10-22)
+
+Spec: [specs/features/phase-2-ridly.md](specs/features/phase-2-ridly.md) · Roadmap items 2.1–2.3 · Branch `phase-2-ridly`, from `redesign`
+
+**Status: done locally, not committed yet.** CI on GitHub runs once the branch is pushed and merged into `redesign`. Missing Ridly content (problem, decisions, screens, videos, diagram) is in roadmap 7.3.
+
+All three featured projects now have a case study. Ridly's card on Home links to `/work/ridly`, each case study has its own social preview in Fraunces, and videos sit behind a click-to-load player.
+
+### Verification
+
+| Check | Result |
+| --- | --- |
+| Lint, typecheck | Pass |
+| Unit and component tests | 144 passed (was 131) |
+| E2E + axe, desktop and phone | 50 passed (was 38). Zero axe violations on `/work/ridly` |
+| Production build | Pass. All three case studies and their OG images are static |
+| Video facade in a real browser | Checked with a temporary public video, then reverted: no request to YouTube or Google before the click; after it, the `youtube-nocookie.com` player with captions on, focus inside, no CSP errors |
+| Lighthouse, phone | `/work/ridly` and `/work/validation-portal` pass. `/` measured LCP 2.52–2.57 s against the 2.5 s budget, but `redesign` without any Phase 2 change measured 2.23–2.67 s (median 2.53 s) in the same session. The machine was slower than when Phase 1 measured 2.34 s, so this isn't a regression. CI on Linux is the reference |
+
+### What changed
+
+- **Ridly case study (2.1):** `src/content/case-studies/ridly.ts`, from the HOP-KMP repo and the decisions log. The spec has a table of every fact and its source.
+  - *My role:* built solo, all 387 commits; names the four parts (shared KMP module, Android, iOS, NestJS API).
+  - *AI in the build:* LangGraph planning with the HITL gate; Claude Code and Copilot working against `Agent.md`, which tells the agent to stop and ask instead of inventing architecture; Copilot's Ridly bug-audit skill. No other tools named.
+  - *Solution:* the passenger and driver flows, MobilePay settlement, ratings, the tax report, saved search alerts.
+  - *Architecture:* shared KMP module with MVI ViewModels, Compose and SwiftUI on top; NestJS 11, Prisma, PostgreSQL with PostGIS, Supabase, Socket.IO, BullMQ, Sentry.
+  - *Test evidence:* the k6 ramp (300 → 600 → 1,500, trip search p95 96 ms at 300), the k6 failure test, and what CI runs. It has a test-run frame for the k6 recording.
+  - *Impact:* 96 ms p95, 1,500 virtual users, 387 commits, 2 platforms.
+  - "Next project" now runs TopicTrail → Ridly → Validation Portal.
+- **Social previews (2.2):** `src/lib/og.tsx` draws every preview: the label in IBM Plex Mono, the title in Fraunces SemiBold, the context line in Fraunces Regular, and the "H" tile. `src/app/work/[slug]/opengraph-image.tsx` makes one per case study, and the default image uses the same layout. The TTFs and their OFL licences are in `public/fonts/`. Case study pages now set their own Twitter title and description; before, they inherited the site's.
+- **Video facade (2.3):** `src/components/video-facade.tsx`. A poster with a vermilion play mark and "Play · loads YouTube"; the click swaps in the privacy-enhanced player with English captions forced on. `MediaItem` gains an optional `poster`. A content test checks that every video ID is a valid YouTube ID.
+- **Lighthouse** also measures `/work/ridly`.
+- **README** status table brought up to date.
+
+### Key decisions and why
+
+1. **Ridly's screens stay placeholders, though the repo has real ones.** The HOP-KMP README has Roborazzi renders of every screen state, taken from the real Compose UI. Per the decision that content comes in Phase 7, I didn't pull them in. **Revisit?** If you're happy to use them, pick 3–5 (for example search results, trip detail, chat, post a trip, settlement) and they can go in now.
+2. **The poster never comes from YouTube.** YouTube's own thumbnail would contact Google on page load, before anyone chose to watch. The poster is a local image, or a plain paper frame when there is none.
+3. **The facade is a link, not a button.** Without JavaScript it opens the video on YouTube; with JavaScript it plays in place. Ctrl- and Cmd-clicks still open a new tab.
+4. **Plex Mono for the OG label.** Satori draws Fraunces' "+" wrongly ("Mobile + backend" came out broken). Plex Mono is the site's own label font, so the preview now matches the page.
+5. **One static `alt` for the case study OG images** ("Case study by Habib Ahmed Wasi"). Per-page alt text would need `generateImageMetadata`, which changes the image URLs. Social sites rarely show it.
+6. **Claims kept to what the repo shows.** "Review its price", not "set the price"; "marked as paid", not "both sides confirm"; CI "on pushes to main and pull requests into it". The k6 ramp numbers come from the decisions log, because the stress profile in `load-test.js` is configured lower (up to 300). **Revisit?** If the 1,500 run used a different script or settings, say so and the text can name it.
+
+### Left for you
+
+- **Ridly content** (roadmap 7.3): problem text, two or three decisions, one concrete example of correcting AI output, 3–5 screens, the demo video and the k6 run recording (YouTube IDs, with captions), the architecture diagram. The repo already has `architecture-diagrams.html`, `hop-dataflow.drawio` and a marketing video with a `.vtt` voiceover that may serve.
+- **Commit, push and merge:** nothing from Phase 2 is committed yet.
+
 ## Phase 1: Launch (2026-10-21, closed 2026-10-22)
 
 Spec: [specs/features/phase-1-launch.md](specs/features/phase-1-launch.md) · Roadmap items 1.1–1.12 · Branch `phase-1-launch`, merged into `redesign`

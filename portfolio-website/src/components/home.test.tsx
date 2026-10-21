@@ -42,7 +42,7 @@ describe("ActionButton", () => {
 });
 
 describe("FeaturedWork", () => {
-  it("lists the featured three in order, with two case studies published", () => {
+  it("lists the featured three in order, each linking to its case study", () => {
     render(<FeaturedWork />);
     const section = document.getElementById("work")!;
     const titles = within(section).getAllByRole("heading", { level: 3 }).map((h) => h.textContent);
@@ -53,7 +53,8 @@ describe("FeaturedWork", () => {
     ]);
     expect(screen.getByRole("link", { name: /TopicTrail/ })).toHaveAttribute("href", "/work/topictrail");
     expect(screen.getByRole("link", { name: /Validation Portal, research/ })).toHaveAttribute("href", "/work/validation-portal");
-    expect(screen.getByText("Case study coming")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Ridly, carpooling/ })).toHaveAttribute("href", "/work/ridly");
+    expect(screen.queryByText("Case study coming")).not.toBeInTheDocument();
   });
 
   it("lists More projects, linking only those with a public repo", () => {

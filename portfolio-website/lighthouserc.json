@@ -5,7 +5,8 @@
       "startServerReadyPattern": "Ready",
       "url": [
         "http://localhost:3200/",
-        "http://localhost:3200/work/validation-portal"
+        "http://localhost:3200/work/validation-portal",
+        "http://localhost:3200/work/ridly"
       ],
       "numberOfRuns": 3,
       "settings": {

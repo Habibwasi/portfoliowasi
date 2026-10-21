@@ -7,11 +7,7 @@ describe("case studies", () => {
   it("exist for exactly the published featured projects", () => {
     const published = featuredProjects.filter((p) => p.caseStudyReady).map((p) => p.slug);
     expect(Object.keys(caseStudies).sort()).toEqual([...published].sort());
-    expect(publishedProjects.map((p) => p.slug)).toEqual(["topictrail", "validation-portal"]);
-  });
-
-  it("keep Ridly unpublished until its case study ships (2.1)", () => {
-    expect(getCaseStudy("ridly")).toBeUndefined();
+    expect(publishedProjects.map((p) => p.slug)).toEqual(["topictrail", "ridly", "validation-portal"]);
   });
 
   it.each(Object.values(caseStudies))("$slug has every section, each with content", (study) => {
@@ -27,8 +23,47 @@ describe("case studies", () => {
   });
 
   it("cycles Next project through the published case studies", () => {
-    expect(nextCaseStudy("topictrail").slug).toBe("validation-portal");
+    expect(nextCaseStudy("topictrail").slug).toBe("ridly");
+    expect(nextCaseStudy("ridly").slug).toBe("validation-portal");
     expect(nextCaseStudy("validation-portal").slug).toBe("topictrail");
+  });
+
+  it.each(Object.values(caseStudies))("$slug uses valid YouTube IDs for its videos (2.3)", (study) => {
+    const media = [study.hero, ...study.screens, ...study.architectureMedia, ...(study.testRun ? [study.testRun] : [])];
+    for (const item of media) {
+      if ((item.kind === "demo" || item.kind === "test-run") && !isPlaceholder(item.src) && !item.src.startsWith("/")) {
+        expect(item.src, item.kind).toMatch(/^[A-Za-z0-9_-]{11}$/);
+      }
+    }
+  });
+});
+
+describe("Ridly", () => {
+  const study = getCaseStudy("ridly")!;
+  const text = JSON.stringify(study);
+
+  it("says it was built solo", () => {
+    expect(study.facts).toContainEqual({ label: "My role", value: "Built solo" });
+    expect(study.role.body.join(" ")).toMatch(/built Ridly alone|built solo/i);
+  });
+
+  it("states the k6 number with its percentile and stage", () => {
+    const search = study.impact.find((m) => m.value === "96 ms")!;
+    expect(search.label).toMatch(/p95/);
+    expect(search.note).toMatch(/300 virtual users/);
+    expect(study.testEvidence.body.join(" ")).toMatch(/p95 of 96 ms/);
+    expect(study.testEvidence.body.join(" ")).toMatch(/300 to 600 to 1,500/);
+  });
+
+  it("names only the AI tools actually used (AI5)", () => {
+    const ai = study.aiInTheBuild.body.join(" ");
+    for (const tool of ["LangGraph", "Claude Code", "GitHub Copilot"]) expect(ai).toContain(tool);
+    expect(text).not.toMatch(/Llama|ChatGPT|Cursor|Gemini/i);
+    expect(text).not.toMatch(/Hop/);
+  });
+
+  it("has a test-run frame (C11)", () => {
+    expect(study.testRun?.kind).toBe("test-run");
   });
 });
 

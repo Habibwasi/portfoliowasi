@@ -11,8 +11,10 @@ The site is being rebuilt in phases, spec-first and test-first. The live version
 | Phase | What | Status |
 | --- | --- | --- |
 | 0 | Foundation: design tokens, content layer, base components, tests, CI | Done |
-| 1 | Launch: new Home, case study template, TopicTrail and Validation Portal case studies, working contact | Next |
-| 2–6 | Ridly case study, AI guide, About page, hero motion, polish | Planned |
+| 1 | Launch: new Home, case study template, TopicTrail and Validation Portal case studies, working contact | Done |
+| 2 | Ridly case study, per-page social previews, click-to-load video player | Done |
+| 3–6 | AI guide, AI story and About page, delight, polish | Planned |
+| 7 | Content handover: CV, Calendly, screens, videos, testimonial, photos | Last |
 
 Full plan in [specs/product/roadmap.md](specs/product/roadmap.md). What changed and why: [CHANGELOG.md](CHANGELOG.md).
 
@@ -101,8 +103,6 @@ portfoliowasi/
     ├── lighthouserc.json           performance budget
     └── playwright.config.ts, vitest.config.mts
 ```
-
-The old sections (`hero.tsx`, `about.tsx`, `experience.tsx`, `projects.tsx`, `skills.tsx`, `contact.tsx` in `src/components/`) still render until Phase 1 replaces them.
 
 ## How work is done
 

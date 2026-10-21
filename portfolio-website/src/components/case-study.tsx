@@ -1,27 +1,29 @@
 import Image from "next/image";
-import { nextCaseStudy } from "@/content/case-studies";
+import { caseStudyEyebrow, nextCaseStudy } from "@/content/case-studies";
 import { isPlaceholder } from "@/content/placeholder";
 import { featuredProjects } from "@/content/projects";
 import { site } from "@/content/site";
 import type { CaseStudy, CaseStudySection, Content, MediaItem, Project } from "@/content/types";
-import { ActionButton, Button, MediaFrame, Metrics, Placeholder, Tag, Tags } from "./hw";
+import { ActionButton, Button, MediaFrame, mediaLabels, Metrics, Placeholder, Tag, Tags } from "./hw";
+import { VideoFacade } from "./video-facade";
 
 function Prose({ value }: { value: Content<string> }) {
   return isPlaceholder(value) ? <Placeholder label={value.label} /> : <p>{value}</p>;
 }
 
-/** Image under /public, a YouTube link for videos (the facade arrives in 2.3), or a placeholder. */
+const isVideo = (item: MediaItem) => item.kind === "demo" || item.kind === "test-run";
+
+/** Image under /public, a YouTube video behind the facade (2.3), or a placeholder. */
 function Media({ item, className }: { item: MediaItem; className?: string }) {
   const { src } = item;
   let content = null;
   if (!isPlaceholder(src)) {
-    content = src.startsWith("/") ? (
-      <Image src={src} alt={item.alt ?? ""} fill sizes="(max-width: 640px) 100vw, 1200px" style={{ objectFit: "contain" }} />
-    ) : (
-      <a className="hw-btn" href={`https://www.youtube.com/watch?v=${encodeURIComponent(src)}`} target="_blank" rel="noopener noreferrer">
-        Watch on YouTube
-      </a>
-    );
+    content =
+      isVideo(item) && !src.startsWith("/") ? (
+        <VideoFacade videoId={src} title={isPlaceholder(item.caption) ? mediaLabels[item.kind] : item.caption} poster={item.poster} />
+      ) : (
+        <Image src={src} alt={item.alt ?? ""} fill sizes="(max-width: 640px) 100vw, 1200px" style={{ objectFit: "contain" }} />
+      );
   }
   return (
     <MediaFrame kind={item.kind} caption={item.caption} missing={isPlaceholder(src) ? src.label : undefined} className={className}>
@@ -68,8 +70,7 @@ function Section({ number, name, section, children }: { number: number; name: st
 
 /** The case study template (1.4): the same order for every project, ending on the next one. */
 export function CaseStudyView({ project, study }: { project: Project; study: CaseStudy }) {
-  const [number, ...rest] = project.eyebrow.split(" / ");
-  const eyebrow = `Case study ${number} / ${String(featuredProjects.length).padStart(2, "0")} · ${rest.join(" / ")}`;
+  const eyebrow = caseStudyEyebrow(project);
   const next = nextCaseStudy(project.slug);
   const nextNumber = next.eyebrow.split(" / ")[0];
   const { code, live } = project.links;

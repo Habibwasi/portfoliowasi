@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0 and 1 done; Phase 2 next)
+Last updated: 2026-10-22 (Phases 0–2 done; Phase 3 next)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -56,13 +56,15 @@ The smallest site that passes the 10-second scan and lets a tech lead click into
 
 Then it is reviewed on the `redesign` branch's Vercel preview. Production waits: `redesign` merges into `main` only after Phase 7 (see "Branches and deployment" below).
 
-## Phase 2: Ridly case study
+## Phase 2: Ridly case study · done locally (2026-10-22); CI on `redesign` once merged
+
+Spec: [phase-2-ridly.md](../features/phase-2-ridly.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 2.1 | **Ridly** case study: built solo; architecture; k6 evidence (ramped 300 → 600 → 1,500 virtual users, trip search p95 96 ms at the 300 stage); AI in the build (LangGraph planning, HITL, Claude Code and GitHub Copilot); screens and demo | C6–C11, AI5 | planned |
-| 2.2 | Per-page OG images with Fraunces TTF | P6 | planned |
-| 2.3 | Video facade: YouTube privacy-enhanced embed, poster, captions, loads on click | C11, P2 | planned |
+| 2.1 | **Ridly** case study: built solo; architecture; k6 evidence (ramped 300 → 600 → 1,500 virtual users, trip search p95 96 ms at the 300 stage); AI in the build (LangGraph planning, HITL, Claude Code and GitHub Copilot); screens and demo | C6–C11, AI5 | done (content in Phase 7) |
+| 2.2 | Per-page OG images with Fraunces TTF | P6 | done |
+| 2.3 | Video facade: YouTube privacy-enhanced embed, poster, captions, loads on click | C11, P2 | done (videos in Phase 7) |
 
 ## Phase 3: AI guide (useful first, animated later)
 
@@ -112,7 +114,7 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | --- | --- | --- | --- |
 | 7.1 | CV PDF, plus the same text for the guide's index | `public/cv/Habib-Ahmed-Wasi-CV.pdf`, then `site.cv` in `src/content/site.ts` (the CV buttons and nav item appear); the guide's index (3.3) | open |
 | 7.2 | Calendly URL | `NEXT_PUBLIC_CALENDLY_URL` in Vercel and `.env.local` | open |
-| 7.3 | Case study content: TopicTrail (role, problem, AI in the build, architecture diagrams, evaluation plan, dated progress notes, screens); Validation Portal (role, problem, AI in the build, demo video, screens, architecture diagram); Ridly (problem text, "what I built" decisions, 3–5 screens, demo video, the real architecture) | `src/content/case-studies/`, media in `public/work/<slug>/` | open |
+| 7.3 | Case study content: TopicTrail (role, problem, AI in the build, architecture diagrams, evaluation plan, dated progress notes, screens); Validation Portal (role, problem, AI in the build, demo video, screens, architecture diagram); Ridly (problem text, "what I built" decisions, one concrete example of correcting AI output, 3–5 screens, demo video, k6 run recording, the real architecture diagram). Videos go on YouTube with English captions; only the video ID goes in the content, plus an optional poster image | `src/content/case-studies/`, media in `public/work/<slug>/` | open |
 | 7.4 | Testimonial: quote, name and role of the Just Eat team leader, with their permission | `testimonial` in `src/content/site.ts` (closes 4.2) | open |
 | 7.5 | Photos with captions, line-art portrait, drawings of your own objects; journey dates checked | About page (4.4), hero (5.5), object nav (5.4) | open |
 | 7.6 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | open |
