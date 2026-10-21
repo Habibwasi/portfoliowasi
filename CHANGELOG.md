@@ -2,6 +2,50 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 1: Launch (2026-10-21)
+
+Spec: [specs/features/phase-1-launch.md](specs/features/phase-1-launch.md) · Roadmap items 1.1–1.12 · Branch `phase-1-launch`
+
+The old site is gone. Home is now Hero → Featured work → Proof → Contact, and TopicTrail and Validation Portal have case study pages at `/work/<slug>`. Content you haven't supplied yet shows as labelled placeholders.
+
+### Verification
+
+| Check | Result |
+| --- | --- |
+| Lint, typecheck | Pass |
+| Unit and component tests | 125 passed |
+| E2E + axe, desktop and phone | 38 passed. axe reports zero violations (not only serious ones) on `/` and both case studies |
+| Production build | Pass. `/work/topictrail` and `/work/validation-portal` are static; `/work/ridly` is a 404 |
+| Lighthouse, phone | LCP 2.34 s on `/` and 2.2 s on a case study; CLS ≤ 0.035; TBT about 240 ms. LCP is an **error** again |
+
+### What changed
+
+- **Hero (1.1):** static, server-rendered, visible with JavaScript off. Role line, name, intro with the marker highlight, availability line, "View case studies" and "Download CV". The portrait slot and the H/W tiles show on desktop only.
+- **Featured work (1.2, 1.3):** the three cards in the decided order; TopicTrail and Validation Portal link to their case studies, Ridly says "Case study coming". More projects lists five, linking only public repos.
+- **Case study template (1.4):** `src/components/case-study.tsx` and `src/app/work/[slug]/page.tsx`. Header with the facts row, hero media, then Problem → My role → AI in the build → Solution → Architecture → Test evidence → Impact, ending with "Next project" (primary) and "Download CV". Each page has its own title, description and canonical URL.
+- **Case studies (1.5, 1.6):** `src/content/case-studies/`. Validation Portal's solution, architecture and stack come from its README and history: 111 commits, all yours; started March 2026; `gpt-oss-20b`. Its test evidence says plainly that there are no automated tests. TopicTrail shows only the planned design, marked "Planned".
+- **Proof (1.7):** testimonial slot plus the one-line QA record (Silver, 92.26%, 268 cycles, 46 issues).
+- **Contact (1.8, 1.9):** Email me, Download CV and Book a call as secondary buttons, then the form with the only primary button. `/api/contact` now validates with Zod, HTML-escapes the email, sets `replyTo`, checks Resend's `{ error }` (502 instead of a false 200), drops honeypot submissions, and rate-limits 5 per IP per 10 minutes through Upstash. If Upstash is missing or down, the form keeps working. The form has pending, success, field-error and error states.
+- **Metadata (1.11):** new title and description, `metadataBase`, Open Graph and Twitter tags, a default OG image, `sitemap.xml` and `robots.txt`.
+- **Phone (1.12):** stacked full-width buttons; no horizontal scroll (checked in E2E).
+- **Clean-up:** removed the six legacy sections, `components/ui`, `components.json`, the shadcn colour mapping, the legacy lint exception, and `@radix-ui/react-slot`, `class-variance-authority`, `lucide-react` and `tw-animate-css`. Added `zod` 4.6.5, `@upstash/ratelimit` 2.2.0 and `@upstash/redis` 1.39.0, pinned.
+
+### Key decisions and why
+
+1. **Missing CV and Calendly render as visible placeholder buttons** ("[CV PDF]", "[Calendly URL]"), not dead links. The nav still hides CV. The E2E test accepts either the real link or the placeholder, so it keeps passing when the PDF arrives.
+2. **About is hidden from the nav** until the About page exists (4.4), by the same rule as CV. The old About and Experience sections are gone, and the full uTest record returns with the About page. **Revisit?** If you'd rather keep a short experience block on Home until Phase 4.
+3. **The Motion provider is unmounted.** Nothing animates in Phase 1, so loading `LazyMotion` on every page only cost first-view JavaScript. The `motion` dependency stays for Phases 3 and 5.
+4. **Home has no `#ai` or `#stack` sections yet.** They are Phase 4. The anchors stay defined, so the section numbers on Home are 01–03 for now.
+5. **The old site's phone number is not carried over.** The mockups and decisions list email, CV and Calendly only. **Revisit?**
+6. **Validation Portal's role stays a placeholder,** even though all 111 commits are yours. If you built it solo, say so and it becomes "Built solo" like Ridly.
+7. **Demo videos render as a plain "Watch on YouTube" link** once a video ID is set. The click-to-load facade is 2.3.
+
+### Left for you
+
+- **Content (CV, Calendly, case study material, testimonial, profiles):** deferred to the end of the project. It's tracked as [Phase 7: Content handover](specs/product/roadmap.md#phase-7-content-handover-last), which also absorbs 1.13. Placeholders stay until then.
+- ~~**Stray `package-lock.json` at the repo root.**~~ Deleted.
+- **Commit, push and merge:** nothing is committed yet. `phase-1-launch` branches from `phase-0-foundation`, which isn't merged into `main` either.
+
 ## Phase 0: Foundation (2026-10-21)
 
 Spec: [specs/features/phase-0-foundation.md](specs/features/phase-0-foundation.md) · Roadmap items 0.1–0.8

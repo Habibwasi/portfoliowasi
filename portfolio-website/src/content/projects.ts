@@ -23,7 +23,7 @@ export const projects: Project[] = [
     links: {},
     cover: placeholder("TopicTrail architecture diagram"),
     featured: true,
-    caseStudyReady: false,
+    caseStudyReady: true,
   },
   {
     slug: "ridly",
@@ -66,7 +66,7 @@ export const projects: Project[] = [
     },
     cover: placeholder("Validation Portal screens"),
     featured: true,
-    caseStudyReady: false,
+    caseStudyReady: true,
   },
   {
     slug: "ai-workflow-global",

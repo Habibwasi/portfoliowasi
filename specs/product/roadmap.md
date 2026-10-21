@@ -1,10 +1,17 @@
 # Roadmap
 
-Last updated: 2026-10-21
+Last updated: 2026-10-21 (Phase 1 built)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
 Status: `planned` · `specced` · `in progress` · `done`
+
+## Branches and deployment
+
+- `main` is production (the live site). It stays unchanged until the whole redesign is done.
+- `redesign` collects every phase. Vercel builds it as a **preview** deployment with its own URL; CI runs on every push to it.
+- Each phase is built on its own branch (`phase-1-launch`, `phase-2-…`) and merged into `redesign`.
+- After Phase 7, one PR merges `redesign` into `main`, and that is the production launch.
 
 ## Phase 0: Foundation
 
@@ -27,19 +34,19 @@ The smallest site that passes the 10-second scan and lets a tech lead click into
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 1.1 | Hero, static: name, role line, 20-word intro, availability line, "View case studies" (primary) and "Download CV" | C1–C3, AI1 | planned |
-| 1.2 | Featured work in this order: TopicTrail (labelled "Bachelor project · in progress · due Jan 2027"), Ridly, Validation Portal. The Ridly card says "Case study coming" until 2.1 ships. | C5, S1 | planned |
-| 1.3 | More projects: AI_Workflow_Global, Undershelf, Heat.IT, Deskinct, Medication Adherence App. Links and claims follow the facts table below. | C22 | planned |
-| 1.4 | Case study template at `/work/[slug]`: title and context line, problem, my role, AI in the build, solution (screens, demo), architecture, test evidence, impact, stack, code link. It ends with the same primary action as Home, "Next project" (S3). | S2, S3, C6–C12, AI5, V6 | planned |
-| 1.5 | **TopicTrail** case study, in progress: problem, architecture diagrams, planned RAG pipeline (keyword + semantic search), evaluation plan, dated progress notes; screens and demo shown as placeholders | C6–C11 | planned |
-| 1.6 | **Validation Portal** case study with the real demo video, architecture diagrams, screens and live demo link | C6–C11 | planned |
-| 1.7 | Proof, minimal: one-line uTest QA record (Silver, 92.26%, 268 test cycles, 46 issues reported) and a testimonial placeholder for the Just Eat team leader | C15, C16 | planned |
-| 1.8 | Contact section: "Have a role in mind?", Email me (mailto), Download CV and Book a call (Calendly) as secondary buttons. The form sits below on `paper-raised`, and its submit button is the one primary on that screen. | C20, C21, G4 | planned |
-| 1.9 | Contact form that works: Zod validation, escaped email body, Resend error check, `replyTo`, honeypot, rate limit, pending/success/error states | G4 | planned |
-| 1.10 | CV PDF in `public/cv/` | C21 | planned |
-| 1.11 | Metadata: new title and description, `metadataBase`, default OG image, sitemap, robots | P5 | planned |
-| 1.12 | Phone layout for all of the above. The phone contact section shows all three actions. | P3 | planned |
-| 1.13 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | planned |
+| 1.1 | Hero, static: name, role line, 20-word intro, availability line, "View case studies" (primary) and "Download CV" | C1–C3, AI1 | done |
+| 1.2 | Featured work in this order: TopicTrail (labelled "Bachelor project · in progress · due Jan 2027"), Ridly, Validation Portal. The Ridly card says "Case study coming" until 2.1 ships. | C5, S1 | done |
+| 1.3 | More projects: AI_Workflow_Global, Undershelf, Heat.IT, Deskinct, Medication Adherence App. Links and claims follow the facts table below. | C22 | done |
+| 1.4 | Case study template at `/work/[slug]`: title and context line, problem, my role, AI in the build, solution (screens, demo), architecture, test evidence, impact, stack, code link. It ends with the same primary action as Home, "Next project" (S3). | S2, S3, C6–C12, AI5, V6 | done |
+| 1.5 | **TopicTrail** case study, in progress: problem, architecture diagrams, planned RAG pipeline (keyword + semantic search), evaluation plan, dated progress notes; screens and demo shown as placeholders | C6–C11 | done (content pending) |
+| 1.6 | **Validation Portal** case study with the real demo video, architecture diagrams, screens and live demo link | C6–C11 | done (content pending) |
+| 1.7 | Proof, minimal: one-line uTest QA record (Silver, 92.26%, 268 test cycles, 46 issues reported) and a testimonial placeholder for the Just Eat team leader | C15, C16 | done (content pending) |
+| 1.8 | Contact section: "Have a role in mind?", Email me (mailto), Download CV and Book a call (Calendly) as secondary buttons. The form sits below on `paper-raised`, and its submit button is the one primary on that screen. | C20, C21, G4 | done |
+| 1.9 | Contact form that works: Zod validation, escaped email body, Resend error check, `replyTo`, honeypot, rate limit, pending/success/error states | G4 | done |
+| 1.10 | CV PDF in `public/cv/` | C21 | done (content pending) |
+| 1.11 | Metadata: new title and description, `metadataBase`, default OG image, sitemap, robots | P5 | done |
+| 1.12 | Phone layout for all of the above. The phone contact section shows all three actions. | P3 | done |
+| 1.13 | Profiles to match (outside the codebase) | — | moved to 7.6 |
 
 **Done when:**
 - Playwright passes Home → case study and Home → contact → CV.
@@ -47,7 +54,7 @@ The smallest site that passes the 10-second scan and lets a tech lead click into
 - Lighthouse on phone: LCP under 2.5 s, CLS under 0.1. Switch the LCP assertion in `lighthouserc.json` from "warn" back to "error" (it is a warning only while the old sections remain).
 - axe reports no violations.
 
-Then deploy to production and start logging applications and interviews.
+Then it is reviewed on the `redesign` branch's Vercel preview. Production waits: `redesign` merges into `main` only after Phase 7 (see "Branches and deployment" below).
 
 ## Phase 2: Ridly case study
 
@@ -97,6 +104,20 @@ C17 (experience and skills side by side) is reinterpreted: experience lives on A
 | 6.2 | Analytics for case study views, CV downloads and Calendly clicks (tool per the open decision) | G4 | planned |
 | 6.3 | Rewrite the repo README (it still describes Nodemailer and the old sections) | — | done (Phase 0) |
 
+## Phase 7: Content handover (last)
+
+Every phase before this one builds with visible placeholders. Habib supplies the real content and assets at the end, in one pass, and each placeholder is swapped for the real thing. `listPlaceholders()` lists what is still missing; the phase is done when it returns nothing on the published pages.
+
+| # | Item | Where it goes | Status |
+| --- | --- | --- | --- |
+| 7.1 | CV PDF, plus the same text for the guide's index | `public/cv/Habib-Ahmed-Wasi-CV.pdf`, then `site.cv` in `src/content/site.ts` (the CV buttons and nav item appear); the guide's index (3.3) | open |
+| 7.2 | Calendly URL | `NEXT_PUBLIC_CALENDLY_URL` in Vercel and `.env.local` | open |
+| 7.3 | Case study content: TopicTrail (role, problem, AI in the build, architecture diagrams, evaluation plan, dated progress notes, screens); Validation Portal (role, problem, AI in the build, demo video, screens, architecture diagram); Ridly (problem text, "what I built" decisions, 3–5 screens, demo video, the real architecture) | `src/content/case-studies/`, media in `public/work/<slug>/` | open |
+| 7.4 | Testimonial: quote, name and role of the Just Eat team leader, with their permission | `testimonial` in `src/content/site.ts` (closes 4.2) | open |
+| 7.5 | Photos with captions, line-art portrait, drawings of your own objects; journey dates checked | About page (4.4), hero (5.5), object nav (5.4) | open |
+| 7.6 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | open |
+| 7.7 | Role text for the More projects (Undershelf, Deskinct, Medication Adherence App) | `src/content/projects.ts` | open |
+
 ## Later (not scheduled)
 
 - Calendly popup instead of the plain link
@@ -129,6 +150,8 @@ C17 (experience and skills side by side) is reinterpreted: experience lives on A
 | 2026-10-21 | Ridly k6 figure is p95 96 ms at the 300-VU stage | — |
 | 2026-10-21 | Testimonial from the Just Eat team leader | Design system "Justit" |
 | 2026-10-21 | Stay on Vercel Hobby | — |
+| 2026-10-21 | All content and assets (CV, Calendly, case study material, testimonial, photos, profiles) are supplied at the end, in Phase 7; placeholders stay until then | Per-feature "once supplied" |
+| 2026-10-21 | No production deploy until every phase is done: phases collect on `redesign` (Vercel preview); `main` is merged after Phase 7 | Phase 1 "deploy to production" |
 
 ## Open decisions
 
@@ -136,18 +159,7 @@ C17 (experience and skills side by side) is reinterpreted: experience lives on A
 
 ## Content and assets to supply
 
-These are placeholders in the build until they arrive.
-
-| Item | Needed for |
-| --- | --- |
-| CV PDF, plus the same text for the guide's index | 1.10, 3.3 |
-| Calendly URL | 1.8 |
-| TopicTrail: architecture diagrams, problem, evaluation plan, progress notes | 1.5 |
-| Validation Portal: hand over the existing video, diagrams and screens | 1.6 |
-| Ridly: problem text, "what I built" decisions, 3–5 screens, demo video, the real architecture | 2.1 |
-| Testimonial: quote, name and role of the Just Eat team leader, with their permission | 4.2 |
-| Photos with captions, line-art portrait, drawings of your own objects | 4.4, 5.4, 5.5 |
-| Journey dates checked | 4.4 |
+All of it is collected in [Phase 7: Content handover](#phase-7-content-handover-last), done last. Until then each item is a visible placeholder in the build.
 
 ## Facts to check before they go on the site
 

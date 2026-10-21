@@ -1,0 +1,156 @@
+import { render, screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { placeholder } from "@/content/placeholder";
+import { ContactForm } from "./contact-form";
+import { ContactSection } from "./contact-section";
+import { FeaturedWork } from "./featured-work";
+import { Hero } from "./hero";
+import { ActionButton } from "./hw";
+import { Proof } from "./proof";
+
+describe("Hero", () => {
+  it("shows the name as the only h1, the intro and availability", () => {
+    render(<Hero />);
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Habib Ahmed Wasi");
+    expect(screen.getByText(/graduating from SDU in January 2027/)).toBeInTheDocument();
+    expect(screen.getByText(/Kolding, Denmark/)).toBeInTheDocument();
+  });
+
+  it("leads to the work, with the CV as the secondary action", () => {
+    render(<Hero />);
+    const primary = screen.getByRole("link", { name: "View case studies" });
+    expect(primary).toHaveAttribute("href", "#work");
+    expect(primary).toHaveClass("hw-btn--primary");
+    // The CV is still a placeholder.
+    expect(screen.getByText("[CV PDF]")).toBeInTheDocument();
+  });
+});
+
+describe("ActionButton", () => {
+  it("renders a link when the target exists", () => {
+    render(<ActionButton href="/cv/cv.pdf" download>Download CV</ActionButton>);
+    expect(screen.getByRole("link", { name: "Download CV" })).toHaveAttribute("download");
+  });
+
+  it("renders a visible placeholder, not a dead link, when the target is missing", () => {
+    render(<ActionButton href={placeholder("Calendly URL")}>Book a call</ActionButton>);
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.getByText("[Calendly URL]")).toHaveAttribute("data-placeholder", "Calendly URL");
+  });
+});
+
+describe("FeaturedWork", () => {
+  it("lists the featured three in order, with two case studies published", () => {
+    render(<FeaturedWork />);
+    const section = document.getElementById("work")!;
+    const titles = within(section).getAllByRole("heading", { level: 3 }).map((h) => h.textContent);
+    expect(titles.slice(0, 3)).toEqual([
+      "TopicTrail, a memory for what you browse",
+      "Ridly, carpooling for Android and iOS",
+      "Validation Portal, research for founders",
+    ]);
+    expect(screen.getByRole("link", { name: /TopicTrail/ })).toHaveAttribute("href", "/work/topictrail");
+    expect(screen.getByRole("link", { name: /Validation Portal, research/ })).toHaveAttribute("href", "/work/validation-portal");
+    expect(screen.getByText("Case study coming")).toBeInTheDocument();
+  });
+
+  it("lists More projects, linking only those with a public repo", () => {
+    render(<FeaturedWork />);
+    const list = screen.getByRole("list", { name: "More projects" });
+    expect(within(list).getAllByRole("listitem")).toHaveLength(5);
+    expect(within(list).getByRole("link", { name: /AI_Workflow_Global/ })).toHaveAttribute(
+      "href",
+      "https://github.com/Habibwasi/AI_Workflow_Global",
+    );
+    expect(within(list).queryByRole("link", { name: /Deskinct/ })).not.toBeInTheDocument();
+    expect(within(list).getByText("Deskinct")).toBeInTheDocument();
+  });
+});
+
+describe("Proof", () => {
+  it("shows the testimonial slot and the one-line QA record", () => {
+    render(<Proof />);
+    expect(screen.getByText("Team leader, Just Eat")).toBeInTheDocument();
+    expect(screen.getByText(/92\.26%/)).toBeInTheDocument();
+    expect(screen.getByText(/268 test cycles/)).toBeInTheDocument();
+  });
+});
+
+describe("ContactSection", () => {
+  it("offers email, CV and a call, with the form submit as the one primary", () => {
+    render(<ContactSection />);
+    const section = document.getElementById("contact")!;
+    expect(within(section).getByRole("heading", { level: 2, name: "Have a role in mind?" })).toBeInTheDocument();
+    expect(within(section).getByRole("link", { name: "Email me" })).toHaveAttribute("href", "mailto:habibwasi9@gmail.com");
+    expect(within(section).getByText("[CV PDF]")).toBeInTheDocument();
+    expect(within(section).getByText("[Calendly URL]")).toBeInTheDocument();
+    const primaries = section.querySelectorAll(".hw-btn--primary");
+    expect(primaries).toHaveLength(1);
+    expect(primaries[0]).toHaveTextContent("Send message");
+  });
+});
+
+describe("ContactForm", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  async function fillAndSend() {
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText("Name"), "Ada Lovelace");
+    await user.type(screen.getByLabelText("Email"), "ada@example.com");
+    await user.type(screen.getByLabelText("Message"), "We have a graduate role on our platform team.");
+    await user.click(screen.getByRole("button", { name: "Send message" }));
+  }
+
+  it("shows a pending state, then success", async () => {
+    let resolve!: (r: Response) => void;
+    const fetchMock = vi.fn(() => new Promise<Response>((r) => (resolve = r)));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ContactForm email="habibwasi9@gmail.com" />);
+    await fillAndSend();
+
+    expect(screen.getByRole("button", { name: "Sending…" })).toBeDisabled();
+    const sent = JSON.parse((fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1].body as string);
+    expect(sent).toMatchObject({ name: "Ada Lovelace", email: "ada@example.com", website: "" });
+
+    resolve(Response.json({ ok: true }));
+    expect(await screen.findByRole("status")).toHaveTextContent(/Thanks, your message is on its way/);
+    expect(screen.queryByRole("button", { name: "Send message" })).not.toBeInTheDocument();
+  });
+
+  it("shows server field errors next to the field", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        Response.json({ error: "Please check the highlighted fields.", fieldErrors: { email: ["Please enter a valid email address."] } }, { status: 400 }),
+      ),
+    );
+    render(<ContactForm email="habibwasi9@gmail.com" />);
+    await fillAndSend();
+
+    const email = screen.getByLabelText("Email");
+    await waitFor(() => expect(email).toHaveAttribute("aria-invalid", "true"));
+    expect(email).toHaveAccessibleDescription("Please enter a valid email address.");
+  });
+
+  it("shows an error with the email address as a fallback", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ error: "The message couldn't be sent." }, { status: 502 })));
+    render(<ContactForm email="habibwasi9@gmail.com" />);
+    await fillAndSend();
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("The message couldn't be sent.");
+    expect(within(alert).getByRole("link", { name: "habibwasi9@gmail.com" })).toHaveAttribute("href", "mailto:habibwasi9@gmail.com");
+    expect(screen.getByRole("button", { name: "Send message" })).toBeEnabled();
+  });
+
+  it("handles a network failure", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new TypeError("offline"))));
+    render(<ContactForm email="habibwasi9@gmail.com" />);
+    await fillAndSend();
+    expect(await screen.findByRole("alert")).toHaveTextContent(/couldn't reach the server/i);
+  });
+});

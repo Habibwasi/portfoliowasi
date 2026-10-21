@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { MotionProvider } from "@/components/motion-provider";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { anchors } from "@/content/anchors";
+import { siteTitle, siteUrl } from "@/content/metadata";
+import { site } from "@/content/site";
 import "./globals.css";
 
 // Fraunces is the display face and the LCP font, so it is the only one preloaded.
@@ -28,17 +32,21 @@ const plexMono = IBM_Plex_Mono({
   preload: false,
 });
 
-// Phase 1 (1.11) rewrites this metadata for the new intro.
 export const metadata: Metadata = {
-  title: "Habib Ahmed Wasi - Full-Stack Developer Portfolio",
-  description: "Software Engineering student and full-stack developer specializing in Python, C#, JavaScript, and cloud computing. Check out my projects and get in touch!",
-  keywords: ["portfolio", "developer", "software engineering", "full-stack", "python", "react", "next.js"],
-  authors: [{ name: "Habib Ahmed Wasi" }],
+  metadataBase: new URL(siteUrl),
+  title: { default: siteTitle, template: `%s · ${site.name}` },
+  description: site.intro,
+  authors: [{ name: site.name, url: siteUrl }],
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Habib Ahmed Wasi - Full-Stack Developer",
-    description: "Discover my projects, skills, and experience as a Software Engineering student",
+    title: siteTitle,
+    description: site.intro,
     type: "website",
+    siteName: site.name,
+    locale: "en_GB",
+    url: "/",
   },
+  twitter: { card: "summary_large_image", title: siteTitle, description: site.intro },
 };
 
 export default function RootLayout({
@@ -49,7 +57,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${instrumentSans.variable} ${plexMono.variable}`}>
       <body>
-        <MotionProvider>{children}</MotionProvider>
+        <SiteHeader />
+        <main id={anchors.main}>{children}</main>
+        <SiteFooter />
         <Analytics />
       </body>
     </html>

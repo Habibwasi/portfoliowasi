@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 @import "../styles/components.css";
+@import "../styles/sections.css";
 
 /*
  * Design tokens from the Habib Wasi Portfolio design system
@@ -66,13 +66,6 @@
   --text-label--line-height: 1.4;
   --text-label--letter-spacing: 0.08em;
   --text-label--font-weight: 500;
-
-  /* Legacy shadcn radii, still used by src/components/ui until Phase 1. */
-  --radius-lg: 0.625rem;
-  --radius-xl: 0.875rem;
-  --radius-2xl: 1.125rem;
-  --radius-3xl: 1.375rem;
-  --radius-4xl: 1.625rem;
 }
 
 /* Phone sizes from the design system (below 640px). */
@@ -84,38 +77,11 @@
   }
 }
 
-/*
- * Legacy shadcn variables mapped onto the paper palette, so the old sections
- * stay coherent until Phase 1 replaces them. Remove with src/components/ui.
- */
-@theme inline {
-  --color-background: var(--color-paper);
-  --color-foreground: var(--color-ink);
-  --color-card: var(--color-paper-raised);
-  --color-card-foreground: var(--color-ink);
-  --color-popover: var(--color-paper-raised);
-  --color-popover-foreground: var(--color-ink);
-  --color-primary: var(--color-ink);
-  --color-primary-foreground: var(--color-paper);
-  --color-secondary: var(--color-paper-sunk);
-  --color-secondary-foreground: var(--color-ink);
-  --color-muted: var(--color-paper-sunk);
-  --color-muted-foreground: var(--color-ink-muted);
-  --color-accent: var(--color-paper-sunk);
-  --color-accent-foreground: var(--color-ink);
-  --color-destructive: var(--color-signal);
-  --color-border: var(--color-line);
-  --color-input: var(--color-line-strong);
-  --color-ring: var(--color-cobalt);
-}
-
 @layer base {
-  * {
-    @apply border-line;
-  }
-
   html {
     scroll-behavior: smooth;
+    /* Keeps anchor targets (#work, #contact) clear of the 64px sticky header. */
+    scroll-padding-top: 80px;
   }
 
   body {

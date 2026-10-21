@@ -70,20 +70,40 @@ export type Project = {
 
 export type CaseStudySection = {
   heading: string;
-  /** Markdown paragraphs. */
+  /** Paragraphs, in order. */
   body: Content<string>[];
+  /** Bullet points after the paragraphs, e.g. the parts he built. */
+  points?: Content<string>[];
 };
 
+/** One cell of the facts row under the title: "My role", "Timeline"… */
+export type CaseStudyFact = {
+  label: string;
+  value: Content<string>;
+};
+
+/**
+ * One case study, in the fixed order the page renders it (S2, C7, C11):
+ * problem → my role → AI in the build → solution → architecture → test evidence → impact.
+ */
 export type CaseStudy = {
   slug: string;
+  /** One sentence under the title: what it is and for whom. */
   contextLine: string;
+  facts: CaseStudyFact[];
+  /** The large visual under the header, usually the demo. */
+  hero: MediaItem;
   problem: CaseStudySection;
   role: CaseStudySection;
   aiInTheBuild: CaseStudySection;
   solution: CaseStudySection;
-  media: MediaItem[];
+  /** 3 to 5 final screens at most (C10). */
+  screens: MediaItem[];
   architecture: CaseStudySection;
+  architectureMedia: MediaItem[];
   testEvidence: CaseStudySection;
+  /** A test-run recording; absent when the project has no automated tests. */
+  testRun?: MediaItem;
   impact: Metric[];
   stack: string[];
 };

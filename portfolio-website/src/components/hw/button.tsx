@@ -1,4 +1,6 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
+import { isPlaceholder } from "@/content/placeholder";
+import type { Content } from "@/content/types";
 import { cn } from "@/lib/utils";
 
 export type ButtonVariant = "primary" | "secondary" | "text";
@@ -39,4 +41,21 @@ export function Button(props: ButtonProps) {
       {children}
     </button>
   );
+}
+
+type ActionButtonProps = Omit<LinkButtonProps, "href"> & { href: Content<string> };
+
+/**
+ * A link button whose target may not exist yet (the CV, Calendly). While it is a
+ * placeholder it renders as a visible, labelled slot instead of a dead link.
+ */
+export function ActionButton({ href, ...props }: ActionButtonProps) {
+  if (isPlaceholder(href)) {
+    return (
+      <span className={cn("hw-btn hw-btn--missing", props.className)} data-placeholder={href.label}>
+        [{href.label}]
+      </span>
+    );
+  }
+  return <Button {...props} href={href} />;
 }

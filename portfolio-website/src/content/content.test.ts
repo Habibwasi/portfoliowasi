@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { anchors } from "./anchors";
+import { caseStudies } from "./case-studies";
 import { isPlaceholder, listPlaceholders, placeholder } from "./placeholder";
 import { featuredProjects, moreProjects, projects } from "./projects";
 import { qaRecord, site, testimonial } from "./site";
 
-const allContent = { site, qaRecord, testimonial, projects };
+const allContent = { site, qaRecord, testimonial, projects, caseStudies };
 
 describe("placeholders", () => {
   it("creates and detects a placeholder", () => {
