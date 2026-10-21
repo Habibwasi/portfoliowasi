@@ -1,6 +1,6 @@
 # Spec: Phase 2 — Ridly case study
 
-Roadmap items 2.1–2.3 · Status: done locally (2026-10-22); CI on `redesign` once merged; missing content tracked in roadmap 7.3 · Branch `phase-2-ridly`, merged into `redesign`
+Roadmap items 2.1–2.3 · Status: done (closed 2026-10-22; CI passes on `redesign`; missing content tracked in roadmap 7.3) · Branch `phase-2-ridly`, merged into `redesign`
 
 ## Goal
 

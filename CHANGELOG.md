@@ -2,11 +2,11 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
-## Phase 2: Ridly case study (2026-10-22)
+## Phase 2: Ridly case study (2026-10-22, closed the same day)
 
-Spec: [specs/features/phase-2-ridly.md](specs/features/phase-2-ridly.md) · Roadmap items 2.1–2.3 · Branch `phase-2-ridly`, from `redesign`
+Spec: [specs/features/phase-2-ridly.md](specs/features/phase-2-ridly.md) · Roadmap items 2.1–2.3 · Branch `phase-2-ridly`, merged into `redesign`
 
-**Status: done locally, not committed yet.** CI on GitHub runs once the branch is pushed and merged into `redesign`. Missing Ridly content (problem, decisions, screens, videos, diagram) is in roadmap 7.3.
+**Status: done.** Every check passes in CI on `redesign` (commit `446015a`). Missing Ridly content (problem, decisions, screens, videos, diagram) is in roadmap 7.3.
 
 All three featured projects now have a case study. Ridly's card on Home links to `/work/ridly`, each case study has its own social preview in Fraunces, and videos sit behind a click-to-load player.
 
@@ -19,7 +19,8 @@ All three featured projects now have a case study. Ridly's card on Home links to
 | E2E + axe, desktop and phone | 50 passed (was 38). Zero axe violations on `/work/ridly` |
 | Production build | Pass. All three case studies and their OG images are static |
 | Video facade in a real browser | Checked with a temporary public video, then reverted: no request to YouTube or Google before the click; after it, the `youtube-nocookie.com` player with captions on, focus inside, no CSP errors |
-| Lighthouse, phone | `/work/ridly` and `/work/validation-portal` pass. `/` measured LCP 2.52–2.57 s against the 2.5 s budget, but `redesign` without any Phase 2 change measured 2.23–2.67 s (median 2.53 s) in the same session. The machine was slower than when Phase 1 measured 2.34 s, so this isn't a regression. CI on Linux is the reference |
+| CI on GitHub (`redesign`, commit `446015a`) | All three jobs pass: check, E2E + axe, Lighthouse (phone), so Home's LCP is within budget in CI |
+| Lighthouse, phone (local) | `/work/ridly` and `/work/validation-portal` pass. `/` measured LCP 2.52–2.57 s against the 2.5 s budget, but `redesign` without any Phase 2 change measured 2.23–2.67 s (median 2.53 s) in the same session. The machine was slower than when Phase 1 measured 2.34 s, so this isn't a regression. CI on Linux is the reference |
 
 ### What changed
 
@@ -48,7 +49,7 @@ All three featured projects now have a case study. Ridly's card on Home links to
 ### Left for you
 
 - **Ridly content** (roadmap 7.3): problem text, two or three decisions, one concrete example of correcting AI output, 3–5 screens, the demo video and the k6 run recording (YouTube IDs, with captions), the architecture diagram. The repo already has `architecture-diagrams.html`, `hop-dataflow.drawio` and a marketing video with a `.vtt` voiceover that may serve.
-- **Commit, push and merge:** nothing from Phase 2 is committed yet.
+- ~~**Commit, push and merge.**~~ Done: `446015a` is on `redesign`, and CI passes.
 
 ## Phase 1: Launch (2026-10-21, closed 2026-10-22)
 

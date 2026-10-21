@@ -56,7 +56,7 @@ The smallest site that passes the 10-second scan and lets a tech lead click into
 
 Then it is reviewed on the `redesign` branch's Vercel preview. Production waits: `redesign` merges into `main` only after Phase 7 (see "Branches and deployment" below).
 
-## Phase 2: Ridly case study · done locally (2026-10-22); CI on `redesign` once merged
+## Phase 2: Ridly case study · done (closed 2026-10-22)
 
 Spec: [phase-2-ridly.md](../features/phase-2-ridly.md)
 
