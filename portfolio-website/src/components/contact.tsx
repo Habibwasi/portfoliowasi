@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -83,7 +83,7 @@ export function Contact() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Get In Touch</h2>
-          <p className="text-foreground/60 max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             I'm always interested in hearing about new opportunities and projects. Feel free to reach out!
           </p>
         </motion.div>
@@ -110,7 +110,7 @@ export function Contact() {
                     </div>
                   </div>
                   <h3 className="font-bold mb-2">{info.label}</h3>
-                  <p className="text-foreground/60 text-sm">{info.value}</p>
+                  <p className="text-muted-foreground text-sm">{info.value}</p>
                 </Card>
               </motion.a>
             );
@@ -175,7 +175,7 @@ export function Contact() {
               </div>
 
               <div className="flex items-center justify-between">
-                <p className="text-sm text-foreground/60">
+                <p className="text-sm text-muted-foreground">
                   I'll get back to you as soon as possible.
                 </p>
                 <Button

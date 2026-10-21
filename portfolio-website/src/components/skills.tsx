@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Card } from './ui/card';
 
 const skillCategories = [
@@ -39,7 +39,7 @@ export function Skills() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Technical Skills</h2>
-          <p className="text-foreground/60 max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             A comprehensive overview of languages, frameworks, tools, and specializations I've developed throughout my studies and projects
           </p>
         </motion.div>

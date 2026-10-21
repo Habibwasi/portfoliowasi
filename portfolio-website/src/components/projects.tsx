@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Github, ExternalLink } from 'lucide-react';
@@ -49,7 +49,7 @@ const projects = [
 
 export function Projects() {
   return (
-    <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+    <section id="work" className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -60,7 +60,7 @@ export function Projects() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Featured Projects</h2>
-          <p className="text-foreground/60 max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             Here are some of my most significant academic and personal projects that demonstrate my full-stack development capabilities
           </p>
         </motion.div>
@@ -82,7 +82,7 @@ export function Projects() {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-                      <p className="text-foreground/70 text-sm">{project.subtitle}</p>
+                      <p className="text-muted-foreground text-sm">{project.subtitle}</p>
                     </div>
                     <div className="flex gap-2">
                       <a
@@ -98,7 +98,7 @@ export function Projects() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-foreground/70 mb-6 leading-relaxed">
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
                     {project.description}
                   </p>
 
@@ -107,7 +107,7 @@ export function Projects() {
                     <p className="text-sm font-semibold mb-3 text-foreground/80">Key Highlights:</p>
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {project.highlights.map((highlight, i) => (
-                        <li key={i} className="text-sm text-foreground/60 flex items-start gap-2">
+                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                           <span className="text-blue-500 mt-1">•</span>
                           <span>{highlight}</span>
                         </li>

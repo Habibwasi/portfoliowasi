@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { Award, TrendingUp, Target, CheckCircle2, Medal } from 'lucide-react';
@@ -52,7 +52,7 @@ export function Experience() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">Professional Experience</h2>
-          <p className="text-foreground/70 max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             Quality Assurance and Software Testing expertise gained through real-world projects
           </p>
         </motion.div>
@@ -69,7 +69,7 @@ export function Experience() {
               <div>
                 <h3 className="text-2xl font-bold mb-2">QA Tester</h3>
                 <p className="text-lg text-foreground/80 mb-1">uTest by Applause</p>
-                <p className="text-sm text-foreground/60">Remote • 2024 - Present</p>
+                <p className="text-sm text-muted-foreground">Remote • 2024 - Present</p>
               </div>
               <div className="flex gap-2 self-start flex-wrap">
                 <Badge variant="secondary" className="px-4 py-2 text-sm">
@@ -83,7 +83,7 @@ export function Experience() {
             </div>
 
             <div className="space-y-4 mb-8">
-              <p className="text-foreground/70 leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed">
                 Professional crowdtesting platform where I conduct comprehensive quality assurance testing 
                 across web, mobile, and desktop applications for global companies. Specialized in identifying 
                 critical bugs, usability issues, and functionality problems before product releases.
@@ -91,7 +91,7 @@ export function Experience() {
 
               <div className="space-y-2">
                 <h4 className="font-semibold text-foreground/90">Key Responsibilities:</h4>
-                <ul className="space-y-2 text-foreground/70">
+                <ul className="space-y-2 text-muted-foreground">
                   <li className="flex gap-2">
                     <span className="text-blue-500 mt-1">•</span>
                     <span>Execute test cases across multiple platforms and devices to ensure cross-platform compatibility</span>
@@ -137,7 +137,7 @@ export function Experience() {
                       <div className="text-xs font-semibold text-foreground/80 mb-1">
                         {stat.label}
                       </div>
-                      <div className="text-xs text-foreground/60">
+                      <div className="text-xs text-muted-foreground">
                         {stat.description}
                       </div>
                     </Card>
@@ -158,14 +158,14 @@ export function Experience() {
                   >
                     {category.name}
                     <span className={`ml-2 font-bold ${
-                      category.rating === 'S' ? 'text-blue-500' : 'text-foreground/60'
+                      category.rating === 'S' ? 'text-blue-500' : 'text-muted-foreground'
                     }`}>
                       [{category.rating}]
                     </span>
                   </Badge>
                 ))}
               </div>
-              <p className="text-xs text-foreground/50 mt-3">
+              <p className="text-xs text-muted-foreground mt-3">
                 S = Silver
               </p>
             </div>
@@ -183,19 +183,19 @@ export function Experience() {
           <Card className="p-6 text-center">
             <div className="text-3xl font-bold text-blue-500 mb-2">131</div>
             <div className="text-sm font-semibold mb-1">Test Cases</div>
-            <div className="text-xs text-foreground/60">Successfully Executed</div>
+            <div className="text-xs text-muted-foreground">Successfully Executed</div>
           </Card>
           
           <Card className="p-6 text-center">
             <div className="text-3xl font-bold text-green-500 mb-2">57</div>
             <div className="text-sm font-semibold mb-1">Products Tested</div>
-            <div className="text-xs text-foreground/60">Across Multiple Industries</div>
+            <div className="text-xs text-muted-foreground">Across Multiple Industries</div>
           </Card>
           
           <Card className="p-6 text-center">
             <div className="text-3xl font-bold text-purple-500 mb-2">30</div>
             <div className="text-sm font-semibold mb-1">Issues Reported</div>
-            <div className="text-xs text-foreground/60">High-Impact Bugs Found</div>
+            <div className="text-xs text-muted-foreground">High-Impact Bugs Found</div>
           </Card>
         </motion.div>
       </div>
