@@ -17,7 +17,7 @@ Get the codebase ready to build on: tokens, content layer, tests, CI.
 | 0.3 | Typed content layer: `projects.ts`, `case-studies/<slug>.ts`, `site.ts`, stable section anchors, and the `Placeholder` component | — | done |
 | 0.4 | Base components from the design system: Button, Tag (incl. `--ai`), Metric, MediaFrame, ProjectCard, Testimonial | V8 | done |
 | 0.5 | Tests: Vitest + Testing Library, Playwright + axe, Lighthouse CI with the first-view budget, and a `test` script | P1 | done |
-| 0.6 | GitHub Actions CI on every push and PR; `.env.example`; static CSP header; Upstash set up | — | done, except creating the Upstash account (yours) |
+| 0.6 | GitHub Actions CI on every push and PR; `.env.example`; static CSP header; Upstash set up | — | done |
 | 0.7 | Site shell: header with the text nav (Work, About, CV, Contact); footer with GitHub and LinkedIn kept secondary, plus the repo and CI badge; reduced-motion handling; focus ring | G5, P3, P4 | done |
 | 0.8 | Fix the outdated design system pages: ProjectCard order, "Justit" → Just Eat, "Hop" → Ridly in samples, Llama 3.3 out of the AI ring, Testimonial placement | V8 | done |
 

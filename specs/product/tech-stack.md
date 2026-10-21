@@ -206,7 +206,7 @@ GitHub Actions runs lint, typecheck, Vitest and build on every push and PR, then
 | `RESEND_API_KEY` | `/api/contact` | Exists today, undocumented |
 | `GROQ_API_KEY` | `/api/guide` | Server only |
 | `GROQ_EVAL_API_KEY` | `evals/guide` | Separate quota from production |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Rate limiting | Via the Vercel Marketplace integration |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Rate limiting | Via the Vercel Marketplace integration |
 | `NEXT_PUBLIC_CALENDLY_URL` | Book a call | Public |
 | `NEXT_PUBLIC_SITE_URL` | `metadataBase`, sitemap, OG | Public |
 

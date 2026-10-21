@@ -134,7 +134,7 @@ Version 13 of the [design system](https://claude.ai/artifact/P1shpLvwDNZziVVL3V3
 
 ### Left for you
 
-- **Upstash:** create the account through the Vercel Marketplace integration. Its environment variables are already in `.env.example`.
+- ~~**Upstash:** create the account through the Vercel Marketplace integration.~~ Done 2026-10-21. Vercel named the variables `KV_REST_API_URL` and `KV_REST_API_TOKEN`, and `.env.example` now uses those names.
 - **Portfolio Mockups artifact:** it still says "Hop" and "Llama 3.3" in places. Only the design system was corrected. Tell me if you want the mockups updated too.
 - **Commit and push:** nothing is committed. Once pushed, CI runs on GitHub and the footer badge goes live.
 

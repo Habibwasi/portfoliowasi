@@ -55,7 +55,7 @@ Environment variables (all listed in `.env.example`):
 | --- | --- |
 | `RESEND_API_KEY` | Sending the contact form |
 | `GROQ_API_KEY`, `GROQ_EVAL_API_KEY` | AI guide and its evaluation (Phase 3) |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Rate limiting (Phase 1 onwards) |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Rate limiting (Phase 1 onwards) |
 | `NEXT_PUBLIC_CALENDLY_URL` | "Book a call" |
 | `NEXT_PUBLIC_SITE_URL` | Metadata, sitemap and social previews |
 
