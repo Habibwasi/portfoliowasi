@@ -38,3 +38,31 @@ describe("design tokens in globals.css", () => {
     expect(css).not.toMatch(/@custom-variant dark/);
   });
 });
+
+/**
+ * next/font only sizes its fallbacks against Times New Roman and Arial, which Linux, ChromeOS
+ * and Android don't have. There the page jumps when the web fonts arrive (CI measured CLS 0.21),
+ * so each stack carries size-matched fallbacks for the fonts those systems do have.
+ */
+describe("font fallbacks", () => {
+  it.each([
+    ["font-display", ["Fraunces Fallback Clone", "Fraunces Fallback Android"]],
+    ["font-sans", ["Instrument Sans Fallback Clone", "Instrument Sans Fallback Android"]],
+  ])("%s lists metric-matched fallbacks after the web font", (token, families) => {
+    const stack = cssValue(token)!;
+    for (const family of families) expect(stack).toContain(`"${family}"`);
+  });
+
+  it.each([
+    ["Fraunces Fallback Clone", ["Liberation Serif", "Tinos"]],
+    ["Fraunces Fallback Android", ["Noto Serif"]],
+    ["Instrument Sans Fallback Clone", ["Liberation Sans", "Arimo"]],
+    ["Instrument Sans Fallback Android", ["Roboto"]],
+  ])("%s is a sized @font-face over local fonts", (family, locals) => {
+    const face = css.match(new RegExp(`@font-face\\s*\\{[^}]*font-family:\\s*"${family}";[^}]*\\}`))?.[0];
+    expect(face).toBeDefined();
+    for (const local of locals) expect(face).toContain(`local("${local}")`);
+    expect(face).toMatch(/size-adjust:/);
+    expect(face).toMatch(/ascent-override:/);
+  });
+});

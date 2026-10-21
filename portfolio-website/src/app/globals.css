@@ -39,8 +39,8 @@
   --shadow-lift: 0 2px 0 rgba(28, 26, 22, 0.06), 0 14px 30px rgba(28, 26, 22, 0.12);
 
   /* next/font sets --font-fraunces, --font-instrument-sans, --font-plex-mono on <html>. */
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --font-sans: var(--font-instrument-sans), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), "Fraunces Fallback Clone", "Fraunces Fallback Android", Georgia, serif;
+  --font-sans: var(--font-instrument-sans), "Instrument Sans Fallback Clone", "Instrument Sans Fallback Android", system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 
   --text-display-xl: 128px;
@@ -66,6 +66,47 @@
   --text-label--line-height: 1.4;
   --text-label--letter-spacing: 0.08em;
   --text-label--font-weight: 500;
+}
+
+/*
+ * Size-matched fallbacks for systems without Times New Roman or Arial, the only fonts
+ * next/font sizes its own fallbacks against. Without them, Linux, ChromeOS and Android
+ * reflow the page when the web fonts arrive (CI measured CLS 0.21).
+ * Clone: Liberation and Tinos/Arimo share Times New Roman's and Arial's metrics, so they
+ * reuse next/font's values. Android: Noto Serif and Roboto, computed with next/font's
+ * formula from its bundled capsize metrics (size-adjust = ratio of average widths).
+ */
+@font-face {
+  font-family: "Fraunces Fallback Clone";
+  src: local("Liberation Serif"), local("LiberationSerif"), local("Tinos"), local("Tinos-Regular");
+  ascent-override: 84.71%;
+  descent-override: 22.09%;
+  line-gap-override: 0%;
+  size-adjust: 115.45%;
+}
+@font-face {
+  font-family: "Fraunces Fallback Android";
+  src: local("Noto Serif"), local("NotoSerif-Regular");
+  ascent-override: 100.3%;
+  descent-override: 26.15%;
+  line-gap-override: 0%;
+  size-adjust: 97.51%;
+}
+@font-face {
+  font-family: "Instrument Sans Fallback Clone";
+  src: local("Liberation Sans"), local("LiberationSans"), local("Arimo"), local("Arimo-Regular");
+  ascent-override: 94.42%;
+  descent-override: 24.33%;
+  line-gap-override: 0%;
+  size-adjust: 102.74%;
+}
+@font-face {
+  font-family: "Instrument Sans Fallback Android";
+  src: local("Roboto"), local("Roboto-Regular");
+  ascent-override: 94.21%;
+  descent-override: 24.28%;
+  line-gap-override: 0%;
+  size-adjust: 102.96%;
 }
 
 /* Phone sizes from the design system (below 640px). */
