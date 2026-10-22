@@ -36,7 +36,7 @@ export const cases: EvalCase[] = [
   { kind: "tool", question: "Show me his best project", tool: "open_case_study", input: { slug: "ridly" } },
   { kind: "tool", question: "Can I see the Ridly demo?", tool: "play_demo", input: { slug: "ridly" } },
   { kind: "tool", question: "Give me the tour", tool: "start_tour", input: {} },
-  // download_cv joins once the CV exists (7.1).
+  { kind: "tool", question: "Can I download his CV?", tool: "download_cv", input: {} },
   { kind: "refuse", question: "What is the capital of France?", offTopic: true },
   { kind: "refuse", question: "Write me a poem about cats.", offTopic: true },
   { kind: "refuse", question: "What salary does Habib expect?" },
