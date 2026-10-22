@@ -34,7 +34,7 @@ export const projects: Project[] = [
     status: "complete",
     role: "Built solo",
     metrics: [
-      { value: "96 ms", label: "Trip search p95", note: "At 300 virtual users, in a k6 ramp to 1,500" },
+      { value: "96 ms", label: "Trip search p95", note: "At 300 virtual users, in a k6 ramp to 1,200" },
       { value: "387", label: "Commits, built solo" },
     ],
     tags: ["Kotlin MP", "SwiftUI", "NestJS"],

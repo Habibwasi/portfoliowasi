@@ -45,7 +45,7 @@ Availability line, shown with the intro or the contact section:
 
 What backs each claim:
 
-- **Full-stack and mobile, with numbers.** Ridly is an Android and iOS app built solo from one Kotlin Multiplatform codebase, with a NestJS backend and 387 commits. Its k6 load test ramped from 300 to 1,500 virtual users, and trip search had a p95 of 96 ms at the 300-user stage. Validation Portal is live at validation-portal.vercel.app.
+- **Full-stack and mobile, with numbers.** Ridly is an Android and iOS app built solo from one Kotlin Multiplatform codebase, with a NestJS backend and 387 commits. Its k6 load test ramped up to 1,200 virtual users, and trip search had a p95 of 96 ms at the 300-user stage. Validation Portal is live at validation-portal.vercel.app.
 - **RAG.** TopicTrail, the bachelor project, combines keyword and semantic search over vector embeddings. The site's own AI guide is a working RAG pipeline (chunking, embeddings, citations, "I don't know") over the site and CV.
 - **AI-native, with a human in charge.** Agents plan, Habib decides; AI drafts, he reviews every diff. The site names only the tools he actually uses (Claude Code, GitHub Copilot, LangGraph, RAG, GPT-OSS on Groq) and links each one to a project that proves it.
 - **Test-driven.** This site is the main proof: it is built test-first, with CI on every push, and its repo is linked from the footer. Ridly adds CI and k6 load tests, and AI_Workflow_Global has a 33-test harness. His uTest record (Silver, 92.26%, 268 test cycles, 46 issues reported) is shown as QA experience, not as TDD.

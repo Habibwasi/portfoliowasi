@@ -62,7 +62,7 @@ Spec: [phase-2-ridly.md](../features/phase-2-ridly.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 2.1 | **Ridly** case study: built solo; architecture; k6 evidence (ramped 300 → 600 → 1,500 virtual users, trip search p95 96 ms at the 300 stage); AI in the build (LangGraph planning, HITL, Claude Code and GitHub Copilot); screens and demo | C6–C11, AI5 | done (content in Phase 7) |
+| 2.1 | **Ridly** case study: built solo; architecture; k6 evidence (ramped up to 1,200 virtual users, trip search p95 96 ms at 300 users); AI in the build (LangGraph planning, HITL, Claude Code and GitHub Copilot); screens and demo | C6–C11, AI5 | done (content in Phase 7) |
 | 2.2 | Per-page OG images with Fraunces TTF | P6 | done |
 | 2.3 | Video facade: YouTube privacy-enhanced embed, poster, captions, loads on click | C11, P2 | done (videos in Phase 7) |
 
@@ -135,10 +135,11 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 ### Case study notes (7.3, 2026-10-22)
 
 - **Drafted for review:** Ridly's problem and the reasons behind its three decisions, and Validation Portal's problem, were written from the repositories (Habib asked for this). Habib reviews the wording.
-- **Ridly k6:** `apps/api/k6/load-test.js` doesn't match "300 → 600 → 1,500 VUs". Its largest profile, `breakpoint`, peaks at 1,200 (800 searching + 400 signed in); "1500" only appears as a latency threshold in ms. The site keeps the decided wording until Habib confirms where 1,500 comes from. No k6 results are committed, so the test-run frame stays a placeholder.
+- **Ridly k6:** the site said "300 → 600 → 1,500 VUs", but `apps/api/k6/load-test.js` peaks at 1,200 (`breakpoint`: 800 searching + 400 signed in); "1500" was a latency threshold in ms. Habib chose the repo's numbers (2026-10-22). No k6 results are committed, so the test-run frame is a chart of the ramp as configured, labelled as such, with the 96 ms point marked.
 - **Ridly CI:** the iOS job pipes Xcode through `xcpretty || true`, so an iOS build failure can't fail CI. The case study now says so, along with the known limits from `CODEBASE_EXPLORATION_REPORT.md`.
 - **Ridly push:** BullMQ runs deadline checks, recurring trips and search alerts; push goes through FCM and APNs directly. The earlier "BullMQ queues the push notifications" was wrong.
-- **Validation Portal media:** the live site has no `VITE_DEMO_VIDEO_URL`; its demo is a coded reel (`src/components/demo`) that renders the app's screens with sample data ("ShiftSwap"). The screens are frames of that reel; a 3-minute 1920×1080 recording with captions is at `Portfolio redesign/validation-portal-demo.webm`, outside the repo, for Habib to upload to YouTube. The guest flow can't be scripted (Cloudflare Turnstile).
+- **Validation Portal media:** the live site has no `VITE_DEMO_VIDEO_URL`; its demo is a coded reel (`src/components/demo`) that renders the app's screens with sample data ("ShiftSwap"). The screens are frames of that reel. The reel, recorded at 1920×1080 with its captions burned in, is on YouTube as `DqSZ-N4Znnc`. The guest flow can't be scripted (Cloudflare Turnstile).
+- **Ridly film:** on YouTube as `GB39N2Kh7Jk`, from `HOP-KMP/apps/web/dist/media/ridly-film-720p.mp4`. Its captions are in `ridly-film.vtt` next to it; upload that file to the YouTube video as English subtitles (C11 asks for captions). Poster: `ridly-film-poster.jpg`.
 - **Validation Portal sample data:** the reel's verdict says "Strong Signal" at 67% pain, below the 70% rule in its README. Worth fixing in the reel.
 
 ### CV text that disagrees with the site (found 2026-10-22)
@@ -219,7 +220,7 @@ All of it is collected in [Phase 7: Content handover](#phase-7-content-handover-
 | Item | Mockup or live site says | Repos show | Fix |
 | --- | --- | --- | --- |
 | Ridly commits | 382 | 387, all his | Use the current count, with "built solo" |
-| Ridly k6 | "96 ms trip search" | Ramp 300 → 600 → 1,500 VUs; p95 96 ms at 300 | Always state "p95" and the stage |
+| Ridly k6 | "96 ms trip search" | Breakpoint ramp to 1,200 VUs (800 searching + 400 signed in); p95 96 ms at 300 | Always state "p95" and the stage (1,500 corrected to the repo's 1,200 on 2026-10-22) |
 | Validation Portal commits | 104 | 111 | Use the current count |
 | Validation Portal model | Llama 3.3 via Groq | Groq `gpt-oss-20b` | Name `gpt-oss-20b` |
 | Validation Portal tests | — | No tests or CI | Evidence is the live demo, video and diagrams; no TEST RUN frame (a C11 exception) |

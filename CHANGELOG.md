@@ -11,7 +11,9 @@ Branch `phase-7-case-studies`. TopicTrail stays placeholders until Habib sends i
 - **Validation Portal:** built solo; the problem; three decisions (AI drafts that the founder must save, the AI behind session-checked serverless functions from day one, guest access deleted after seven days); Copilot and Claude Code; the model history (OpenAI → Gemini → Groq). New in the text: the AI question generator, the Mom Test bias check, translation into eight languages and the read-only report link. Five screens taken from the live demo reel, an architecture diagram drawn from the code, and a card cover.
 - **Site:** media can be phone-shaped (`shape: "phone"`); desktop screenshots show two per row; a unit test checks every case study image exists and has alt text.
 - **Accessibility fix found on the way:** the guide tile could cover a focused link near the bottom of the screen (the flaky keyboard test). `scroll-padding-bottom: 120px` keeps focus clear of it (WCAG 2.4.11).
-- **Left open:** Ridly's demo video and k6 recording, and where "1,500 VUs" comes from (the script peaks at 1,200); the YouTube ID for the Validation Portal recording; one concrete example of correcting Copilot or Claude Code on Validation Portal.
+- **Videos:** the Ridly film (`GB39N2Kh7Jk`, with its own poster) and the Validation Portal walkthrough (`DqSZ-N4Znnc`) play behind the click-to-load facade, and the guide's `play_demo` now offers both.
+- **k6, corrected to the repo:** the site said the ramp went to 1,500 users; `load-test.js` peaks at 1,200 (800 searching, 400 signed in). Every mention now says 1,200. With no results committed, the test-run frame shows the ramp as configured, labelled that way, with the 96 ms point at 300 users.
+- **Left open:** upload `ridly-film.vtt` to the Ridly video as English subtitles (the Validation Portal video has captions burned in); one concrete example of correcting Copilot or Claude Code on Validation Portal; TopicTrail.
 
 ## Phase 6: Polish (2026-10-22)
 

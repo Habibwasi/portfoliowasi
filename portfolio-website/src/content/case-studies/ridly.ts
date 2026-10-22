@@ -20,8 +20,9 @@ export const ridly: CaseStudy = {
   ],
   hero: {
     kind: "demo",
-    src: placeholder("Ridly demo video"),
-    caption: placeholder("Demo caption: one line on what the video shows"),
+    src: "GB39N2Kh7Jk",
+    caption: "A three-minute film: a passenger and a driver, from searching for a ride to paying in MobilePay.",
+    poster: "/work/ridly/film-poster.jpg",
   },
   problem: {
     heading: "Why it needed to exist",
@@ -112,7 +113,7 @@ export const ridly: CaseStudy = {
   testEvidence: {
     heading: "Proof it holds up",
     body: [
-      "A k6 load test ramped from 300 to 600 to 1,500 virtual users against the API. At the 300-user stage, trip search had a p95 of 96 ms.",
+      "k6 load tests ramp the API up in stages. The largest adds users every two minutes until 1,200 are active at once: 800 searching for trips and 400 signed in. At 300 virtual users, trip search had a p95 of 96 ms.",
       "A second k6 script attacks the API on purpose: missing fields, huge strings, broken tokens, unknown IDs and a burst of 50 requests a second on search. It fails if a single request gets a server error.",
       "CI runs the shared module's unit tests and builds the Android app on every push to main and every pull request into it. It builds the iOS app too, but that step can't fail the run yet, so an iOS build error would slip through.",
       "A review of the whole codebase lists what isn't solved yet, and that is the next work: two people booking the last seat at the same moment can both get it, completing a trip can fail halfway through creating the payment records, and creating the same recurring trip twice isn't fully prevented. The backend's own tests don't run in CI yet either.",
@@ -120,12 +121,13 @@ export const ridly: CaseStudy = {
   },
   testRun: {
     kind: "test-run",
-    src: placeholder("Ridly k6 run recording"),
-    caption: "The k6 ramp from 300 to 1,500 virtual users.",
+    src: "/work/ridly/k6-ramp.svg",
+    caption: "The breakpoint ramp as configured in load-test.js, up to 1,200 virtual users.",
+    alt: "A chart of the k6 breakpoint profile: searching users rise to 800 and signed-in users to 400 over 16 minutes, 1,200 in total, then ramp down. At 300 users, trip search had a p95 of 96 ms.",
   },
   impact: [
-    { value: "96 ms", label: "Trip search p95", note: "At 300 virtual users, in a k6 ramp to 1,500" },
-    { value: "1,500", label: "Virtual users", note: "Peak of the k6 ramp" },
+    { value: "96 ms", label: "Trip search p95", note: "At 300 virtual users, in a k6 ramp to 1,200" },
+    { value: "1,200", label: "Virtual users", note: "Peak of the k6 breakpoint ramp" },
     { value: "387", label: "Commits, built solo" },
     { value: "2", label: "Platforms", note: "Android and iOS from one Kotlin codebase" },
   ],

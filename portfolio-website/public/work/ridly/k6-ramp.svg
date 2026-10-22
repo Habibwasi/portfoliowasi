@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -60 1600 1060" role="img" aria-labelledby="t d">
+  <title id="t">Ridly k6 breakpoint ramp</title>
+  <desc id="d">The breakpoint profile in Ridly's k6 load test, as configured: every two minutes it adds 100 virtual users searching for trips and 50 signed-in users, reaching 800 and 400, 1,200 in total, at 16 minutes, then ramps down. Trip search had a p95 of 96 ms at 300 virtual users.</desc>
+  <style>
+    text { font-family: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; fill: #f5f1e8; }
+    .a { font-size: 20px; fill: #d9d0bf; }
+    .k { font-size: 22px; }
+    .g { stroke: #5c564c; stroke-width: 1; }
+  </style>
+  <rect y="-60" width="1600" height="1060" fill="#1c1a16"/>
+  <text class="k" x="150" y="40">$ k6 run -e TEST_TYPE=breakpoint load-test.js</text>
+  <text class="a" x="150" y="76">stages as configured · virtual users over minutes</text>
+  <path class="g" d="M150 870.0H1530"/><text class="a" x="134" y="876.0" text-anchor="end">0</text><path class="g" d="M150 680.0H1530"/><text class="a" x="134" y="686.0" text-anchor="end">300</text><path class="g" d="M150 490.0H1530"/><text class="a" x="134" y="496.0" text-anchor="end">600</text><path class="g" d="M150 300.0H1530"/><text class="a" x="134" y="306.0" text-anchor="end">900</text><path class="g" d="M150 110.0H1530"/><text class="a" x="134" y="116.0" text-anchor="end">1,200</text><text class="a" x="150.0" y="906" text-anchor="middle">0</text><text class="a" x="303.3" y="906" text-anchor="middle">2</text><text class="a" x="456.7" y="906" text-anchor="middle">4</text><text class="a" x="610.0" y="906" text-anchor="middle">6</text><text class="a" x="763.3" y="906" text-anchor="middle">8</text><text class="a" x="916.7" y="906" text-anchor="middle">10</text><text class="a" x="1070.0" y="906" text-anchor="middle">12</text><text class="a" x="1223.3" y="906" text-anchor="middle">14</text><text class="a" x="1376.7" y="906" text-anchor="middle">16</text><text class="a" x="1530.0" y="906" text-anchor="middle">18</text>
+  <path d="M150 870H1530M150 870V110" stroke="#d9d0bf" stroke-width="1.5" fill="none"/>
+  <polyline points="150.0,870.0 303.3,775.0 456.7,680.0 610.0,585.0 763.3,490.0 916.7,395.0 1070.0,300.0 1223.3,205.0 1376.7,110.0 1530.0,870.0" fill="none" stroke="#f5f1e8" stroke-width="2" stroke-dasharray="8 6"/>
+  <polyline points="150.0,870.0 303.3,806.7 456.7,743.3 610.0,680.0 763.3,616.7 916.7,553.3 1070.0,490.0 1223.3,426.7 1376.7,363.3 1530.0,870.0" fill="none" stroke="#e8613a" stroke-width="4" stroke-linejoin="round"/>
+  <polyline points="150.0,870.0 303.3,838.3 456.7,806.7 610.0,775.0 763.3,743.3 916.7,711.7 1070.0,680.0 1223.3,648.3 1376.7,616.7 1530.0,870.0" fill="none" stroke="#f2d35b" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="1376.7" cy="110.0" r="7" fill="#f5f1e8"/>
+  <text class="k" x="1360.7" y="90.0" text-anchor="end">1,200 total</text>
+  <path d="M190 167.0h44" stroke="#e8613a" stroke-width="4"/>
+  <text class="k" x="250" y="175.0" style="fill:#e8613a">searching trips, up to 800</text>
+  <path d="M190 217.7h44" stroke="#f2d35b" stroke-width="4"/>
+  <text class="k" x="250" y="225.7" style="fill:#f2d35b">signed in, up to 400</text>
+  <path d="M190 268.3h44" stroke="#f5f1e8" stroke-width="2" stroke-dasharray="8 6"/>
+  <text class="k" x="250" y="276.3">total</text>
+  <path d="M456.7 680.0V870" stroke="#f5f1e8" stroke-width="1.5" stroke-dasharray="4 5"/>
+  <circle cx="456.7" cy="680.0" r="7" fill="#f5f1e8"/>
+  <text class="k" x="474.7" y="852.3">300 users: trip search p95 96 ms</text>
+</svg>

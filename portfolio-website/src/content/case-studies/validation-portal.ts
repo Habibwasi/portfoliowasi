@@ -20,8 +20,9 @@ export const validationPortal: CaseStudy = {
   ],
   hero: {
     kind: "demo",
-    src: placeholder("Validation Portal demo video"),
-    caption: placeholder("Demo caption: one line on what the video shows"),
+    src: "DqSZ-N4Znnc",
+    caption: "A three-minute walkthrough of the live app, from a new idea to the AI verdict, with sample data.",
+    poster: "/work/validation-portal/dashboard.png",
   },
   problem: {
     heading: "Why it needed to exist",

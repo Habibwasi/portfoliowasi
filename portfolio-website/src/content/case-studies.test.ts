@@ -63,7 +63,7 @@ describe("Ridly", () => {
     expect(search.label).toMatch(/p95/);
     expect(search.note).toMatch(/300 virtual users/);
     expect(study.testEvidence.body.join(" ")).toMatch(/p95 of 96 ms/);
-    expect(study.testEvidence.body.join(" ")).toMatch(/300 to 600 to 1,500/);
+    expect(study.testEvidence.body.join(" ")).toMatch(/1,200 are active/);
   });
 
   it("names only the AI tools actually used (AI5)", () => {
