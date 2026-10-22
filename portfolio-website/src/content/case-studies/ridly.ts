@@ -1,4 +1,3 @@
-import { placeholder } from "../placeholder";
 import type { CaseStudy } from "../types";
 
 /**

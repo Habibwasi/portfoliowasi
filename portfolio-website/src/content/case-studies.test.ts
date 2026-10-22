@@ -110,8 +110,16 @@ describe("TopicTrail", () => {
     }
   });
 
-  it("keeps screens and demo as placeholders until they exist", () => {
-    expect(isPlaceholder(study.hero.src)).toBe(true);
-    expect(study.screens.every((s) => isPlaceholder(s.src))).toBe(true);
+  it("shows the planned design, not screens or a demo, while nothing runs (7.3)", () => {
+    expect(study.hero.kind).toBe("architecture");
+    expect(study.screens).toEqual([]);
+    expect(study.facts).toContainEqual({ label: "My role", value: "Team of two" });
+  });
+
+  it("dates every progress note", () => {
+    for (const note of study.testEvidence.points ?? []) {
+      // A date with a year before the colon, or the "Next:" line.
+      expect(typeof note === "string" && /^(Next|[^:]*\b20\d\d):/.test(note), String(note)).toBe(true);
+    }
   });
 });

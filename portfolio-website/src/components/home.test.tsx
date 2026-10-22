@@ -133,9 +133,11 @@ describe("FeaturedWork", () => {
 });
 
 describe("Proof", () => {
-  it("shows the testimonial slot and the one-line QA record", () => {
+  it("shows the team lead's testimonial and the one-line QA record", () => {
     render(<Proof />);
-    expect(screen.getByText("Team leader, Just Eat")).toBeInTheDocument();
+    expect(screen.getByText("Kasper Krogh")).toBeInTheDocument();
+    expect(screen.getByText("Team Lead, Just Eat Takeaway.com")).toBeInTheDocument();
+    expect(screen.getByText(/among the highest in the country/)).toBeInTheDocument();
     expect(screen.getByText(/92\.26%/)).toBeInTheDocument();
     expect(screen.getByText(/268 test cycles/)).toBeInTheDocument();
   });

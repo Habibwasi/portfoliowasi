@@ -427,6 +427,8 @@ a.hw-card:hover {
 .hw-footer {
   margin-top: var(--spacing-space-7);
   padding-block: var(--spacing-space-5);
+  /* Room for the guide tile (bottom 108px) so it never covers the last footer link (2.4.11). */
+  padding-bottom: calc(var(--spacing-space-5) + 96px);
   background: var(--color-paper-sunk);
   border-top: 1px solid var(--color-line);
   font-size: var(--text-small);

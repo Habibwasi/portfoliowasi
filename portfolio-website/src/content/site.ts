@@ -107,8 +107,17 @@ export const qaRecord = {
   line: "Silver-rated QA tester at uTest since June 2024: 268 test cycles, 46 issues reported, 92.26% rating.",
 } as const;
 
+/**
+ * Two sentences, word for word, from Kasper Krogh's LinkedIn recommendation (20 October 2026;
+ * he managed Habib directly). The full text: "I have been very fortunate to have Habib as one of
+ * my employees during my employment as Team Lead at Just Eat Takeaway.com. Habib is incredibly
+ * efficient at his tasks and his performance numbers were among the highest in the country. He is
+ * reliable, good at problem solving and flexible. I can only give my warmest recommendations and
+ * trust he will be a great addition in his future positions."
+ */
 export const testimonial: Testimonial = {
-  quote: placeholder("Team leader's words, two sentences at most"),
-  name: placeholder("Name Surname"),
-  role: "Team leader, Just Eat",
+  quote:
+    "Habib is incredibly efficient at his tasks and his performance numbers were among the highest in the country. He is reliable, good at problem solving and flexible.",
+  name: "Kasper Krogh",
+  role: "Team Lead, Just Eat Takeaway.com",
 };

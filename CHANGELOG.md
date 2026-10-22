@@ -13,6 +13,10 @@ Branch `phase-7-case-studies`. TopicTrail stays placeholders until Habib sends i
 - **Accessibility fix found on the way:** the guide tile could cover a focused link near the bottom of the screen (the flaky keyboard test). `scroll-padding-bottom: 120px` keeps focus clear of it (WCAG 2.4.11).
 - **Videos:** the Ridly film (`GB39N2Kh7Jk`, with its own poster) and the Validation Portal walkthrough (`DqSZ-N4Znnc`) play behind the click-to-load facade, and the guide's `play_demo` now offers both.
 - **k6, corrected to the repo:** the site said the ramp went to 1,500 users; `load-test.js` peaks at 1,200 (800 searching, 400 signed in). Every mention now says 1,200. With no results committed, the test-run frame shows the ramp as configured, labelled that way, with the 96 ms point at 300 users.
+- **TopicTrail:** written from the project files: the problem (from the proposal and PRD), your part of a two-person team, four decisions (the 0.1 watch-ratio threshold, keyword as the baseline for semantic search, privacy and the ToS limits, the move from a local-first Electron app to a server with per-user encryption), the evaluation plan, and dated progress. The hero is a new planned-architecture diagram; your class diagram sits under Architecture. "Local, first, opt-in capture" is gone, because the October design changed it.
+- **Testimonial (7.4):** two sentences from Kasper Krogh's LinkedIn recommendation, word for word.
+- **Lighthouse fix:** Validation Portal's page missed the 2.5 s LCP budget in CI (3.16 s) once its video poster arrived, because the poster loaded lazily. The case study hero now preloads; locally that page went from 3.28 s to 2.21–2.47 s.
+- **Footer fix:** at the very bottom of a page the guide tile covered the footer's last link; the footer has room for it now.
 - **Left open:** upload `ridly-film.vtt` to the Ridly video as English subtitles (the Validation Portal video has captions burned in); one concrete example of correcting Copilot or Claude Code on Validation Portal; TopicTrail.
 
 ## Phase 6: Polish (2026-10-22)

@@ -25,7 +25,7 @@ describe("placeholders", () => {
     const missing = listPlaceholders(allContent);
     expect(missing).not.toContain("CV PDF");
     expect(missing).toContain("Calendly URL");
-    expect(missing).toContain("Name Surname");
+    expect(missing).not.toContain("Name Surname");
   });
 });
 

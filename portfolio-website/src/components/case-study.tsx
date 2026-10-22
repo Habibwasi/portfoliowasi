@@ -16,15 +16,15 @@ function Prose({ value }: { value: Content<string> }) {
 const isVideo = (item: MediaItem) => item.kind === "demo" || item.kind === "test-run";
 
 /** Image under /public, a YouTube video behind the facade (2.3), or a placeholder. */
-function Media({ item, className }: { item: MediaItem; className?: string }) {
+function Media({ item, className, preload }: { item: MediaItem; className?: string; preload?: boolean }) {
   const { src } = item;
   let content = null;
   if (!isPlaceholder(src)) {
     content =
       isVideo(item) && !src.startsWith("/") ? (
-        <VideoFacade videoId={src} title={isPlaceholder(item.caption) ? mediaLabels[item.kind] : item.caption} poster={item.poster} />
+        <VideoFacade videoId={src} title={isPlaceholder(item.caption) ? mediaLabels[item.kind] : item.caption} poster={item.poster} preload={preload} />
       ) : (
-        <Image src={src} alt={item.alt ?? ""} fill sizes={item.shape === "phone" ? "(max-width: 640px) 50vw, 240px" : "(max-width: 640px) 100vw, 1200px"} style={{ objectFit: "contain" }} />
+        <Image src={src} alt={item.alt ?? ""} fill preload={preload} sizes={item.shape === "phone" ? "(max-width: 640px) 50vw, 240px" : "(max-width: 640px) 100vw, 1200px"} style={{ objectFit: "contain" }} />
       );
   }
   return (
@@ -97,7 +97,7 @@ export function CaseStudyView({ project, study }: { project: Project; study: Cas
       </header>
 
       <div id={caseStudyDemoId} className="hw-container hw-cs-hero">
-        <Media item={study.hero} className="hw-cs-hero__frame" />
+        <Media item={study.hero} className="hw-cs-hero__frame" preload />
       </div>
 
       <Section number={1} name="Problem" section={study.problem} />
