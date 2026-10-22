@@ -90,8 +90,11 @@ describe("site", () => {
     expect(qaRecord.issuesReported).toBe(46);
   });
 
-  it("credits the testimonial to Just Eat", () => {
-    expect(testimonial.role).toBe("Team leader, Just Eat");
+  it("credits the testimonial to the Just Eat team lead (7.4)", () => {
+    expect(testimonial.name).toBe("Kasper Krogh");
+    expect(testimonial.role).toBe("Team Lead, Just Eat Takeaway.com");
+    // Two sentences at most (C15).
+    expect(String(testimonial.quote).split(/(?<=\.) /)).toHaveLength(2);
   });
 });
 

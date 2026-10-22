@@ -75,7 +75,7 @@ export const topictrail: CaseStudy = {
     heading: "Evaluation plan and progress",
     body: [
       "Personal search can’t be tested on a shared benchmark, because everyone’s archive is different and private. So each participant will be tested on their own TopicTrail archive, with tasks built from what they actually watched: find a known item (“what article did I read last week?”), look up a fact (“what did I read about AI?”) and gather everything on a subject.",
-      "Search is judged by comparing keyword, semantic and combined retrieval on those tasks. Summaries are judged with RAGAS (faithfulness, context precision and recall, answer relevance) plus human spot checks. The research behind the plan also recommends MRR and Hit@k for re-finding and V-measure for topics; those are kept for after the first version.",
+      "Search is judged by comparing keyword, semantic and combined retrieval on those tasks. Summaries are judged on faithfulness, context precision and recall, and answer relevance, plus human spot checks. The research behind the plan also recommends MRR and Hit@k for re-finding and V-measure for topics; those are kept for after the first version.",
     ],
     points: [
       "September 2026: project proposal, scoped to Chrome and YouTube first.",

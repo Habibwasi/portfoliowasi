@@ -73,9 +73,9 @@ describe("buildChunks", () => {
     expect(nav?.text).not.toMatch(/CV/);
   });
 
-  it("leaves the testimonial out while it is a placeholder", () => {
-    expect(isPlaceholder(testimonial.quote)).toBe(true);
-    expect(chunks.some((c) => c.id === "testimonial")).toBe(false);
+  it("includes the testimonial now that it is real (7.4)", () => {
+    expect(isPlaceholder(testimonial.quote)).toBe(false);
+    expect(chunks.find((c) => c.id === "testimonial")?.text).toContain("Kasper Krogh");
   });
 });
 
