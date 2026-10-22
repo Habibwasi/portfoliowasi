@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0–3 done; Phase 4 next)
+Last updated: 2026-10-22 (Phases 0–3 done; Phase 4 in progress)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -79,14 +79,16 @@ Spec: [phase-3-guide.md](../features/phase-3-guide.md)
 | 3.5 | "How this guide works" link to its architecture | AI6 | done |
 | 3.6 | Search-only fallback: when the guide is busy (limit, no key, Groq error) it still says so, and lists the parts of the site that match the question, with links and excerpts | GD5 | done |
 
-## Phase 4: AI story, proof and About
+## Phase 4: AI story, proof and About · in progress
+
+Spec: [phase-4-ai-story-about.md](../features/phase-4-ai-story-about.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 4.1 | "How I build with AI": AIWorkflow diagram (Plan → HITL → Build → Test → Ship), and AI toolkit tags, each linked to a project that proves it | AI2, AI6 | planned |
-| 4.2 | Testimonial with the real quote, name and role, once supplied | C15 | planned |
-| 4.3 | Skills as a tag row, each tag linked to the projects that use it (the orbit comes in Phase 5) | C13, C14, AI4 | planned |
-| 4.4 | About page: short intro, photos (placeholders), the journey line (Upwork → uTest → Just Eat → Validation Portal → Ridly → TopicTrail → graduation), full QA record, CV and email | C18, C19, V3, V7 | planned |
+| 4.1 | "How I build with AI": AIWorkflow diagram (Plan → HITL → Build → Test → Ship), and AI toolkit tags, each linked to a project that proves it | AI2, AI6 | in progress (built, awaiting CI on `redesign`) |
+| 4.2 | Testimonial with the real quote, name and role, once supplied | C15 | moved to 7.4 (component and placeholder exist since 1.7) |
+| 4.3 | Skills as a tag row, each tag linked to the projects that use it (the orbit comes in Phase 5) | C13, C14, AI4 | in progress (built, awaiting CI on `redesign`) |
+| 4.4 | About page: short intro, photos (placeholders), the journey line (Upwork → uTest → Just Eat → Validation Portal → Ridly → TopicTrail → graduation), full QA record, CV and email | C18, C19, V3, V7 | in progress (built, awaiting CI on `redesign`); photos in 7.5 |
 
 C17 (experience and skills side by side) is reinterpreted: experience lives on About, and skills on Home link to it.
 
@@ -119,7 +121,7 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 7.2 | Calendly URL | `NEXT_PUBLIC_CALENDLY_URL` in Vercel and `.env.local` | open |
 | 7.3 | Case study content: TopicTrail (role, problem, AI in the build, architecture diagrams, evaluation plan, dated progress notes, screens); Validation Portal (role, problem, AI in the build, demo video, screens, architecture diagram); Ridly (problem text, "what I built" decisions, one concrete example of correcting AI output, 3–5 screens, demo video, k6 run recording, the real architecture diagram). Videos go on YouTube with English captions; only the video ID goes in the content, plus an optional poster image | `src/content/case-studies/`, media in `public/work/<slug>/` | open |
 | 7.4 | Testimonial: quote, name and role of the Just Eat team leader, with their permission | `testimonial` in `src/content/site.ts` (closes 4.2) | open |
-| 7.5 | Photos with captions, line-art portrait, drawings of your own objects; journey dates checked | About page (4.4), hero (5.5), object nav (5.4) | open |
+| 7.5 | Photos with captions (three on About), line-art portrait, drawings of your own objects. Check the About facts taken from the mockup: every journey date, "SDU in Sønderborg", and "91% on time" at Just Eat | `about.photos` and `about.journey` in `src/content/about.ts` (4.4), hero (5.5), object nav (5.4) | open |
 | 7.6 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | open |
 | 7.7 | Role text for the More projects (Undershelf, Deskinct, Medication Adherence App) | `src/content/projects.ts` | open |
 | 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY`. When adding to Production, check `VERCEL_SUPPORT_LARGE_FUNCTION=1` is there too (set for Preview on 2026-10-22) | open |
@@ -162,6 +164,8 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 2026-10-22 | The guide's "Best project" jump goes to Ridly; "AI workflow" goes to Ridly's "AI in the build" until 4.1 adds `#ai` on Home | — |
 | 2026-10-22 | `GROQ_EVAL_API_KEY` must come from a separate Groq organisation, because Groq's limits are per organisation | Tech stack "separate key" |
 | 2026-10-22 | The guide's site-wide cap is 90 questions a day: Groq's 200K tokens a day allow roughly 100 answers | Phase 3 "300 a day" |
+| 2026-10-22 | Skills live in one list (`skills.ts`) with their proofs; the AI toolkit and the Stack row both read it. The toolkit drops Llama 3.3 and RAGAS and adds "GPT-OSS via Groq"; this site and its guide count as proof | Mockup toolkit |
+| 2026-10-22 | The guide's "AI workflow" jump goes to `/#ai` | Earlier jump to Ridly's "AI in the build" |
 | 2026-10-22 | `VERCEL_SUPPORT_LARGE_FUNCTION=1` is set in Vercel: the preview deployment failed on the size of `/api/guide` (ONNX runtime) despite tracing only the Linux binary | Phase 3 "58 MB, far under 250 MB" |
 
 ## Open decisions

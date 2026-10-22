@@ -77,7 +77,7 @@ describe("GuideLauncher", () => {
     const links = within(jumps).getAllByRole("link");
     expect(links.map((a) => [a.textContent, a.getAttribute("href")])).toEqual([
       ["Best project", "/work/ridly"],
-      ["AI workflow", "/work/ridly#cs-ai-in-the-build"],
+      ["AI workflow", "/#ai"],
       ["Proof", "/#proof"],
       ["Contact", "/#contact"],
     ]);

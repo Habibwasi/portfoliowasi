@@ -7,7 +7,8 @@
         "http://localhost:3200/",
         "http://localhost:3200/work/validation-portal",
         "http://localhost:3200/work/ridly",
-        "http://localhost:3200/guide"
+        "http://localhost:3200/guide",
+        "http://localhost:3200/about"
       ],
       "numberOfRuns": 3,
       "settings": {

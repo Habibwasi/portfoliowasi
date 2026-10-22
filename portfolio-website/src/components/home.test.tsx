@@ -1,13 +1,16 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { aiSkills, techSkills } from "@/content/skills";
 import { placeholder } from "@/content/placeholder";
 import { ContactForm } from "./contact-form";
 import { ContactSection } from "./contact-section";
 import { FeaturedWork } from "./featured-work";
 import { Hero } from "./hero";
+import { AiWorkflow } from "./ai-workflow";
 import { ActionButton } from "./hw";
 import { Proof } from "./proof";
+import { Stack } from "./stack";
 
 describe("Hero", () => {
   it("shows the name as the only h1, the intro and availability", () => {
@@ -76,6 +79,11 @@ describe("Proof", () => {
     expect(screen.getByText("Team leader, Just Eat")).toBeInTheDocument();
     expect(screen.getByText(/92\.26%/)).toBeInTheDocument();
     expect(screen.getByText(/268 test cycles/)).toBeInTheDocument();
+  });
+
+  it("links to the full QA record on About", () => {
+    render(<Proof />);
+    expect(screen.getByRole("link", { name: "See the full record" })).toHaveAttribute("href", "/about#qa-record");
   });
 });
 
@@ -153,5 +161,56 @@ describe("ContactForm", () => {
     render(<ContactForm email="habibwasi9@gmail.com" />);
     await fillAndSend();
     expect(await screen.findByRole("alert")).toHaveTextContent(/couldn't reach the server/i);
+  });
+});
+
+describe("AiWorkflow", () => {
+  it("shows the five steps in order, with the human review loop said in text", () => {
+    render(<AiWorkflow />);
+    const section = document.getElementById("ai")!;
+    expect(within(section).getByRole("heading", { level: 2 })).toHaveTextContent("AI-native, human in charge");
+    const steps = within(section).getByRole("list", { name: "Agentic SDLC workflow" });
+    const names = within(steps).getAllByRole("heading", { level: 3 }).map((h) => h.textContent);
+    expect(names).toEqual(["Plan", "Human review", "Build", "Test", "Ship"]);
+    expect(within(steps).getByText(/HITL/)).toBeInTheDocument();
+    expect(section).toHaveTextContent(/Rejected: back to Plan to revise/);
+  });
+
+  it("links every AI toolkit tag to the project that proves it (AI6)", () => {
+    render(<AiWorkflow />);
+    const toolkit = screen.getByRole("list", { name: "AI toolkit I use every week" });
+    const links = within(toolkit).getAllByRole("link");
+    expect(links.map((a) => a.textContent)).toEqual(aiSkills.map((s) => s.name));
+    expect(links.map((a) => a.getAttribute("href"))).toEqual(aiSkills.map((s) => s.proofs[0].href));
+    for (const link of links) expect(link).toHaveClass("hw-tag--ai");
+  });
+});
+
+describe("Stack", () => {
+  it("shows every skill as a toggle, with the first AI tool selected on load", () => {
+    render(<Stack />);
+    const ai = screen.getByRole("group", { name: "AI tools" });
+    const tech = screen.getByRole("group", { name: "Languages and frameworks" });
+    expect(within(ai).getAllByRole("button")).toHaveLength(aiSkills.length);
+    expect(within(tech).getAllByRole("button")).toHaveLength(techSkills.length);
+    expect(within(ai).getByRole("button", { name: aiSkills[0].name })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText(`Selected · ${aiSkills[0].name}`)).toBeInTheDocument();
+  });
+
+  it("switches the proofs on click and by keyboard", async () => {
+    const user = userEvent.setup();
+    render(<Stack />);
+    const swift = screen.getByRole("button", { name: "Swift" });
+    await user.click(swift);
+    expect(swift).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: aiSkills[0].name })).toHaveAttribute("aria-pressed", "false");
+    const panel = screen.getByRole("region", { name: "Where I used Swift" });
+    expect(within(panel).getByRole("link", { name: "Ridly" })).toHaveAttribute("href", "/work/ridly");
+
+    const python = screen.getByRole("button", { name: "Python" });
+    python.focus();
+    await user.keyboard("{Enter}");
+    expect(python).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Selected · Python")).toBeInTheDocument();
   });
 });

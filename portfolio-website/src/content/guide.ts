@@ -1,4 +1,4 @@
-import { anchors, caseStudySectionId, hash, projectCardId } from "./anchors";
+import { anchors, hash, projectCardId } from "./anchors";
 
 /**
  * Everything the AI guide says that isn't an answer from the model (3.1–3.5): labels,
@@ -21,8 +21,7 @@ export const guide = {
   /** The quick jumps after the tour (GD4). Real links, so they work without the model. */
   jumps: [
     { label: "Best project", href: "/work/ridly" },
-    // Until "How I build with AI" lands on Home (4.1), Ridly's "AI in the build" section proves it.
-    { label: "AI workflow", href: `/work/ridly#${caseStudySectionId("AI in the build")}` },
+    { label: "AI workflow", href: `/${hash(anchors.ai)}` },
     { label: "Proof", href: `/${hash(anchors.proof)}` },
     { label: "Contact", href: `/${hash(anchors.contact)}` },
   ] satisfies GuideJump[],

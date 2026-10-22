@@ -1,9 +1,11 @@
+import { about, journeyDate } from "@/content/about";
 import { anchors, caseStudySectionId, hash, type CaseStudySectionName } from "@/content/anchors";
 import { publishedProjects, getCaseStudy } from "@/content/case-studies";
 import { howItWorks } from "@/content/guide";
 import { isPlaceholder } from "@/content/placeholder";
 import { projects } from "@/content/projects";
-import { qaRecord, site, testimonial } from "@/content/site";
+import { aiWorkflow, home, qaRecord, site, testimonial } from "@/content/site";
+import { aiSkills, techSkills, type Skill } from "@/content/skills";
 import type { CaseStudySection, Content, Metric } from "@/content/types";
 import type { GuideChunk } from "./search";
 
@@ -19,7 +21,8 @@ const sectionText = (section: CaseStudySection) =>
 
 /**
  * The site's text as chunks for the guide's index (3.3): one per case study section, one per
- * project, plus the intro, availability, QA record, contact, testimonial and the /guide page.
+ * project, plus the intro, availability, how he builds with AI, skills, the journey, QA record,
+ * contact, testimonial and the /guide page.
  * Built from src/content, the same source the pages render.
  */
 export function buildChunks(): GuideChunk[] {
@@ -36,8 +39,28 @@ export function buildChunks(): GuideChunk[] {
     `Location: ${location}. Availability: ${status}. Languages: ${languages}.`,
   ]);
 
-  add("qa-record", "QA record at uTest", `/${hash(anchors.proof)}`, [
+  add("ai-workflow", home.ai.heading, `/${hash(anchors.ai)}`, [
+    `How Habib builds with AI. ${home.ai.subline}`,
+    aiWorkflow.map((step, i) => `Step ${i + 1}, ${step.name}: ${step.text}.`).join(" "),
+    `${home.ai.toolkitHeading}: ${aiSkills.map((s) => s.name).join(", ")}.`,
+    home.ai.closing,
+  ]);
+
+  const skillText = (skill: Skill) => `${skill.name}: ${skill.proofs.map((p) => `${p.title} (${p.note})`).join("; ")}.`;
+  add("skills", `Skills: ${home.stack.heading}`, `/${hash(anchors.stack)}`, [
+    "Habib's skills, each with the projects where he used it.",
+    `${home.stack.aiGroup}. ${aiSkills.map(skillText).join(" ")}`,
+    `${home.stack.techGroup}. ${techSkills.map(skillText).join(" ")}`,
+  ]);
+
+  add("journey", `Journey: ${about.journey.heading}`, `${about.path}#${about.anchors.journey}`, [
+    about.intro,
+    about.journey.entries.map((e) => `${journeyDate(e.month)}: ${e.title}. ${e.line}`).join(" "),
+  ]);
+
+  add("qa-record", "QA record at uTest", `${about.path}#${about.anchors.qaRecord}`, [
     qaRecord.line,
+    qaRecord.description,
     `${qaRecord.company}, ${qaRecord.tier} tier, rating ${qaRecord.rating}: ${qaRecord.testCycles} test cycles, ${qaRecord.issuesReported} issues reported, ${qaRecord.testCasesRun} test cases run, ${qaRecord.productsTested} products tested.`,
   ]);
 

@@ -2,6 +2,22 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 4: AI story, proof and About (2026-10-22)
+
+Spec: [specs/features/phase-4-ai-story-about.md](specs/features/phase-4-ai-story-about.md) · Roadmap items 4.1–4.4 · Branch `phase-4-ai-story-about`
+
+**What changed.** Home now runs hero → selected work → **How I build with AI** → proof → **Stack** → contact, and the site has an **About** page.
+
+- **How I build with AI (`#ai`, 4.1):** the Plan → Human review → Build → Test → Ship diagram with the "rejected: revise" loop (a vertical stack on phones), and the AI toolkit as dark tags, each linking to the project that proves it.
+- **Stack (`#stack`, 4.3):** every skill a project proves, in two groups. Picking one shows where it was used. The orbit replaces the row in 5.3.
+- **One skills list:** `src/content/skills.ts` feeds both. A test fails if a skill has no proof, or if a proof links somewhere the site doesn't have.
+- **About (`/about`, 4.4):** intro, three photo placeholders, the journey line (horizontal on desktop, vertical on phones, linked to the case studies and the QA record), the full QA record, and CV and email. It's in the nav, the sitemap and Lighthouse, with its own OG image. Home's proof links to it ("See the full record").
+- **Guide:** new chunks for the AI workflow, skills and journey; the QA record chunk points to About; the "AI workflow" jump goes to `/#ai`; one new eval question. Index rebuilt.
+- **4.2 (testimonial)** needed no new code and moves to 7.4.
+- **Revisit?** The toolkit drops Llama 3.3 and RAGAS from the mockup and adds "GPT-OSS via Groq". This site and its guide count as proof for RAG, embeddings, Claude Code and TDD.
+- **Revisit?** The journey facts come straight from the mockup (dates, "SDU in Sønderborg", "91% on time" at Just Eat). They're listed in 7.5 to check.
+- **Tests:** 227 unit and component tests, 86 end-to-end (desktop and phone, with axe); lint, typecheck and build pass. Lighthouse wasn't run locally; CI runs it.
+
 ## Phase 3 follow-up: search-only fallback while busy (2026-10-22)
 
 Spec: [specs/features/phase-3-guide.md](specs/features/phase-3-guide.md), section 3.6 · Branch `phase-3-search-fallback`, merged into `redesign`

@@ -132,6 +132,34 @@
   flex-wrap: wrap;
   gap: var(--spacing-space-2);
 }
+ul.hw-tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* A tag that links to its proof (4.1) or selects a skill (4.3). */
+.hw-tag--link {
+  text-decoration: none;
+}
+.hw-tag--link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.hw-tag--button {
+  cursor: pointer;
+  background: var(--color-paper-raised);
+}
+.hw-tag--button.hw-tag--ai {
+  background: var(--color-ink);
+}
+.hw-tag--button:hover {
+  border-color: var(--color-ink);
+}
+.hw-tag--button[aria-pressed="true"] {
+  color: var(--color-on-signal);
+  background: var(--color-signal);
+  border-color: var(--color-signal);
+}
 
 /* Metric */
 .hw-metric {

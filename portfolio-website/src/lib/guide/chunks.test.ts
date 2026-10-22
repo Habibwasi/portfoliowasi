@@ -51,6 +51,17 @@ describe("buildChunks", () => {
     expect(chunks.some((c) => c.url === "/guide")).toBe(true);
   });
 
+  it("indexes the AI workflow, the skills and the journey (Phase 4)", () => {
+    const byId = (id: string) => chunks.find((c) => c.id === id);
+    expect(byId("ai-workflow")?.url).toBe("/#ai");
+    expect(byId("ai-workflow")?.text).toMatch(/LangGraph/);
+    expect(byId("skills")?.url).toBe("/#stack");
+    expect(byId("skills")?.text).toMatch(/Kotlin/);
+    expect(byId("journey")?.url).toBe("/about#journey");
+    expect(byId("journey")?.text).toMatch(/uTest/);
+    expect(byId("qa-record")?.url).toBe("/about#qa-record");
+  });
+
   it("leaves the testimonial out while it is a placeholder", () => {
     expect(isPlaceholder(testimonial.quote)).toBe(true);
     expect(chunks.some((c) => c.id === "testimonial")).toBe(false);

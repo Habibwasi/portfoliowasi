@@ -10,8 +10,12 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "Skip to content" })).toHaveAttribute("href", "#main");
   });
 
-  it("lists Work and Contact, hiding About until its page exists and CV until the PDF exists", () => {
-    expect(navItems().map((i) => i.label)).toEqual(["Work", "Contact"]);
+  it("lists Work, About and Contact, hiding CV until the PDF exists", () => {
+    expect(navItems().map((i) => [i.label, i.href])).toEqual([
+      ["Work", "/#work"],
+      ["About", "/about"],
+      ["Contact", "/#contact"],
+    ]);
   });
 
   it("puts the nav in a labelled landmark", () => {

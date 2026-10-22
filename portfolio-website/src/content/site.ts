@@ -42,17 +42,47 @@ export const home = {
   moreProjects: {
     heading: "More projects",
   },
+  ai: {
+    eyebrow: "02 / How I build with AI",
+    heading: "AI-native, human in charge",
+    subline:
+      "I plan with agents, code with AI pair programmers and keep every decision reviewable. My own LangGraph workflow turns an idea into approved specs, with me as the human in the loop.",
+    diagramLabel: "Agentic SDLC workflow",
+    loopLabel: "rejected: revise",
+    /** The loop arrow, said in words for screen readers. */
+    loopText: "Rejected: back to Plan to revise.",
+    toolkitHeading: "AI toolkit I use every week",
+    closing:
+      "AI drafts, I decide. Every AI-written change goes through my review, tests and CI before it ships. Questions? The guide in the corner knows the whole site.",
+  },
   proof: {
-    eyebrow: "02 / Proof from others",
+    eyebrow: "03 / Proof from others",
     qaHeading: "QA record",
+    fullRecord: "See the full record",
+  },
+  stack: {
+    eyebrow: "04 / Stack",
+    heading: "Shipped stack, AI-native toolkit",
+    subline: "The languages, frameworks and AI tools behind the projects above. Pick one to see where I used it.",
+    aiGroup: "AI tools",
+    techGroup: "Languages and frameworks",
   },
   contact: {
-    eyebrow: "03 / Contact",
+    eyebrow: "05 / Contact",
     heading: "Have a role in mind?",
     subline: "I graduate in January 2027. Tell me about the team and the problem you're solving.",
     formHeading: "Or write here",
   },
 } as const;
+
+/** "How I build with AI" (AI2): the workflow behind the projects, in order. */
+export const aiWorkflow = [
+  { name: "Plan", text: "LangGraph agents clarify, scope and write specs" },
+  { name: "Human review", text: "I approve or reject every step (HITL)" },
+  { name: "Build", text: "Claude Code and GitHub Copilot, reviewed by me" },
+  { name: "Test", text: "TDD, k6 load and stress tests" },
+  { name: "Ship", text: "CI/CD tests and builds every push" },
+] as const;
 
 export const qaRecord = {
   company: "uTest by Applause",
@@ -63,6 +93,8 @@ export const qaRecord = {
   issuesReported: 46,
   testCasesRun: 234,
   productsTested: 100,
+  /** The full record on About (4.4). */
+  description: "Freelance functional testing for well-known consumer and fintech clients.",
   /** One credibility line for Home (C16). */
   line: "Silver-rated QA tester at uTest since June 2024: 268 test cycles, 46 issues reported, 92.26% rating.",
 } as const;

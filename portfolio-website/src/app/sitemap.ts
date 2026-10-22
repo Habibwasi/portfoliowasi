@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { about } from "@/content/about";
 import { publishedProjects } from "@/content/case-studies";
 import { howItWorks } from "@/content/guide";
 import { siteUrl } from "@/content/metadata";
@@ -11,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
+    { url: `${siteUrl}${about.path}`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${siteUrl}${howItWorks.path}`, changeFrequency: "monthly", priority: 0.5 },
   ];
 }
