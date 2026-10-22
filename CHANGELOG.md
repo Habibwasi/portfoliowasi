@@ -4,9 +4,9 @@ Each entry lists what changed, the key decisions and why, and what's left open. 
 
 ## Phase 5: Delight (2026-10-22)
 
-Spec: [specs/features/phase-5-delight.md](specs/features/phase-5-delight.md) · Roadmap items 5.1–5.6 · Branch `phase-5-delight`, to merge into `redesign`
+Spec: [specs/features/phase-5-delight.md](specs/features/phase-5-delight.md) · Roadmap items 5.1–5.6 · Branch `phase-5-delight`, merged into `redesign`
 
-**Status: built, not yet closed.** It closes when CI, the guide evaluation and the Vercel preview pass on `redesign`.
+**Status: done.** CI, the guide evaluation and the Vercel preview pass on `redesign` (commit `1dc9042`). In CI: 258 unit tests in 25 files, 102 end-to-end tests (2 skipped by design), and Lighthouse on phone within budget on every URL. The first run's end-to-end job failed before any test ran: `npm ci` timed out downloading the ONNX runtime from nuget.org. The re-run passed. Unit tests can't run on this PC for now: Windows Smart App Control blocks Rolldown's native module, which Vitest needs, so CI runs them.
 
 **What changed.** The site moves now, and the guide can act on the page. The first view is still server-rendered and readable before any of it runs.
 

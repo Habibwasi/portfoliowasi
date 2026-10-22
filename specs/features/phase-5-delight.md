@@ -1,6 +1,6 @@
 # Spec: Phase 5 — Delight
 
-Roadmap items 5.1–5.6 · Status: built (2026-10-22); closes once CI, the guide evaluation and the Vercel preview pass on `redesign` · Branch `phase-5-delight`, to merge into `redesign`
+Roadmap items 5.1–5.6 · Status: done (closed 2026-10-22; CI, guide eval and Vercel pass on `redesign`, commit `1dc9042`) · Branch `phase-5-delight`, merged into `redesign`
 
 ## Goal
 

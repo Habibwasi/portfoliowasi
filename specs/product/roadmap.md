@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0–4 done; Phase 5 built, waiting on CI and the preview)
+Last updated: 2026-10-22 (Phases 0–5 done; Phase 6 next)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -92,7 +92,7 @@ Spec: [phase-4-ai-story-about.md](../features/phase-4-ai-story-about.md)
 
 C17 (experience and skills side by side) is reinterpreted: experience lives on About, and skills on Home link to it.
 
-## Phase 5: Delight · built (closes when CI and the Vercel preview pass on `redesign`)
+## Phase 5: Delight · done (closed 2026-10-22)
 
 Spec: [phase-5-delight.md](../features/phase-5-delight.md)
 
