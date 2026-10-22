@@ -27,8 +27,9 @@ describe("Hero", () => {
     const primary = screen.getByRole("link", { name: "View case studies" });
     expect(primary).toHaveAttribute("href", "#work");
     expect(primary).toHaveClass("hw-btn--primary");
-    // The CV is still a placeholder.
-    expect(screen.getByText("[CV PDF]")).toBeInTheDocument();
+    const cv = screen.getByRole("link", { name: "Download CV" });
+    expect(cv).toHaveAttribute("href", "/cv/Habib-Ahmed-Wasi-CV.pdf");
+    expect(cv).toHaveAttribute("download");
   });
 });
 
@@ -82,6 +83,7 @@ describe("ObjectNav (5.4)", () => {
     expect(links.map((a) => [a.textContent, a.getAttribute("href")])).toEqual([
       ["Work", "#work"],
       ["About", "/about"],
+      ["CV", "/cv/Habib-Ahmed-Wasi-CV.pdf"],
       ["Contact", "#contact"],
     ]);
     for (const link of links) expect(link).toHaveAttribute("tabindex", "-1");
@@ -150,7 +152,7 @@ describe("ContactSection", () => {
     const section = document.getElementById("contact")!;
     expect(within(section).getByRole("heading", { level: 2, name: "Have a role in mind?" })).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "Email me" })).toHaveAttribute("href", "mailto:habibwasi9@gmail.com");
-    expect(within(section).getByText("[CV PDF]")).toBeInTheDocument();
+    expect(within(section).getByRole("link", { name: "Download CV" })).toHaveAttribute("href", "/cv/Habib-Ahmed-Wasi-CV.pdf");
     expect(within(section).getByText("[Calendly URL]")).toBeInTheDocument();
     const primaries = section.querySelectorAll(".hw-btn--primary");
     expect(primaries).toHaveLength(1);

@@ -42,6 +42,15 @@ test.describe("analytics", () => {
     expect(await calls(page)).toEqual([["Calendly click", { place: "contact" }]]);
   });
 
+  test("records a CV download from the header, and the PDF still downloads", async ({ page, isMobile }) => {
+    await page.goto("/");
+    const nav = page.getByRole("navigation", { name: "Main" });
+    test.skip(isMobile && !(await nav.getByRole("link", { name: "CV" }).isVisible()), "the CV nav item is hidden on this phone");
+    const [download] = await Promise.all([page.waitForEvent("download"), nav.getByRole("link", { name: "CV" }).click()]);
+    expect(download.suggestedFilename()).toBe("Habib-Ahmed-Wasi-CV.pdf");
+    expect(await calls(page)).toEqual([["CV download", { place: "header" }]]);
+  });
+
   test("doesn't record other links", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Work" }).click();

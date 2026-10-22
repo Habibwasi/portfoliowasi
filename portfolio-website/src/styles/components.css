@@ -406,6 +406,23 @@ a.hw-card:hover {
     font-size: 14px;
   }
 }
+/* With the CV item (7.1) the header needs more room than 320 px gives; tighten it, keeping 24 px targets (2.5.8). */
+@media (max-width: 379.98px) {
+  .hw-header__inner {
+    gap: var(--spacing-space-2);
+  }
+  .hw-wordmark {
+    font-size: 18px;
+  }
+  .hw-textnav {
+    gap: var(--spacing-space-2);
+  }
+  .hw-textnav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+  }
+}
 
 .hw-footer {
   margin-top: var(--spacing-space-7);

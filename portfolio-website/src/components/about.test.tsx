@@ -48,6 +48,6 @@ describe("About", () => {
     render(<About />);
     expect(screen.getByRole("heading", { name: "The full story, on paper" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Email me" })).toHaveAttribute("href", "mailto:habibwasi9@gmail.com");
-    expect(screen.getByText("[CV PDF]")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Download CV" })).toHaveAttribute("href", "/cv/Habib-Ahmed-Wasi-CV.pdf");
   });
 });

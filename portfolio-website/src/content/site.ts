@@ -23,11 +23,8 @@ export const site = {
     ciBadge: "https://github.com/Habibwasi/portfoliowasi/actions/workflows/ci.yml/badge.svg",
     ciRuns: "https://github.com/Habibwasi/portfoliowasi/actions/workflows/ci.yml",
   },
-  /**
-   * Public path of the CV PDF. Once the file is in public/cv/, replace the placeholder with
-   * "/cv/Habib-Ahmed-Wasi-CV.pdf"; every CV button and the nav item then appear.
-   */
-  cv: placeholder("CV PDF") as Content<string>,
+  /** Public path of the CV PDF (7.1); every CV button, the nav item and the guide's offer use it. */
+  cv: "/cv/Habib-Ahmed-Wasi-CV.pdf" as Content<string>,
   hero: {
     /**
      * The line-art portrait beside the name (5.5, V3). Once drawn, replace the placeholder with

@@ -10,10 +10,11 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "Skip to content" })).toHaveAttribute("href", "#main");
   });
 
-  it("lists Work, About and Contact, hiding CV until the PDF exists", () => {
+  it("lists Work, About, CV and Contact, in the design system's order", () => {
     expect(navItems().map((i) => [i.label, i.href])).toEqual([
       ["Work", "/#work"],
       ["About", "/about"],
+      ["CV", "/cv/Habib-Ahmed-Wasi-CV.pdf"],
       ["Contact", "/#contact"],
     ]);
   });

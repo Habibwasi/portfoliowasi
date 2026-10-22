@@ -121,8 +121,8 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 
 | # | Item | Where it goes | Status |
 | --- | --- | --- | --- |
-| 7.1 | CV PDF, plus the same text for the guide's index | `public/cv/Habib-Ahmed-Wasi-CV.pdf`, then `site.cv` in `src/content/site.ts` (the CV buttons and nav item appear); the guide's index (3.3) | open |
-| 7.2 | Calendly URL | `NEXT_PUBLIC_CALENDLY_URL` in Vercel and `.env.local` | open |
+| 7.1 | CV PDF, plus the same text for the guide's index | `public/cv/Habib-Ahmed-Wasi-CV.pdf`, then `site.cv` in `src/content/site.ts` (the CV buttons and nav item appear); the guide's index (3.3) | PDF done (2026-10-22); its text in the guide's index waits on the CV fixes below |
+| 7.2 | Calendly URL | `NEXT_PUBLIC_CALENDLY_URL` in Vercel and `.env.local` | done (2026-10-22, set in Vercel) |
 | 7.3 | Case study content: TopicTrail (role, problem, AI in the build, architecture diagrams, evaluation plan, dated progress notes, screens); Validation Portal (role, problem, AI in the build, demo video, screens, architecture diagram); Ridly (problem text, "what I built" decisions, one concrete example of correcting AI output, 3–5 screens, demo video, k6 run recording, the real architecture diagram). Videos go on YouTube with English captions; only the video ID goes in the content, plus an optional poster image | `src/content/case-studies/`, media in `public/work/<slug>/` | open |
 | 7.4 | Testimonial: quote, name and role of the Just Eat team leader, with their permission | `testimonial` in `src/content/site.ts` (closes 4.2) | open |
 | 7.5 | Photos with captions (three on About), line-art portrait, drawings of your own objects. Check the About facts taken from the mockup: every journey date, "SDU in Sønderborg", and "91% on time" at Just Eat | `about.photos` and `about.journey` in `src/content/about.ts` (4.4), `site.hero.portrait` (5.5), the object drawings in `src/components/object-drawings.tsx` (5.4; the mockup's laptop, stopwatch, sheet and envelope are stand-ins) | open |
@@ -131,6 +131,19 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY`. When adding to Production, check `VERCEL_SUPPORT_LARGE_FUNCTION=1` is there too (set for Preview on 2026-10-22) | open |
 | 7.9 | Umami Cloud: create the account (free Hobby plan), add the website for the production domain, and copy its website ID | `NEXT_PUBLIC_UMAMI_WEBSITE_ID` in Vercel **Production** only. In Umami, add a goal or funnel for the three events (`CV download`, `Email click`, `Calendly click`) and the `/work/*` page views | open |
 | 7.10 | Screen reader check by hand, on the real content: NVDA with Firefox on Home and a case study, VoiceOver on an iPhone. Listen for the card names, the guide panel and the contact form's messages | — (fix anything found before the launch PR) | open |
+
+### CV text that disagrees with the site (found 2026-10-22)
+
+The CV PDF is live as supplied. These lines differ from what the site says, so its text stays out of the guide's index until they match:
+
+| CV says | Site says | Source |
+| --- | --- | --- |
+| uTest Silver rating 91.8% | 92.26% | Decisions log |
+| Validation Portal and Core Competencies: "Groq's Llama 3.3" | `gpt-oss-20b` on Groq; Llama 3.3 was shut down | Facts to check |
+| Undershelf "80%+ Pytest coverage" | Dropped: no coverage config in the repo | Facts to check |
+| Ridly "trip search ran in 96 ms" | p95 96 ms at the 300-VU stage | Facts to check |
+| LinkedIn `linkedin.com/in/habib-ahmed-wasi` | `linkedin.com/in/habib-ahmed-wasi-4985091b8` | `site.links.linkedin` (7.6) |
+| "Available part-time now" | "Open to roles now, full-time from February 2027" | `site.availability` |
 
 ## Later (not scheduled)
 

@@ -113,10 +113,10 @@ describe("POST /api/guide", () => {
     expect(prompt).not.toContain("tool-");
   });
 
-  it("offers the page tools to the model, without download_cv while the CV is missing (5.6)", async () => {
+  it("offers the page tools to the model, with download_cv now the CV exists (5.6, 7.1)", async () => {
     await (await post(ask("When is he available full-time?"))).text();
     const tools = (model.doStreamCalls[0].tools ?? []).map((t) => t.name);
-    expect(tools).toEqual(["scroll_to", "open_case_study", "highlight", "play_demo", "start_tour"]);
+    expect(tools).toEqual(["scroll_to", "open_case_study", "highlight", "play_demo", "start_tour", "download_cv"]);
     expect(JSON.stringify(model.doStreamCalls[0].prompt)).toMatch(/at most one tool/);
   });
 

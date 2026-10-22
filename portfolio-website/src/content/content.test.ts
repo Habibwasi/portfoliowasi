@@ -23,7 +23,7 @@ describe("placeholders", () => {
 
   it("lists the content still missing on the site", () => {
     const missing = listPlaceholders(allContent);
-    expect(missing).toContain("CV PDF");
+    expect(missing).not.toContain("CV PDF");
     expect(missing).toContain("Calendly URL");
     expect(missing).toContain("Name Surname");
   });

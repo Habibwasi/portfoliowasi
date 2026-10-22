@@ -26,13 +26,9 @@ test.describe("Home → contact → CV", () => {
     await expect(contact.getByRole("heading", { level: 2 })).toBeInViewport();
     await expect(contact.getByRole("link", { name: "Email me" })).toHaveAttribute("href", "mailto:habibwasi9@gmail.com");
 
-    // The CV PDF hasn't been supplied yet: a visible placeholder until it is.
-    const cv = contact.getByRole("link", { name: "Download CV" });
-    if ((await cv.count()) > 0) {
-      await expect(cv).toHaveAttribute("href", /\.pdf$/);
-    } else {
-      await expect(contact.getByText("[CV PDF]")).toBeVisible();
-    }
+    // The CV (7.1) downloads as a PDF.
+    const [download] = await Promise.all([page.waitForEvent("download"), contact.getByRole("link", { name: "Download CV" }).click()]);
+    expect(download.suggestedFilename()).toBe("Habib-Ahmed-Wasi-CV.pdf");
     const call = contact.getByRole("link", { name: "Book a call" });
     await expect(call.or(contact.getByText("[Calendly URL]"))).toBeVisible();
   });
