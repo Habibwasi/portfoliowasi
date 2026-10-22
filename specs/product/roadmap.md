@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0–2 done; Phase 3 built, waiting for CI on `redesign`)
+Last updated: 2026-10-22 (Phases 0–3 done; Phase 4 next)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -66,7 +66,7 @@ Spec: [phase-2-ridly.md](../features/phase-2-ridly.md)
 | 2.2 | Per-page OG images with Fraunces TTF | P6 | done |
 | 2.3 | Video facade: YouTube privacy-enhanced embed, poster, captions, loads on click | C11, P2 | done (videos in Phase 7) |
 
-## Phase 3: AI guide (useful first, animated later) · in progress
+## Phase 3: AI guide (useful first, animated later) · done (closed 2026-10-22)
 
 Spec: [phase-3-guide.md](../features/phase-3-guide.md)
 

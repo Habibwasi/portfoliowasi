@@ -1,6 +1,6 @@
 # Spec: Phase 3 — AI guide (useful first, animated later)
 
-Roadmap items 3.1–3.5 · Status: built and verified locally; waiting for CI on `redesign` · Branch `phase-3-guide`, from `redesign`
+Roadmap items 3.1–3.5 · Status: done (closed 2026-10-22; CI passes on `redesign`; live answers wait for the Groq keys, roadmap 7.8) · Branch `phase-3-guide`, merged into `redesign`
 
 ## Goal
 
@@ -72,7 +72,7 @@ The tile costs almost nothing on first load. The panel, the chat code and the mo
   - **Retrieval**, always: expected source in the top 4; off-topic questions return no chunks or are answered "I don't know".
   - **Answers**, only when `GROQ_EVAL_API_KEY` is set: calls the real `POST` handler with that key, one question at a time, 8 s apart (token-per-minute limit). Checks the answer cites a source, contains the required words, or says "I don't know" for out-of-scope cases. Five answers get an LLM-judged faithfulness check (the same model answers "SUPPORTED" or "UNSUPPORTED" against the sources).
   - Writes a summary table; any failure fails the run.
-- `.github/workflows/guide-eval.yml`: nightly at 03:00 UTC and on demand. The answers part is skipped when the secret isn't set.
+- `.github/workflows/guide-eval.yml`: nightly at 03:00 UTC and on demand (both run only from the default branch, so after Phase 7), and on pushes to `redesign` that touch the content or the guide. The answers part is skipped when the secret isn't set.
 
 ### 3.5 "How this guide works"
 - `/guide`: title "How this guide works", static, in the sitemap, with its own metadata and OG image (shared helper). It shows the build-time and request-time pipeline as numbered steps in the design system's workflow style, the model and the limits, what happens with no match, the evaluation, the upgrade path (pgvector once there are more chunks than memory comfortably holds), and links to the code in this repo.

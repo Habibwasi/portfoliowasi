@@ -2,11 +2,11 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
-## Phase 3: AI guide (2026-10-22)
+## Phase 3: AI guide (2026-10-22, closed the same day)
 
 Spec: [specs/features/phase-3-guide.md](specs/features/phase-3-guide.md) · Roadmap items 3.1–3.5 · Branch `phase-3-guide`, merged into `redesign`
 
-**Status: built and verified locally; waiting for CI on `redesign`.** The guide works end to end except for live answers, which need a `GROQ_API_KEY` (roadmap 7.8). Until then the chat shows its "busy" state, and the jumps and the tour work as normal.
+**Status: done.** Every check passes in CI on `redesign` (commit `9b3a6e2`). The guide works end to end except for live answers, which need a `GROQ_API_KEY` (roadmap 7.8). Until then the chat shows its "busy" state, and the jumps and the tour work as normal.
 
 The vermilion "H" now sits bottom-right on every page. Opened, it docks a 400 px panel on desktop and reflows the page, or slides up as a sheet on phones. It has a "Jump to" row, a 30-second tour of Home, and a chat that answers from the site's own text with source links. `/guide` explains how it works.
 
@@ -20,6 +20,7 @@ The vermilion "H" now sits bottom-right on every page. Opened, it docks a 400 px
 | Retrieval evaluation (`npm run eval:guide`, real gte-small embeddings) | 22 of 22: the expected source is in the top 4 for all 16 recruiter questions, and both clearly off-topic questions retrieve nothing. The 22 answer checks are skipped without `GROQ_EVAL_API_KEY` |
 | Production build | Pass. `/guide` and its OG image are static. The `/api/guide` function traces to 58 MB, with only the Linux x64 ONNX runtime |
 | Lighthouse, phone (local) | All four pages within budget: `/` LCP 2.33 s, CLS 0.017; `/work/ridly` 2.23 s; `/work/validation-portal` 2.27 s; `/guide` 1.97 s |
+| CI on GitHub (`redesign`, commit `9b3a6e2`) | All three jobs pass: check, E2E + axe, Lighthouse (phone) |
 | Live answers from Groq | **Not checked.** There is no Groq key yet |
 
 ### What changed
@@ -36,7 +37,7 @@ The vermilion "H" now sits bottom-right on every page. Opened, it docks a 400 px
   - *Search:* `search.ts` combines BM25 and cosine with reciprocal rank fusion and returns the top 4.
   - *Route:* `POST /api/guide` validates the request with Zod (user and assistant text only, questions up to 500 characters). It rate-limits each visitor to 10 questions per 10 minutes and the site to 300 a day, failing closed. It then embeds the question (falling back to keyword search after 4 s) and streams GPT-OSS 120B with low reasoning effort. Source links go out as message metadata. With no match it answers "I don't know" without calling the model; Groq errors show "busy".
   - *Rendering:* answers go through a small renderer (paragraphs, lists, bold, `[n]` links) that never parses HTML.
-- **Evaluation (3.4):** `evals/guide/` holds 22 cases, the runner and an LLM faithfulness judge on 5 answers. `.github/workflows/guide-eval.yml` runs it nightly and on demand.
+- **Evaluation (3.4):** `evals/guide/` holds 22 cases, the runner and an LLM faithfulness judge on 5 answers. `.github/workflows/guide-eval.yml` runs it nightly and on demand, but GitHub only does that from the default branch (`main`, after Phase 7). Until then it also runs on pushes to `redesign` that touch the content or the guide.
 - **How this guide works (3.5):** `/guide`, with the build and request pipelines as numbered steps, the model, the limits, the evaluation and links to the code. It is in the sitemap, Lighthouse measures it, and its text is indexed so the guide can explain itself.
 - **Dependencies:** `ai` 7.0.148, `@ai-sdk/react` 4.0.152, `@ai-sdk/groq` 4.0.67, `@huggingface/transformers` 4.3.1, `@vercel/functions` 3.10.2, and `tsx` (dev).
 - **README** status, stack and scripts brought up to date.
