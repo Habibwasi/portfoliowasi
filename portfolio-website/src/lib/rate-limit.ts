@@ -41,8 +41,8 @@ type GuideLimiters = { visitor: Ratelimit; site: Ratelimit };
 let guideLimiters: GuideLimiters | null | undefined;
 
 /**
- * 10 questions per IP per 10 minutes, and 300 a day across the site, which keeps the guide
- * inside Groq's free tier (about 1,000 requests a day for gpt-oss-120b).
+ * 10 questions per IP per 10 minutes, and 90 a day across the site. Groq's free tier for
+ * gpt-oss-120b allows 200K tokens a day, roughly 100 answers, so the guide goes busy first.
  */
 function getGuideLimiters(): GuideLimiters | null {
   if (guideLimiters !== undefined) return guideLimiters;
@@ -52,7 +52,7 @@ function getGuideLimiters(): GuideLimiters | null {
   const redis = new Redis({ url, token });
   guideLimiters = {
     visitor: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(10, "10 m"), prefix: "ratelimit:guide", timeout: 3000 }),
-    site: new Ratelimit({ redis, limiter: Ratelimit.fixedWindow(300, "1 d"), prefix: "ratelimit:guide-daily", timeout: 3000 }),
+    site: new Ratelimit({ redis, limiter: Ratelimit.fixedWindow(90, "1 d"), prefix: "ratelimit:guide-daily", timeout: 3000 }),
   };
   return guideLimiters;
 }

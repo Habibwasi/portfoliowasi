@@ -67,7 +67,7 @@ export const howItWorks = {
     { name: "Ship", text: "Chunks and vectors are written to a JSON file in the repository, so the index always deploys with the content it was built from." },
   ],
   requestSteps: [
-    { name: "Limit", text: "Each visitor gets 10 questions per 10 minutes, and the whole site 300 a day, to stay inside the Groq free tier. When a limit is reached, or Groq is unavailable, the guide says it is busy and lists the parts of the site that match the question instead, found by search alone." },
+    { name: "Limit", text: "Each visitor gets 10 questions per 10 minutes, and the whole site 90 a day, to stay inside the Groq free tier. When a limit is reached, or Groq is unavailable, the guide says it is busy and lists the parts of the site that match the question instead, found by search alone." },
     { name: "Embed", text: "The question is embedded with the same model, inside the serverless function." },
     { name: "Retrieve", text: "Keyword search (BM25) and vector search (cosine) each rank the chunks; reciprocal rank fusion merges them, and the top 4 become the sources." },
     { name: "Generate", text: "GPT-OSS 120B on Groq answers in a few sentences, only from the numbered sources, and cites them." },

@@ -14,7 +14,7 @@ Spec: [specs/features/phase-3-guide.md](specs/features/phase-3-guide.md), sectio
 - **`/guide`:** the "Limit" step explains the fallback; the index was rebuilt.
 - **Why:** Groq's free tier for `gpt-oss-120b` allows 200,000 tokens a day, which is roughly 100 answers. Past that, visitors still get something useful.
 - **Tests:** 203 unit and component tests (6 new), 72 end-to-end (2 new, with axe), lint and typecheck clean.
-- **Open:** the site-wide cap is still 300 a day, above Groq's real limit of roughly 100 answers. Lowering it to about 90 would make the guide go busy just before Groq does. **Revisit?**
+- **Daily cap lowered from 300 to 90** questions across the site, just under Groq's roughly 100 answers a day, so the guide goes busy before Groq starts refusing. **Revisit?** Raise it if Groq's usage dashboard shows answers using fewer tokens than estimated, or on a paid Groq tier.
 
 ## Phase 3: AI guide (2026-10-22, closed the same day)
 

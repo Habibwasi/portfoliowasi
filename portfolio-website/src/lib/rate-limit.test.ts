@@ -2,6 +2,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const limit = vi.fn();
+const slidingWindow = vi.fn(() => ({}));
+const fixedWindow = vi.fn(() => ({}));
 
 vi.mock("@upstash/redis", () => ({ Redis: class {} }));
 vi.mock("@upstash/ratelimit", () => ({
@@ -9,7 +11,7 @@ vi.mock("@upstash/ratelimit", () => ({
     class {
       limit = limit;
     },
-    { slidingWindow: () => ({}), fixedWindow: () => ({}) },
+    { slidingWindow, fixedWindow },
   ),
 }));
 
@@ -73,6 +75,17 @@ describe("allowGuide", () => {
     expect(await allowGuide("1.2.3.4")).toBe(true);
     expect(limit).toHaveBeenNthCalledWith(1, "1.2.3.4");
     expect(limit).toHaveBeenNthCalledWith(2, "site");
+  });
+
+  it("allows 10 questions per visitor per 10 minutes and 90 a day across the site", async () => {
+    vi.stubEnv("KV_REST_API_URL", "https://example.upstash.io");
+    vi.stubEnv("KV_REST_API_TOKEN", "token");
+    limit.mockResolvedValue({ success: true });
+    const { allowGuide } = await load();
+    await allowGuide("1.2.3.4");
+    expect(slidingWindow).toHaveBeenCalledWith(10, "10 m");
+    // Groq's free tier allows roughly 100 answers a day (200K tokens), so the guide goes busy first.
+    expect(fixedWindow).toHaveBeenCalledWith(90, "1 d");
   });
 
   it("doesn't spend the daily cap on a visitor who is already limited", async () => {
