@@ -77,7 +77,7 @@ Spec: [phase-3-guide.md](../features/phase-3-guide.md)
 | 3.3 | RAG chat: build-time JSON index, `gte-small` embeddings, hybrid search, `gpt-oss-120b` on Groq, sources on every answer, "I don't know" fallback, third-person voice, per-IP and daily limits, "busy" state | GD5, GD9, AI3 | done (live answers need the Groq keys, 7.8) |
 | 3.4 | Guide evaluation: about 20 recruiter questions, citation and refusal checks (tool checks arrive with 5.6), run nightly on a separate key | GD9 | done (answers run once `GROQ_EVAL_API_KEY` is set, 7.8) |
 | 3.5 | "How this guide works" link to its architecture | AI6 | done |
-| 3.6 | Search-only fallback: when the guide is busy (limit, no key, Groq error) it still says so, and lists the parts of the site that match the question, with links and excerpts | GD5 | in progress |
+| 3.6 | Search-only fallback: when the guide is busy (limit, no key, Groq error) it still says so, and lists the parts of the site that match the question, with links and excerpts | GD5 | done |
 
 ## Phase 4: AI story, proof and About
 
