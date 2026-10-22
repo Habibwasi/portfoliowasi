@@ -209,6 +209,7 @@ GitHub Actions runs lint, typecheck, Vitest and build on every push and PR, then
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Rate limiting | Via the Vercel Marketplace integration |
 | `NEXT_PUBLIC_CALENDLY_URL` | Book a call | Public |
 | `NEXT_PUBLIC_SITE_URL` | `metadataBase`, sitemap, OG | Public |
+| `VERCEL_SUPPORT_LARGE_FUNCTION=1` | Vercel build | Vercel only (Preview and Production). Without it the deployment fails on the size of `/api/guide` (the ONNX runtime) |
 
 All of them go in `.env.example`.
 

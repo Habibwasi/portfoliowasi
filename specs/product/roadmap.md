@@ -121,7 +121,7 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 7.5 | Photos with captions, line-art portrait, drawings of your own objects; journey dates checked | About page (4.4), hero (5.5), object nav (5.4) | open |
 | 7.6 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | open |
 | 7.7 | Role text for the More projects (Undershelf, Deskinct, Medication Adherence App) | `src/content/projects.ts` | open |
-| 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY` | open |
+| 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY`. When adding to Production, check `VERCEL_SUPPORT_LARGE_FUNCTION=1` is there too (set for Preview on 2026-10-22) | open |
 
 ## Later (not scheduled)
 
@@ -160,6 +160,7 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 2026-10-22 | The guide's index is committed (`src/generated/guide-index.json`) and rebuilt with `npm run guide:index`; a unit test catches a stale index | Tech stack "written at build time" |
 | 2026-10-22 | The guide's "Best project" jump goes to Ridly; "AI workflow" goes to Ridly's "AI in the build" until 4.1 adds `#ai` on Home | — |
 | 2026-10-22 | `GROQ_EVAL_API_KEY` must come from a separate Groq organisation, because Groq's limits are per organisation | Tech stack "separate key" |
+| 2026-10-22 | `VERCEL_SUPPORT_LARGE_FUNCTION=1` is set in Vercel: the preview deployment failed on the size of `/api/guide` (ONNX runtime) despite tracing only the Linux binary | Phase 3 "58 MB, far under 250 MB" |
 
 ## Open decisions
 

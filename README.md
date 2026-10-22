@@ -61,6 +61,7 @@ Environment variables (all listed in `.env.example`):
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Rate limiting (Phase 1 onwards) |
 | `NEXT_PUBLIC_CALENDLY_URL` | "Book a call" |
 | `NEXT_PUBLIC_SITE_URL` | Metadata, sitemap and social previews |
+| `VERCEL_SUPPORT_LARGE_FUNCTION=1` | Vercel only: lets the `/api/guide` function past the size check (not needed locally) |
 
 ## Scripts
 
