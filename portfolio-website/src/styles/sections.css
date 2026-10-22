@@ -254,11 +254,17 @@
 @keyframes hw-letter-squash {
   50% { transform: scale(1.12, 0.88); }
 }
-.hw-letter--1 { left: 8px; bottom: 0; transform: rotate(-9deg); }
-.hw-letter--2 { left: 84px; bottom: 6px; transform: rotate(6deg); }
-.hw-letter--3 { left: 160px; bottom: 0; transform: rotate(-3deg); }
-.hw-letter--4 { left: 46px; bottom: 86px; transform: rotate(4deg); }
-.hw-letter--5 { left: 124px; bottom: 90px; transform: rotate(-6deg); }
+/* One row that reads H W A S I, spread over the column: the same slots the falling tiles land in. */
+.hw-letter {
+  --slot: 0;
+  bottom: 0;
+  left: min(var(--slot) * 78px, (100% - 72px) * var(--slot) / 4);
+}
+.hw-letter--1 { --slot: 0; transform: rotate(-3deg); }
+.hw-letter--2 { --slot: 1; transform: rotate(2deg); }
+.hw-letter--3 { --slot: 2; transform: rotate(-1deg); }
+.hw-letter--4 { --slot: 3; transform: rotate(3deg); }
+.hw-letter--5 { --slot: 4; transform: rotate(-2deg); }
 /* While the engine runs, each tile and its shadow are their own layers, so moving them never repaints. */
 .hw-hero__art:not([data-physics="off"]) .hw-letter {
   will-change: transform;
