@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { caseStudies, getCaseStudy, nextCaseStudy, publishedProjects } from "./case-studies";
 import { isPlaceholder } from "./placeholder";
@@ -26,6 +28,15 @@ describe("case studies", () => {
     expect(nextCaseStudy("topictrail").slug).toBe("ridly");
     expect(nextCaseStudy("ridly").slug).toBe("validation-portal");
     expect(nextCaseStudy("validation-portal").slug).toBe("topictrail");
+  });
+
+  it.each(Object.values(caseStudies))("$slug only shows images that exist, each with alt text (7.3, P4)", (study) => {
+    const media = [study.hero, ...study.screens, ...study.architectureMedia, ...(study.testRun ? [study.testRun] : [])];
+    for (const item of media) {
+      if (isPlaceholder(item.src) || !item.src.startsWith("/")) continue;
+      expect(existsSync(path.join(__dirname, "../../public", item.src)), item.src).toBe(true);
+      expect(item.alt?.length, item.src).toBeGreaterThan(20);
+    }
   });
 
   it.each(Object.values(caseStudies))("$slug uses valid YouTube IDs for its videos (2.3)", (study) => {
@@ -74,6 +85,14 @@ describe("Validation Portal", () => {
   it("names the model it actually uses", () => {
     expect(text).toContain("gpt-oss-20b");
     expect(text).not.toMatch(/Llama/i);
+  });
+
+  it("covers the question drafts, the bias check and translation (7.3)", () => {
+    const solution = study.solution.body.join(" ");
+    expect(solution).toMatch(/drafts questions/);
+    expect(solution).toMatch(/bias/);
+    expect(solution).toMatch(/eight languages/);
+    expect(study.facts).toContainEqual({ label: "My role", value: "Built solo" });
   });
 
   it("says plainly that it has no automated tests, and shows no test run (C11 exception)", () => {

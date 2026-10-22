@@ -2,6 +2,17 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 7.3: Ridly and Validation Portal case studies (2026-10-22)
+
+Branch `phase-7-case-studies`. TopicTrail stays placeholders until Habib sends its files.
+
+- **Ridly:** the problem, three decisions with their reasons (direct MobilePay payment, SKAT-rate pricing in whole øre, the two trip models) and the Prisma 7 correction as the AI example, all drafted from HOP-KMP for your review. Five screens from the README gallery, framed as phones. A new architecture diagram drawn from your `hop-dataflow.drawio`. A Home card cover made of three screens.
+- **Ridly, corrected:** pushes go through FCM and APNs, not a BullMQ queue. CI builds iOS but can't fail on it (`xcpretty || true`), so the page no longer says it builds both apps. The known limits from the codebase audit (overbooking under concurrent bookings, partial settlement creation, recurring-trip idempotency, backend tests not in CI) are stated as the next work.
+- **Validation Portal:** built solo; the problem; three decisions (AI drafts that the founder must save, the AI behind session-checked serverless functions from day one, guest access deleted after seven days); Copilot and Claude Code; the model history (OpenAI → Gemini → Groq). New in the text: the AI question generator, the Mom Test bias check, translation into eight languages and the read-only report link. Five screens taken from the live demo reel, an architecture diagram drawn from the code, and a card cover.
+- **Site:** media can be phone-shaped (`shape: "phone"`); desktop screenshots show two per row; a unit test checks every case study image exists and has alt text.
+- **Accessibility fix found on the way:** the guide tile could cover a focused link near the bottom of the screen (the flaky keyboard test). `scroll-padding-bottom: 120px` keeps focus clear of it (WCAG 2.4.11).
+- **Left open:** Ridly's demo video and k6 recording, and where "1,500 VUs" comes from (the script peaks at 1,200); the YouTube ID for the Validation Portal recording; one concrete example of correcting Copilot or Claude Code on Validation Portal.
+
 ## Phase 6: Polish (2026-10-22)
 
 Spec: [specs/features/phase-6-polish.md](specs/features/phase-6-polish.md) · Roadmap items 6.1–6.2 · Branch `phase-6-polish`, merged into `redesign`

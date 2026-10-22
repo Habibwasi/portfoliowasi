@@ -54,13 +54,13 @@ test.describe("keyboard", () => {
           const x = rect.left + rect.width / 2;
           const y = rect.top + rect.height / 2;
           const top = document.elementFromPoint(x, y);
-          const covered = !!top && !el.contains(top) && !top.contains(el);
+          const covered = !!top && !el.contains(top) && !top.contains(el) ? `${top.tagName.toLowerCase()}.${top.className}` : "";
           return { id: name + `@${Math.round(rect.top + scrollY)}`, name, ring, covered, size: rect.width > 0 && rect.height > 0 };
         });
         if (!stop || stop.id === first) break;
         first ??= stop.id;
         if (!stop.ring) problems.push(`${stop.name}: no focus ring`);
-        if (stop.covered) problems.push(`${stop.name}: covered`);
+        if (stop.covered) problems.push(`${stop.name}: covered by ${stop.covered}`);
         if (!stop.size) problems.push(`${stop.name}: no size`);
       }
       expect(problems).toEqual([]);

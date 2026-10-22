@@ -42,7 +42,12 @@ export const projects: Project[] = [
     links: {
       code: { label: "HOP-KMP on GitHub", href: "https://github.com/Habibwasi/HOP-KMP" },
     },
-    cover: placeholder("Ridly screens"),
+    cover: {
+      kind: "screens",
+      src: "/work/ridly/cover.png",
+      caption: "Search results, trip detail and settlement",
+      alt: "Three Ridly screens: rides from Copenhagen to Aarhus, a trip at DKK 173.28 per seat, and paying the driver in MobilePay.",
+    },
     featured: true,
     caseStudyReady: true,
   },
@@ -53,7 +58,7 @@ export const projects: Project[] = [
     summary:
       "Surveys, customer interviews and an LLM verdict with themes, key quotes and next steps, so founders test ideas before building.",
     status: "complete",
-    role: placeholder("Role on Validation Portal"),
+    role: "Built solo",
     metrics: [
       { value: "111", label: "Commits" },
       { value: "Live", label: "Demo online" },
@@ -64,7 +69,12 @@ export const projects: Project[] = [
       code: { label: "Validation-Portal on GitHub", href: "https://github.com/Habibwasi/Validation-Portal" },
       live: { label: "validation-portal.vercel.app", href: "https://validation-portal.vercel.app" },
     },
-    cover: placeholder("Validation Portal screens"),
+    cover: {
+      kind: "screens",
+      src: "/work/validation-portal/ai-analysis.png",
+      caption: "AI analysis",
+      alt: "Validation Portal's AI verdict: a strong signal from 12 interviews and 47 survey responses, with the patterns it found.",
+    },
     featured: true,
     caseStudyReady: true,
   },

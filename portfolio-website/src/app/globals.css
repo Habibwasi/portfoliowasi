@@ -124,6 +124,8 @@
     scroll-behavior: smooth;
     /* Keeps anchor targets (#work, #contact) clear of the 64px sticky header. */
     scroll-padding-top: 80px;
+    /* Keeps a focused link clear of the guide tile, fixed in the bottom 108px (2.4.11). */
+    scroll-padding-bottom: 120px;
   }
 
   body {

@@ -39,6 +39,8 @@ export type MediaItem = {
   alt?: string;
   /** Poster image under /public for a video; without one the player shows a plain paper poster. */
   poster?: string;
+  /** A phone screenshot: framed tall instead of 16:10. */
+  shape?: "phone";
 };
 
 export type ProjectStatus = "complete" | "in-progress";

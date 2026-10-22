@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -60 1600 1060" role="img" aria-labelledby="t d">
+  <title id="t">Validation Portal architecture</title>
+  <desc id="d">Founders use a React 19 single-page app, and respondents fill in public surveys without logging in. Both read and write Supabase directly: PostgreSQL with row-level security, and Auth with guest sign-in protected by Cloudflare Turnstile. AI and email go through Vercel serverless functions, which check the Supabase session and then call GPT-OSS 20B on Groq for the verdict, question drafts, the bias check and translation, or Resend to email the owner when a response arrives. A pg_cron job deletes guest accounts after seven days.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c1a16"/></marker>
+    <style>
+      text { font-family: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; fill: #1c1a16; }
+      .h { font-size: 26px; font-weight: 600; }
+      .s { font-size: 19px; fill: #5c564c; }
+      .l { font-size: 16px; letter-spacing: .08em; fill: #5c564c; }
+      .box { fill: #fcfaf5; stroke: #1c1a16; stroke-width: 1.5; }
+      .grp { fill: none; stroke: #8a8173; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .ln { stroke: #1c1a16; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+  <rect y="-60" width="1600" height="1060" fill="#fcfaf5"/>
+
+  <text class="l" x="40" y="48">IN THE BROWSER</text>
+  <rect class="grp" x="40" y="64" width="500" height="576" rx="14"/>
+  <rect class="box" x="70" y="96" width="440" height="220" rx="10"/>
+  <text class="h" x="94" y="142">Founder app</text>
+  <text class="s" x="94" y="180">React 19 · Vite · TypeScript</text>
+  <text class="s" x="94" y="226">hypotheses · surveys</text>
+  <text class="s" x="94" y="258">conversations · dashboard</text>
+  <text class="s" x="94" y="290">guests welcome</text>
+  <rect class="box" x="70" y="380" width="440" height="220" rx="10"/>
+  <text class="h" x="94" y="426">Public survey</text>
+  <text class="s" x="94" y="464">/s/:slug, no login</text>
+  <text class="s" x="94" y="510">one question at a time,</text>
+  <text class="s" x="94" y="542">in the respondent's language</text>
+
+  <path class="ln" d="M510 200h130" marker-end="url(#a)"/>
+  <path class="ln" d="M510 480h50v-140h80" marker-end="url(#a)"/>
+  <text class="s" x="556" y="186">data</text>
+
+  <text class="l" x="640" y="48">SUPABASE</text>
+  <rect class="box" x="640" y="64" width="460" height="330" rx="10"/>
+  <text class="h" x="664" y="110">PostgreSQL + Auth</text>
+  <text class="s" x="664" y="150">row-level security on every</text>
+  <text class="s" x="664" y="182">table: each user reads only</text>
+  <text class="s" x="664" y="214">their own data</text>
+  <text class="s" x="664" y="262">guest sign-in, no account</text>
+  <text class="s" x="664" y="310">pg_cron deletes guests</text>
+  <text class="s" x="664" y="342">after 7 days</text>
+
+  <path class="ln" d="M290 640v120h350" marker-end="url(#a)"/>
+  <text class="s" x="306" y="740">/api, with the session</text>
+
+  <text class="l" x="640" y="470">VERCEL SERVERLESS FUNCTIONS</text>
+  <rect x="640" y="488" width="460" height="452" rx="10" fill="#fcfaf5" stroke="#c24018" stroke-width="2.5"/>
+  <text class="h" x="664" y="536">/api/analyse</text>
+  <text class="s" x="664" y="572">verdict · question drafts</text>
+  <text class="s" x="664" y="604">· bias check</text>
+  <text class="h" x="664" y="656">/api/translate-survey</text>
+  <text class="h" x="664" y="712">/api/notify-survey</text>
+  <text class="s" x="664" y="776">each checks the Supabase</text>
+  <text class="s" x="664" y="808">session first; the API keys</text>
+  <text class="s" x="664" y="840">never reach the browser</text>
+  <path class="ln" d="M870 488v-94" marker-end="url(#a)"/>
+  <text class="s" x="886" y="426">session check</text>
+
+  <text class="l" x="1200" y="48">BOT CHECK</text>
+  <rect class="box" x="1200" y="64" width="360" height="160" rx="10"/>
+  <text class="h" x="1224" y="110">Turnstile</text>
+  <text class="s" x="1224" y="148">Cloudflare, verified</text>
+  <text class="s" x="1224" y="180">by Supabase Auth</text>
+  <path class="ln" d="M1200 144h-100" marker-end="url(#a)" stroke-dasharray="6 5"/>
+
+  <text class="l" x="1200" y="470">EXTERNAL</text>
+  <path class="ln" d="M1100 590h100" marker-end="url(#a)"/>
+  <rect class="box" x="1200" y="488" width="360" height="200" rx="10"/>
+  <text class="h" x="1224" y="536">Groq</text>
+  <text class="s" x="1224" y="576">GPT-OSS 20B</text>
+  <text class="s" x="1224" y="608">(openai/gpt-oss-20b)</text>
+  <path class="ln" d="M1100 820h100" marker-end="url(#a)"/>
+  <rect class="box" x="1200" y="740" width="360" height="200" rx="10"/>
+  <text class="h" x="1224" y="788">Resend</text>
+  <text class="s" x="1224" y="828">emails the owner on</text>
+  <text class="s" x="1224" y="860">each survey response</text>
+</svg>

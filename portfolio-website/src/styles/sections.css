@@ -1198,6 +1198,22 @@ textarea.hw-input {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--spacing-space-4);
 }
+/* Desktop screenshots: two per row, so the screens stay readable. */
+.hw-cs-screens:has(.hw-frame__box img):not(:has(.hw-frame--phone)) {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+/* Phone screenshots (Ridly): narrow columns, each frame the shape of the screen. */
+.hw-cs-screens:has(.hw-frame--phone) {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.hw-frame--phone .hw-frame__box {
+  aspect-ratio: 360 / 870;
+}
+/* The frame's tag sits in the top band, above the screen instead of over its header. */
+.hw-frame--phone .hw-frame__box > img {
+  top: 44px !important;
+  height: calc(100% - 44px) !important;
+}
 .hw-cs-impact {
   display: flex;
   flex-direction: column;

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -60 1600 1060" role="img" aria-labelledby="t d">
+  <title id="t">Ridly architecture</title>
+  <desc id="d">Android (Compose Multiplatform) and iOS (SwiftUI) apps share one Kotlin Multiplatform module with the ViewModels, repositories and Ktor client. It calls a NestJS API over REST and a Socket.IO WebSocket for chat. The API uses Supabase Auth, Mapbox for places and routes, Firebase Cloud Messaging and APNs for push, PostgreSQL with PostGIS through Prisma, and Redis with BullMQ for background jobs. Passengers pay drivers directly in MobilePay, outside the app.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c1a16"/></marker>
+    <style>
+      text { font-family: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; fill: #1c1a16; }
+      .h { font-size: 26px; font-weight: 600; }
+      .s { font-size: 19px; fill: #5c564c; }
+      .l { font-size: 16px; letter-spacing: .08em; fill: #5c564c; }
+      .box { fill: #fcfaf5; stroke: #1c1a16; stroke-width: 1.5; }
+      .ext { fill: #fcfaf5; stroke: #1c1a16; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .ln { stroke: #1c1a16; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+  <rect y="-60" width="1600" height="1060" fill="#fcfaf5"/>
+
+  <text class="l" x="60" y="62">CLIENTS</text>
+  <rect class="box" x="60" y="80" width="330" height="110" rx="10"/>
+  <text class="h" x="84" y="126">Android app</text>
+  <text class="s" x="84" y="162">Compose Multiplatform</text>
+  <rect class="box" x="430" y="80" width="330" height="110" rx="10"/>
+  <text class="h" x="454" y="126">iOS app</text>
+  <text class="s" x="454" y="162">SwiftUI</text>
+
+  <path class="ln" d="M225 190v40M595 190v40"/>
+  <rect x="60" y="230" width="700" height="150" rx="10" fill="#fcfaf5" stroke="#c24018" stroke-width="2.5"/>
+  <text class="h" x="84" y="276">Shared Kotlin Multiplatform module</text>
+  <text class="s" x="84" y="314">MVI ViewModels · repositories · domain models</text>
+  <text class="s" x="84" y="348">Ktor client · Koin · PricingEngine (øre)</text>
+
+  <path class="ln" d="M300 380v130" marker-end="url(#a)"/>
+  <text class="s" x="316" y="440">REST /api/v1</text>
+  <path class="ln" d="M560 380v130" marker-end="url(#a)" marker-start="url(#a)" stroke-dasharray="2 6" stroke-linecap="round"/>
+  <text class="s" x="576" y="440">WebSocket chat</text>
+
+  <text class="l" x="60" y="502">BACKEND</text>
+  <rect class="box" x="60" y="520" width="700" height="190" rx="10"/>
+  <text class="h" x="84" y="566">NestJS 11 API</text>
+  <text class="s" x="84" y="604">trips · bookings · settlements · ratings</text>
+  <text class="s" x="84" y="638">chat gateway (Socket.IO) · search alerts</text>
+  <text class="s" x="84" y="672">SupabaseGuard on every request · Sentry</text>
+
+  <path class="ln" d="M240 710v90" marker-end="url(#a)"/>
+  <path class="ln" d="M580 710v90" marker-end="url(#a)"/>
+  <rect class="box" x="60" y="800" width="330" height="140" rx="10"/>
+  <text class="h" x="84" y="846">PostgreSQL</text>
+  <text class="s" x="84" y="884">PostGIS points, via Prisma</text>
+  <text class="s" x="84" y="916">money as integer øre</text>
+  <rect class="box" x="430" y="800" width="330" height="140" rx="10"/>
+  <text class="h" x="454" y="846">Redis + BullMQ</text>
+  <text class="s" x="454" y="884">deadline checks, recurring</text>
+  <text class="s" x="454" y="916">trips, search alerts</text>
+
+  <text class="l" x="900" y="502">SERVICES</text>
+  <path class="ln" d="M760 580h140" marker-end="url(#a)"/>
+  <rect class="box" x="900" y="520" width="640" height="100" rx="10"/>
+  <text class="h" x="924" y="562">Supabase Auth</text>
+  <text class="s" x="924" y="596">sign-in; tokens checked server-side</text>
+  <path class="ln" d="M760 640h40v50h100" marker-end="url(#a)"/>
+  <rect class="box" x="900" y="640" width="640" height="100" rx="10"/>
+  <text class="h" x="924" y="682">Mapbox</text>
+  <text class="s" x="924" y="716">geocoding · route distance → seat price</text>
+  <path class="ln" d="M760 680h20v130h120" marker-end="url(#a)"/>
+  <rect class="box" x="900" y="760" width="640" height="100" rx="10"/>
+  <text class="h" x="924" y="802">FCM + APNs</text>
+  <text class="s" x="924" y="836">push to Android and iOS</text>
+
+  <rect class="ext" x="900" y="160" width="640" height="220" rx="10"/>
+  <text class="l" x="900" y="142">OUTSIDE THE APP</text>
+  <text class="h" x="924" y="206">MobilePay</text>
+  <text class="s" x="924" y="248">After the ride, the passenger pays</text>
+  <text class="s" x="924" y="280">the driver directly. The app records</text>
+  <text class="s" x="924" y="312">"paid" and "received", or a dispute.</text>
+  <path class="ln" d="M760 300h140" marker-end="url(#a)" stroke-dasharray="6 5"/>
+</svg>

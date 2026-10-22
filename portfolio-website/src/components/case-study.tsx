@@ -6,6 +6,7 @@ import { featuredProjects } from "@/content/projects";
 import { site } from "@/content/site";
 import type { CaseStudy, CaseStudySection, Content, MediaItem, Project } from "@/content/types";
 import { ActionButton, Button, MediaFrame, mediaLabels, Metrics, Placeholder, Tag, Tags } from "./hw";
+import { cn } from "@/lib/utils";
 import { VideoFacade } from "./video-facade";
 
 function Prose({ value }: { value: Content<string> }) {
@@ -23,11 +24,11 @@ function Media({ item, className }: { item: MediaItem; className?: string }) {
       isVideo(item) && !src.startsWith("/") ? (
         <VideoFacade videoId={src} title={isPlaceholder(item.caption) ? mediaLabels[item.kind] : item.caption} poster={item.poster} />
       ) : (
-        <Image src={src} alt={item.alt ?? ""} fill sizes="(max-width: 640px) 100vw, 1200px" style={{ objectFit: "contain" }} />
+        <Image src={src} alt={item.alt ?? ""} fill sizes={item.shape === "phone" ? "(max-width: 640px) 50vw, 240px" : "(max-width: 640px) 100vw, 1200px"} style={{ objectFit: "contain" }} />
       );
   }
   return (
-    <MediaFrame kind={item.kind} caption={item.caption} missing={isPlaceholder(src) ? src.label : undefined} className={className}>
+    <MediaFrame kind={item.kind} caption={item.caption} missing={isPlaceholder(src) ? src.label : undefined} className={cn(className, item.shape === "phone" && "hw-frame--phone")}>
       {content}
     </MediaFrame>
   );
