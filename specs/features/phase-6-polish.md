@@ -1,6 +1,6 @@
 # Spec: Phase 6 — Polish
 
-Roadmap items 6.1–6.2 · Status: in progress · Branch `phase-6-polish`, merged into `redesign`
+Roadmap items 6.1–6.2 · Status: done (closed 2026-10-22; CI and Vercel pass on `redesign`, merge commit `65a7871`) · Branch `phase-6-polish`, merged into `redesign` through PR #1
 
 ## Goal
 

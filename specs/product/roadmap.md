@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0–5 done; Phase 6 in progress)
+Last updated: 2026-10-22 (Phases 0–6 done; Phase 7 next)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -105,14 +105,14 @@ Spec: [phase-5-delight.md](../features/phase-5-delight.md)
 | 5.5 | Hero illustration and photo slots | V3 | done (portrait in 7.5) |
 | 5.6 | Guide: five squash-and-stretch states, the poke, and the page tools (`scroll_to`, `open_case_study`, `highlight`, `play_demo`, `start_tour`, `download_cv`) with hop-and-point; reduced motion fades | GD2, GD6, GD8 | done (videos in 7.3) |
 
-## Phase 6: Polish · in progress
+## Phase 6: Polish · done (closed 2026-10-22)
 
 Spec: [phase-6-polish.md](../features/phase-6-polish.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 6.1 | Full accessibility pass: keyboard, screen reader, reduced motion, contrast, reflow, plus a styled 404 | P4 | in progress (manual screen reader check in 7.10) |
-| 6.2 | Analytics with Umami Cloud: case study page views, CV downloads, email and Calendly clicks | G4 | in progress (website ID in 7.9) |
+| 6.1 | Full accessibility pass: keyboard, screen reader, reduced motion, contrast, reflow, plus a styled 404 | P4 | done (manual screen reader check in 7.10) |
+| 6.2 | Analytics with Umami Cloud: case study page views, CV downloads, email and Calendly clicks | G4 | done (website ID in 7.9) |
 | 6.3 | Rewrite the repo README (it still describes Nodemailer and the old sections) | — | done (Phase 0) |
 
 ## Phase 7: Content handover (last)

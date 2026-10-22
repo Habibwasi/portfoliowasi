@@ -6,7 +6,7 @@ Each entry lists what changed, the key decisions and why, and what's left open. 
 
 Spec: [specs/features/phase-6-polish.md](specs/features/phase-6-polish.md) · Roadmap items 6.1–6.2 · Branch `phase-6-polish`, merged into `redesign`
 
-**Status: in progress until CI passes on `redesign`.** Locally: typecheck, lint, the build and all end-to-end tests pass (desktop and phone). Unit tests run in CI only, because Smart App Control still blocks Vitest on this PC.
+**Status: done.** CI and the Vercel preview pass on `redesign` (merge commit `65a7871`, PR #1). In CI: 303 unit tests in 27 files, 158 end-to-end tests, and Lighthouse on phone within budget. The guide evaluation wasn't rerun, since nothing in the guide changed. Unit tests still run in CI only, because Smart App Control blocks Vitest on this PC.
 
 - **Accessibility audit (6.1):** axe with the WCAG 2.2 AA tags plus best practice on every page, a Tab walk of every page, reduced motion, 320 px reflow and the WCAG text-spacing overrides. The site already passed nearly all of it. Two fixes came out of it:
   - **Card links:** each featured card is one link, so a screen reader named it with the whole card (placeholder, metrics, tags and "Read the case study"). It's now named by the title and described by the summary.
