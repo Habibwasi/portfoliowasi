@@ -16,11 +16,14 @@ function CardMedia({ cover }: { cover: Project["cover"] }) {
 }
 
 /**
- * A featured project on Home. The whole card is one link to the case study.
+ * A featured project on Home. The whole card is one link to the case study, named by its
+ * title and described by its summary, so a screen reader doesn't read the whole card (6.1).
  * Until the case study is published, the card is not a link and says so.
  */
 export function ProjectCard({ project }: { project: Project }) {
   const href = `/work/${project.slug}`;
+  const titleId = `${projectCardId(project.slug)}-title`;
+  const summaryId = `${projectCardId(project.slug)}-summary`;
   const cta = project.caseStudyReady ? "Read the case study" : "Case study coming";
 
   const body = (
@@ -33,8 +36,8 @@ export function ProjectCard({ project }: { project: Project }) {
           <Tag className="hw-card__status">{project.statusNote}</Tag>
         )}
         <span className="hw-label">{project.eyebrow}</span>
-        <h3 className="hw-card__title">{project.title}</h3>
-        <p className="hw-card__text">{project.summary}</p>
+        <h3 id={titleId} className="hw-card__title">{project.title}</h3>
+        <p id={summaryId} className="hw-card__text">{project.summary}</p>
         <Metrics metrics={project.metrics.slice(0, MAX_METRICS)} />
         <Tags items={project.tags.slice(0, MAX_TAGS)} />
         <span className="hw-btn hw-btn--text">{cta}</span>
@@ -51,7 +54,7 @@ export function ProjectCard({ project }: { project: Project }) {
   }
 
   return (
-    <a id={projectCardId(project.slug)} className="hw-card" href={href}>
+    <a id={projectCardId(project.slug)} className="hw-card" href={href} aria-labelledby={titleId} aria-describedby={summaryId}>
       {body}
     </a>
   );

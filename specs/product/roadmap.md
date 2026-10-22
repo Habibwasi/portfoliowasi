@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0–5 done; Phase 6 next)
+Last updated: 2026-10-22 (Phases 0–5 done; Phase 6 in progress)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -105,12 +105,14 @@ Spec: [phase-5-delight.md](../features/phase-5-delight.md)
 | 5.5 | Hero illustration and photo slots | V3 | done (portrait in 7.5) |
 | 5.6 | Guide: five squash-and-stretch states, the poke, and the page tools (`scroll_to`, `open_case_study`, `highlight`, `play_demo`, `start_tour`, `download_cv`) with hop-and-point; reduced motion fades | GD2, GD6, GD8 | done (videos in 7.3) |
 
-## Phase 6: Polish
+## Phase 6: Polish · in progress
+
+Spec: [phase-6-polish.md](../features/phase-6-polish.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 6.1 | Full accessibility pass: keyboard, screen reader, reduced motion, contrast | P4 | planned |
-| 6.2 | Analytics for case study views, CV downloads and Calendly clicks (tool per the open decision) | G4 | planned |
+| 6.1 | Full accessibility pass: keyboard, screen reader, reduced motion, contrast, reflow, plus a styled 404 | P4 | in progress (manual screen reader check in 7.10) |
+| 6.2 | Analytics with Umami Cloud: case study page views, CV downloads, email and Calendly clicks | G4 | in progress (website ID in 7.9) |
 | 6.3 | Rewrite the repo README (it still describes Nodemailer and the old sections) | — | done (Phase 0) |
 
 ## Phase 7: Content handover (last)
@@ -127,6 +129,8 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 7.6 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | open |
 | 7.7 | Role text for the More projects (Undershelf, Deskinct, Medication Adherence App) | `src/content/projects.ts` | open |
 | 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY`. When adding to Production, check `VERCEL_SUPPORT_LARGE_FUNCTION=1` is there too (set for Preview on 2026-10-22) | open |
+| 7.9 | Umami Cloud: create the account (free Hobby plan), add the website for the production domain, and copy its website ID | `NEXT_PUBLIC_UMAMI_WEBSITE_ID` in Vercel **Production** only. In Umami, add a goal or funnel for the three events (`CV download`, `Email click`, `Calendly click`) and the `/work/*` page views | open |
+| 7.10 | Screen reader check by hand, on the real content: NVDA with Firefox on Home and a case study, VoiceOver on an iPhone. Listen for the card names, the guide panel and the contact form's messages | — (fix anything found before the launch PR) | open |
 
 ## Later (not scheduled)
 
@@ -176,11 +180,13 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 2026-10-22 | The orbit shows all 21 skills in three rings; the Stack has three groups | Design system SkillOrbit (at most 6/5/3) |
 | 2026-10-22 | Guide states are CSS keyframes from the mockup playground, not Motion | Tech stack "Motion for the state animations" |
 | 2026-10-22 | A page tool runs in the browser without a second model call | Tech stack "`sendAutomaticallyWhen`" |
+| 2026-10-22 | Analytics: Umami Cloud (free Hobby plan), next to Vercel's page views. Events are sorted by link target in one listener, not Umami's `data-umami-event` (it cancels the click, which breaks the CV download). Case study views are Umami page views. Tracking counts only the production host | Open decision "Umami or Plausible" |
+| 2026-10-22 | Featured card links are named by their title (`aria-labelledby`), not by the whole card | Design system ProjectCard (one link, name from its content) |
 | 2026-10-22 | The name's reveal lifts whole words, not letters, so Fraunces keeps its kerning; only a scrambling letter is positioned, so the `h1` stays the LCP element | Spec 5.1 "each letter rises" |
 
 ## Open decisions
 
-- [ ] Analytics for custom events: Umami or Plausible (Vercel custom events need Pro). Decide in Phase 6.
+- [x] Analytics for custom events: **Umami Cloud** (decided 2026-10-22, Phase 6).
 
 ## Content and assets to supply
 

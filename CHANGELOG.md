@@ -2,6 +2,21 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 6: Polish (2026-10-22)
+
+Spec: [specs/features/phase-6-polish.md](specs/features/phase-6-polish.md) · Roadmap items 6.1–6.2 · Branch `phase-6-polish`, merged into `redesign`
+
+**Status: in progress until CI passes on `redesign`.** Locally: typecheck, lint, the build and all end-to-end tests pass (desktop and phone). Unit tests run in CI only, because Smart App Control still blocks Vitest on this PC.
+
+- **Accessibility audit (6.1):** axe with the WCAG 2.2 AA tags plus best practice on every page, a Tab walk of every page, reduced motion, 320 px reflow and the WCAG text-spacing overrides. The site already passed nearly all of it. Two fixes came out of it:
+  - **Card links:** each featured card is one link, so a screen reader named it with the whole card (placeholder, metrics, tags and "Read the case study"). It's now named by the title and described by the summary.
+  - **404:** Next's bare "404" is replaced with a page in the site's style that leads back to the work, About and Home.
+- **Tests that keep it:** `e2e/a11y.spec.ts` runs all of the above on every page, plus Home with the guide open. A unit test checks the contrast of the colour pairs the design uses, read from `globals.css`. The lowest pairs are `signal` on paper (4.61:1) and muted ink on the marker (4.93:1).
+- **Analytics (6.2):** Umami Cloud, as you chose. One listener recognises CV, `mailto:` and Calendly links by their target and sends `CV download`, `Email click` or `Calendly click` with where on the page the click happened. Case study views are Umami's page views of `/work/<slug>`. The script loads only when `NEXT_PUBLIC_UMAMI_WEBSITE_ID` is set and counts only the production host, so previews and CI never show up. The CSP allows `cloud.umami.is` and `gateway.umami.is`. Checked with a test ID: the script loads and nothing is blocked.
+- **Why not Umami's own `data-umami-event`:** on a link it cancels the click and sets `location.href` itself, which would open the CV PDF instead of downloading it.
+- **Revisit?** Vercel Analytics stays next to Umami, so page views are counted twice, in two dashboards. Dropping Vercel's is a one-line change.
+- **Left open:** the Umami account and website ID (7.9), and a manual screen reader pass with NVDA and VoiceOver on the real content (7.10).
+
 ## Phase 5 follow-up: smoother tiles, guide answers that scroll (2026-10-22)
 
 Reported on the preview: the page lagged, the letter tiles fell unevenly, and guide answers looked cut off.

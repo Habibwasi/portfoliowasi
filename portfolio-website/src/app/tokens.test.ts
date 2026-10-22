@@ -66,3 +66,52 @@ describe("font fallbacks", () => {
     expect(face).toMatch(/ascent-override:/);
   });
 });
+
+/** WCAG 2.x relative luminance and contrast ratio of two #rrggbb colours. */
+function contrast(a: string, b: string): number {
+  const luminance = (hex: string) => {
+    const [r, g, b] = [1, 3, 5].map((i) => {
+      const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (dark + 0.05);
+}
+
+/** The pairs the design actually uses (6.1): body text 4.5:1, the focus ring and input borders 3:1 (1.4.11). */
+describe("colour contrast", () => {
+  const color = (name: string) => cssValue(`color-${name}`)!;
+
+  it.each([
+    ["ink", "paper"],
+    ["ink", "paper-raised"],
+    ["ink", "paper-sunk"],
+    ["ink", "marker"],
+    ["ink-muted", "paper"],
+    ["ink-muted", "paper-raised"],
+    ["ink-muted", "paper-sunk"],
+    ["ink-muted", "marker"],
+    ["signal", "paper"],
+    ["signal-ink", "paper"],
+    ["signal-ink", "paper-sunk"],
+    ["cobalt", "paper"],
+    ["cobalt", "paper-raised"],
+    ["cobalt", "paper-sunk"],
+    ["marker-ink", "paper"],
+    ["on-signal", "signal"],
+    ["paper", "ink"],
+  ])("text %s on %s is at least 4.5:1", (fg, bg) => {
+    expect(contrast(color(fg), color(bg))).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it.each([
+    ["cobalt", "paper"],
+    ["cobalt", "paper-sunk"],
+    ["line-strong", "paper"],
+    ["signal", "paper-sunk"],
+  ])("ring, border or large text %s on %s is at least 3:1", (fg, bg) => {
+    expect(contrast(color(fg), color(bg))).toBeGreaterThanOrEqual(3);
+  });
+});
