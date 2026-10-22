@@ -5,7 +5,7 @@ import { caseStudies, publishedProjects } from "./case-studies";
 import { howItWorks } from "./guide";
 import { projects } from "./projects";
 import { aiWorkflow, home, site } from "./site";
-import { aiSkills, skills, techSkills } from "./skills";
+import { aiSkills, frameworkSkills, languageSkills, skills, techSkills } from "./skills";
 
 /** Every page and anchor a proof may point at, plus the code links the site already shows. */
 function isKnownHref(href: string): boolean {
@@ -60,6 +60,13 @@ describe("skills (C14, AI6)", () => {
       const known = toolkit.some((name) => tag.toLowerCase().includes(name.split(" ")[0].toLowerCase()));
       expect(known, tag).toBe(true);
     }
+  });
+
+  it("puts every tech skill in one family, six per inner orbit ring (5.3)", () => {
+    for (const skill of techSkills) expect(skill.family, skill.name).toMatch(/^(language|framework)$/);
+    for (const skill of aiSkills) expect(skill.family, skill.name).toBeUndefined();
+    expect(languageSkills.map((s) => s.name)).toEqual(["Kotlin", "Swift", "TypeScript", "Python", "PostgreSQL", "C#"]);
+    expect(frameworkSkills.map((s) => s.name)).toEqual(["React", "Next.js", "NestJS", "Supabase", "k6", "TDD"]);
   });
 
   it("marks TopicTrail proofs as planned", () => {

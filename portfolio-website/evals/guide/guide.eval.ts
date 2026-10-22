@@ -44,6 +44,9 @@ describe("retrieval", () => {
         const ok = urls.some((url) => fromAny(url, c.sources));
         record(c.question, "source retrieved", ok);
         expect(ok, `expected one of ${c.sources.join(", ")} in ${urls.join(", ")}`).toBe(true);
+      } else if (c.kind === "tool") {
+        record(c.question, "something retrieved", urls.length > 0);
+        expect(urls.length, "a tool question must reach the model").toBeGreaterThan(0);
       } else if (c.offTopic) {
         record(c.question, "nothing retrieved", urls.length === 0);
         expect(urls).toEqual([]);
@@ -63,6 +66,7 @@ async function readAnswer(response: Response) {
     text: events.filter((e) => e.type === "text-delta").map((e) => e.delta).join("") as string,
     sources: (metadata.sources ?? []) as { n: number; title: string; url: string }[],
     errors: events.filter((e) => e.type === "error").map((e) => e.errorText) as string[],
+    tools: events.filter((e) => e.type === "tool-input-available").map((e) => ({ name: e.toolName, input: e.input })) as { name: string; input: unknown }[],
   };
 }
 
@@ -98,8 +102,15 @@ describe.skipIf(!evalKey)("answers through the real route", () => {
         }),
       );
       expect(response.status).toBe(200);
-      const { text, sources, errors } = await readAnswer(response);
+      const { text, sources, errors, tools } = await readAnswer(response);
       expect(errors, "provider errors").toEqual([]);
+
+      if (c.kind === "tool") {
+        const called = tools.length === 1 && tools[0].name === c.tool && JSON.stringify(tools[0].input) === JSON.stringify(c.input);
+        record(c.question, `calls ${c.tool}`, called);
+        expect(tools, `tool call: ${JSON.stringify(tools)}`).toEqual([{ name: c.tool, input: c.input }]);
+        return;
+      }
 
       if (c.kind === "refuse") {
         record(c.question, "says I don't know", DONT_KNOW.test(text));

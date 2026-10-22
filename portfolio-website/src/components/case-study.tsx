@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { caseStudySectionId, type CaseStudySectionName } from "@/content/anchors";
+import { caseStudyDemoId, caseStudySectionId, caseStudyTitleId, type CaseStudySectionName } from "@/content/anchors";
 import { caseStudyEyebrow, nextCaseStudy } from "@/content/case-studies";
 import { isPlaceholder } from "@/content/placeholder";
 import { featuredProjects } from "@/content/projects";
@@ -81,7 +81,7 @@ export function CaseStudyView({ project, study }: { project: Project; study: Cas
       <header className="hw-container hw-cs-header">
         <span className="hw-label">{eyebrow}</span>
         {project.status === "in-progress" && project.statusNote && <Tag className="hw-cs-header__status">{project.statusNote}</Tag>}
-        <h1 className="hw-cs-header__title">{project.title}</h1>
+        <h1 id={caseStudyTitleId} className="hw-cs-header__title">{project.title}</h1>
         <p className="hw-cs-header__lede">{study.contextLine}</p>
         <div className="hw-cs-facts" role="group" aria-label="Project facts">
           <dl className="hw-cs-facts__list">
@@ -95,7 +95,7 @@ export function CaseStudyView({ project, study }: { project: Project; study: Cas
         </div>
       </header>
 
-      <div className="hw-container hw-cs-hero">
+      <div id={caseStudyDemoId} className="hw-container hw-cs-hero">
         <Media item={study.hero} className="hw-cs-hero__frame" />
       </div>
 

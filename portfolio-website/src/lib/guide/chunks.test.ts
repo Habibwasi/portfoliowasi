@@ -62,6 +62,17 @@ describe("buildChunks", () => {
     expect(byId("qa-record")?.url).toBe("/about#qa-record");
   });
 
+  it("indexes how to get around the site, so navigation requests reach the model (5.6)", () => {
+    const nav = chunks.find((c) => c.id === "navigation");
+    expect(nav?.title).toBe("Getting around this site");
+    expect(nav?.url).toBe("/");
+    expect(nav?.text).toMatch(/tour/);
+    expect(nav?.text).toMatch(/contact/i);
+    expect(nav?.text).toMatch(/demo/);
+    for (const p of publishedProjects) expect(nav?.text).toContain(p.title.split(",")[0]);
+    expect(nav?.text).not.toMatch(/CV/);
+  });
+
   it("leaves the testimonial out while it is a placeholder", () => {
     expect(isPlaceholder(testimonial.quote)).toBe(true);
     expect(chunks.some((c) => c.id === "testimonial")).toBe(false);

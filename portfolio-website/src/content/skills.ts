@@ -5,7 +5,7 @@ import { site } from "./site";
 
 /**
  * Every skill the site names, once, with the work that proves it (C14, AI6). The AI toolkit
- * on Home (4.1) and the Stack row (4.3) both read this list; the orbit (5.3) will too.
+ * on Home (4.1) and the Stack (4.3, the orbit in 5.3) both read this list.
  */
 export type SkillProof = {
   /** Project or page name, e.g. "Ridly". */
@@ -19,6 +19,8 @@ export type Skill = {
   name: string;
   /** AI tools use dark tags so they read apart from languages and frameworks. */
   kind: "ai" | "tech";
+  /** Tech skills only: the orbit's ring and the Stack's group (5.3). */
+  family?: "language" | "framework";
   proofs: SkillProof[];
 };
 
@@ -108,16 +110,19 @@ export const skills: Skill[] = [
   {
     name: "Kotlin",
     kind: "tech",
+    family: "language",
     proofs: [project("ridly", "Shared Kotlin Multiplatform module and the Android app")],
   },
   {
     name: "Swift",
     kind: "tech",
+    family: "language",
     proofs: [project("ridly", "The iOS app in SwiftUI, over the shared module")],
   },
   {
     name: "TypeScript",
     kind: "tech",
+    family: "language",
     proofs: [
       project("validation-portal", "The React app and the serverless functions that call Groq"),
       project("ridly", "The NestJS API"),
@@ -127,26 +132,31 @@ export const skills: Skill[] = [
   {
     name: "Python",
     kind: "tech",
+    family: "language",
     proofs: [project("ai-workflow-global", "LangGraph orchestrator with 33 tests")],
   },
   {
     name: "React",
     kind: "tech",
+    family: "framework",
     proofs: [project("validation-portal", "React 19 front end"), thisSite("Next.js and React")],
   },
   {
     name: "Next.js",
     kind: "tech",
+    family: "framework",
     proofs: [thisSite("App Router, static pages and the guide's API route")],
   },
   {
     name: "NestJS",
     kind: "tech",
+    family: "framework",
     proofs: [project("ridly", "API with Prisma, Socket.IO chat and BullMQ push notifications", "Architecture")],
   },
   {
     name: "PostgreSQL",
     kind: "tech",
+    family: "language",
     proofs: [
       project("ridly", "PostGIS geography points with spatial indexes for trip search", "Architecture"),
       project("validation-portal", "Row-level security on every table, through Supabase"),
@@ -155,24 +165,30 @@ export const skills: Skill[] = [
   {
     name: "Supabase",
     kind: "tech",
+    family: "framework",
     proofs: [project("validation-portal", "Database and sessions; the functions check the session before calling Groq"), project("ridly", "Sign-in and auth")],
   },
   {
     name: "C#",
     kind: "tech",
+    family: "language",
     proofs: [project("heat-it", "The Asset Manager module, in .NET and Avalonia")],
   },
   {
     name: "k6",
     kind: "tech",
+    family: "framework",
     proofs: [project("ridly", "Load test ramped 300 → 600 → 1,500 virtual users", "Test evidence")],
   },
   {
     name: "TDD",
     kind: "tech",
+    family: "framework",
     proofs: [thisSite("Tests first; CI runs unit, end-to-end and Lighthouse checks"), project("ai-workflow-global", "33 tests over the LangGraph workflow")],
   },
 ];
 
 export const aiSkills = skills.filter((s) => s.kind === "ai");
 export const techSkills = skills.filter((s) => s.kind === "tech");
+export const languageSkills = techSkills.filter((s) => s.family === "language");
+export const frameworkSkills = techSkills.filter((s) => s.family === "framework");

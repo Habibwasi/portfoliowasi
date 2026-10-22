@@ -1,12 +1,13 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { aiSkills, techSkills } from "@/content/skills";
+import { aiSkills, frameworkSkills, languageSkills } from "@/content/skills";
 import { placeholder } from "@/content/placeholder";
 import { ContactForm } from "./contact-form";
 import { ContactSection } from "./contact-section";
 import { FeaturedWork } from "./featured-work";
 import { Hero } from "./hero";
+import { ObjectNav } from "./object-nav";
 import { AiWorkflow } from "./ai-workflow";
 import { ActionButton } from "./hw";
 import { Proof } from "./proof";
@@ -28,6 +29,62 @@ describe("Hero", () => {
     expect(primary).toHaveClass("hw-btn--primary");
     // The CV is still a placeholder.
     expect(screen.getByText("[CV PDF]")).toBeInTheDocument();
+  });
+});
+
+describe("Hero motion (5.1, 5.2, 5.5)", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    window.sessionStorage.clear();
+  });
+
+  it("keeps the name's accessible name, with one hidden span per letter", () => {
+    render(<Hero />);
+    const name = screen.getByRole("heading", { level: 1, name: "Habib Ahmed Wasi" });
+    const letters = name.querySelectorAll(".hw-name__ch");
+    expect([...letters].map((l) => l.textContent).join("")).toBe("HabibAhmedWasi");
+    for (const word of name.querySelectorAll(".hw-name__word")) expect(word).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("skips the animation under reduced motion and tells the physics the name has settled", () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({ matches: query.includes("reduce"), addEventListener() {}, removeEventListener() {} }));
+    const settled = vi.fn();
+    window.addEventListener("hw:name-settled", settled, { once: true });
+    render(<Hero />);
+    const name = screen.getByRole("heading", { level: 1 });
+    expect(name).toHaveAttribute("data-settled");
+    expect(name).not.toHaveClass("is-lifting");
+    expect(settled).toHaveBeenCalledOnce();
+  });
+
+  it("renders the five letter tiles as a still, hidden pile with one signal tile", () => {
+    render(<Hero />);
+    const art = document.querySelector(".hw-hero__art")!;
+    expect(art).toHaveAttribute("data-physics", "off");
+    const layer = art.querySelector(".hw-letters")!;
+    expect(layer).toHaveAttribute("aria-hidden", "true");
+    expect([...layer.querySelectorAll(".hw-letter")].map((t) => t.textContent)).toEqual(["H", "W", "A", "S", "I"]);
+    expect(layer.querySelectorAll(".hw-letter--signal")).toHaveLength(1);
+  });
+
+  it("shows the portrait slot as a labelled placeholder until it is drawn", () => {
+    render(<Hero />);
+    expect(screen.getByText("[Line-art portrait]")).toBeInTheDocument();
+  });
+});
+
+describe("ObjectNav (5.4)", () => {
+  it("leads to the sections, hidden from assistive tech and out of the tab order", () => {
+    render(<ObjectNav />);
+    const row = document.querySelector(".hw-objects")!;
+    expect(row).toHaveAttribute("aria-hidden", "true");
+    const links = [...row.querySelectorAll("a")];
+    expect(links.map((a) => [a.textContent, a.getAttribute("href")])).toEqual([
+      ["Work", "#work"],
+      ["About", "/about"],
+      ["Contact", "#contact"],
+    ]);
+    for (const link of links) expect(link).toHaveAttribute("tabindex", "-1");
   });
 });
 
@@ -187,14 +244,32 @@ describe("AiWorkflow", () => {
 });
 
 describe("Stack", () => {
-  it("shows every skill as a toggle, with the first AI tool selected on load", () => {
+  it("shows every skill as a toggle in three groups, with the first AI tool selected on load", () => {
     render(<Stack />);
     const ai = screen.getByRole("group", { name: "AI tools" });
-    const tech = screen.getByRole("group", { name: "Languages and frameworks" });
+    const languages = screen.getByRole("group", { name: "Languages and data" });
+    const frameworks = screen.getByRole("group", { name: "Frameworks and tools" });
     expect(within(ai).getAllByRole("button")).toHaveLength(aiSkills.length);
-    expect(within(tech).getAllByRole("button")).toHaveLength(techSkills.length);
+    expect(within(languages).getAllByRole("button")).toHaveLength(languageSkills.length);
+    expect(within(frameworks).getAllByRole("button")).toHaveLength(frameworkSkills.length);
     expect(within(ai).getByRole("button", { name: aiSkills[0].name })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText(`Selected · ${aiSkills[0].name}`)).toBeInTheDocument();
+  });
+
+  it("spaces each ring's tags evenly around the orbit (5.3)", () => {
+    render(<Stack />);
+    const items = screen.getByRole("group", { name: "Languages and data" }).querySelectorAll<HTMLElement>(".hw-orbit__item");
+    expect([...items].map((el) => el.style.getPropertyValue("--a"))).toEqual(["0deg", "60deg", "120deg", "180deg", "240deg", "300deg"]);
+  });
+
+  it("pauses and resumes the rotation", async () => {
+    const user = userEvent.setup();
+    render(<Stack />);
+    const toggle = screen.getByRole("button", { name: "Pause rotation" });
+    expect(toggle).toHaveAttribute("aria-pressed", "false");
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute("aria-pressed", "true");
+    expect(document.querySelector(".hw-orbit")).toHaveAttribute("data-paused");
   });
 
   it("switches the proofs on click and by keyboard", async () => {

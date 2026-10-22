@@ -28,23 +28,50 @@
 }
 .hw-guide {
   display: block;
+  overflow: visible;
   transform-origin: 50% 100%;
 }
-.hw-guide__eyes {
+.hw-guide__eyes,
+.hw-guide__pupils,
+.hw-guide__mouth {
   transform-box: fill-box;
   transform-origin: center;
 }
-.hw-guide--idle {
-  animation: hw-guide-breathe 2.6s ease-in-out infinite;
-}
-.hw-guide--idle .hw-guide__eyes {
-  animation: hw-guide-blink 4.6s infinite;
-}
 .hw-guide--small {
-  width: 28px;
-  height: 33px;
+  width: 48px;
+  height: 56px;
   flex: none;
+  cursor: pointer;
 }
+
+/*
+ * The five states and the poke (5.6, GD2), from the mockup playground. Squash and stretch keep
+ * the volume (wider means shorter) from a pivot at the feet. The face alone also tells the state,
+ * so it still reads with reduced motion: pupils up while thinking, mouth open while talking.
+ */
+.hw-guide__dots {
+  opacity: 0;
+}
+.hw-guide--listening .hw-guide__pupils { transform: translate(-2px, 3px); }
+.hw-guide--thinking .hw-guide__pupils { transform: translate(0, -3px); }
+.hw-guide--thinking .hw-guide__dots { opacity: 1; }
+.hw-guide--talking .hw-guide__mouth { transform: scaleY(1.6); }
+
+.hw-guide--idle { animation: hw-guide-breathe 2.6s ease-in-out infinite; }
+.hw-guide .hw-guide__eyes { animation: hw-guide-blink 4.6s infinite; }
+.hw-guide--listening { animation: hw-guide-perk 1.4s ease-in-out infinite; }
+.hw-guide--listening .hw-guide__pupils { animation: hw-guide-glance 1.4s ease-in-out infinite; }
+.hw-guide--thinking { animation: hw-guide-wobble 1.8s ease-in-out infinite; }
+.hw-guide--thinking .hw-guide__pupils { animation: hw-guide-roll 1.8s linear infinite; }
+.hw-guide--thinking .hw-guide__dots circle { animation: hw-guide-pulse 0.9s infinite; }
+.hw-guide--thinking .hw-guide__dot2 { animation-delay: 0.15s !important; }
+.hw-guide--thinking .hw-guide__dot3 { animation-delay: 0.3s !important; }
+.hw-guide--talking { animation: hw-guide-chatter 0.36s ease-in-out infinite alternate; }
+.hw-guide--talking .hw-guide__mouth { animation: hw-guide-talk 0.36s ease-in-out infinite alternate; }
+/* In the panel header it points in place; the pointer beside the target hops (below). */
+.hw-guide--pointing { animation: hw-guide-lean 1.3s ease-in-out infinite; }
+.hw-guide.hw-guide--poke { animation: hw-guide-jelly 0.65s ease both; }
+
 @keyframes hw-guide-breathe {
   0%, 100% { transform: scale(1, 1); }
   50% { transform: scale(1.045, 0.95); }
@@ -53,9 +80,93 @@
   0%, 93%, 100% { transform: scaleY(1); }
   96% { transform: scaleY(0.1); }
 }
+@keyframes hw-guide-perk {
+  0%, 100% { transform: rotate(-4deg) scale(1, 1); }
+  18% { transform: rotate(-7deg) scale(0.94, 1.08); }
+  42% { transform: rotate(-3deg) scale(1.04, 0.96); }
+  68% { transform: rotate(-5deg) scale(0.99, 1.02); }
+}
+@keyframes hw-guide-glance {
+  0%, 100% { transform: translate(-2px, 3px); }
+  50% { transform: translate(-3px, 2px); }
+}
+@keyframes hw-guide-wobble {
+  0%, 100% { transform: rotate(0deg) skewX(0deg) scale(1, 1); }
+  25% { transform: rotate(-5deg) skewX(5deg) scale(1.04, 0.96); }
+  50% { transform: rotate(0deg) skewX(0deg) scale(0.97, 1.03); }
+  75% { transform: rotate(5deg) skewX(-5deg) scale(1.04, 0.96); }
+}
+@keyframes hw-guide-roll {
+  0%, 100% { transform: translate(0, -3px); }
+  25% { transform: translate(2px, -2px); }
+  50% { transform: translate(0, -4px); }
+  75% { transform: translate(-2px, -2px); }
+}
+@keyframes hw-guide-pulse {
+  50% { opacity: 0.2; }
+}
+@keyframes hw-guide-chatter {
+  from { transform: scale(1.05, 0.93); }
+  to { transform: translateY(-3px) scale(0.97, 1.05); }
+}
+@keyframes hw-guide-talk {
+  from { transform: scaleY(0.3); }
+  to { transform: scaleY(1); }
+}
+@keyframes hw-guide-lean {
+  0%, 100% { transform: rotate(6deg) scale(1, 1); }
+  30% { transform: rotate(12deg) scale(1.07, 0.93); }
+  55% { transform: rotate(5deg) scale(0.97, 1.04); }
+}
+@keyframes hw-guide-arrive {
+  0% { transform: translate(0, 0) scale(1, 1); }
+  15% { transform: translate(0, 0) scale(1.16, 0.82); }
+  40% { transform: translate(14px, -46px) rotate(8deg) scale(0.88, 1.14); }
+  62% { transform: translate(28px, 0) rotate(10deg) scale(1.18, 0.8); }
+  78% { transform: translate(28px, 0) rotate(10deg) scale(0.95, 1.06); }
+  100% { transform: translate(28px, 0) rotate(10deg) scale(1, 1); }
+}
+@keyframes hw-guide-nudge {
+  0%, 100% { transform: translate(28px, 0) rotate(10deg) scale(1, 1); }
+  30% { transform: translate(36px, 0) rotate(16deg) scale(1.07, 0.93); }
+  55% { transform: translate(27px, 0) rotate(8deg) scale(0.97, 1.04); }
+}
+@keyframes hw-guide-jelly {
+  0% { transform: scale(1, 1); }
+  25% { transform: scale(1.28, 0.72); }
+  40% { transform: scale(0.78, 1.24); }
+  55% { transform: scale(1.14, 0.88); }
+  70% { transform: scale(0.95, 1.05); }
+  85% { transform: scale(1.03, 0.97); }
+  100% { transform: scale(1, 1); }
+}
+
+/* The pointer (5.6): a copy of the guide that hops onto the corner of a tool's target. */
+.hw-guide-pointer {
+  position: fixed;
+  z-index: 65;
+  width: 40px;
+  height: 47px;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 8px rgba(28, 26, 22, 0.2));
+  animation: hw-guide-fade 200ms ease-out both;
+}
+.hw-guide-pointer .hw-guide {
+  width: 40px;
+  height: 47px;
+  animation: hw-guide-arrive 0.8s cubic-bezier(0.3, 0.7, 0.4, 1) both, hw-guide-nudge 1.3s ease-in-out 0.8s infinite;
+}
+@keyframes hw-guide-fade {
+  from { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hw-guide, .hw-guide * {
     animation: none !important;
+  }
+  /* No hop: the pointer fades in where the hop would land. */
+  .hw-guide-pointer .hw-guide {
+    transform: translate(28px, 0) rotate(10deg);
   }
 }
 
@@ -320,4 +431,27 @@
 }
 .hw-guide-page .hw-prose h3 {
   margin: var(--spacing-space-4) 0 0;
+}
+
+/* What a page tool showed (5.6), and the CV confirm card. */
+.hw-guide-panel__character {
+  display: block;
+  line-height: 0;
+}
+.hw-guide-tool-line {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--color-ink-muted);
+}
+.hw-guide-cv {
+  margin-top: var(--spacing-space-2);
+  padding: var(--spacing-space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-paper);
+}
+.hw-guide-cv p {
+  margin: 0 0 var(--spacing-space-2);
 }

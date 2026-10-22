@@ -104,7 +104,7 @@ export function GuideLauncher() {
           onFocus={loadPanel}
           onClick={() => openPanel()}
         >
-          <GuideCharacter className="hw-guide hw-guide--idle" />
+          <GuideCharacter />
         </button>
       </div>
       {mounted && (

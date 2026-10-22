@@ -34,3 +34,7 @@ export type CaseStudySectionName = (typeof caseStudySectionNames)[number];
 
 /** "AI in the build" → "cs-ai-in-the-build". */
 export const caseStudySectionId = (name: CaseStudySectionName) => `cs-${name.toLowerCase().replace(/[^a-z]+/g, "-")}`;
+
+/** A case study's title and its demo (the media under the header); the guide's tools point at them (5.6). */
+export const caseStudyTitleId = "cs-title";
+export const caseStudyDemoId = "cs-demo";

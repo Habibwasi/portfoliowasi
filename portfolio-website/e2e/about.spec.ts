@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { aimAtTag } from "./orbit";
 
 /** Phase 4: How I build with AI (4.1), Stack (4.3) and the About page (4.4). */
 
@@ -24,8 +25,10 @@ test.describe("Home", () => {
   });
 
   test("picking a skill in Stack shows where it was used", async ({ page }) => {
-    await page.goto("/#stack");
-    await page.getByRole("button", { name: "Swift" }).click();
+    await page.goto("/");
+    const swift = page.getByRole("button", { name: "Swift" });
+    await aimAtTag(page, swift);
+    await swift.click();
     const panel = page.getByRole("region", { name: "Where I used Swift" });
     await panel.getByRole("link", { name: "Ridly" }).click();
     await expect(page).toHaveURL(/\/work\/ridly$/);

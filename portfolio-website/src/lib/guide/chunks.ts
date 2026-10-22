@@ -5,9 +5,10 @@ import { howItWorks } from "@/content/guide";
 import { isPlaceholder } from "@/content/placeholder";
 import { projects } from "@/content/projects";
 import { aiWorkflow, home, qaRecord, site, testimonial } from "@/content/site";
-import { aiSkills, techSkills, type Skill } from "@/content/skills";
+import { aiSkills, frameworkSkills, languageSkills, type Skill } from "@/content/skills";
 import type { CaseStudySection, Content, Metric } from "@/content/types";
 import type { GuideChunk } from "./search";
+import { cvReady, sections } from "./tools";
 
 /** Real text only: placeholders are dropped, never indexed. */
 const known = (values: (Content<string> | undefined)[]) => values.filter((v): v is string => typeof v === "string" && v.trim() !== "");
@@ -50,7 +51,8 @@ export function buildChunks(): GuideChunk[] {
   add("skills", `Skills: ${home.stack.heading}`, `/${hash(anchors.stack)}`, [
     "Habib's skills, each with the projects where he used it.",
     `${home.stack.aiGroup}. ${aiSkills.map(skillText).join(" ")}`,
-    `${home.stack.techGroup}. ${techSkills.map(skillText).join(" ")}`,
+    `${home.stack.languageGroup}. ${languageSkills.map(skillText).join(" ")}`,
+    `${home.stack.frameworkGroup}. ${frameworkSkills.map(skillText).join(" ")}`,
   ]);
 
   add("journey", `Journey: work experience and education`, `${about.path}#${about.anchors.journey}`, [
@@ -122,6 +124,15 @@ export function buildChunks(): GuideChunk[] {
       `Stack: ${study.stack.join(", ")}.`,
     ]);
   }
+
+  // Lets "take me to contact" or "give me the tour" retrieve something, so the model can call a tool (5.6).
+  const studies = publishedProjects.map((p) => p.title.split(",")[0]);
+  add("navigation", "Getting around this site", "/", [
+    `The home page has these sections, in order: ${Object.values(sections).join(", ")}.`,
+    `Case studies: ${studies.join(", ")}.`,
+    "The About page has Habib's journey and his full QA record.",
+    `The AI assistant can take you to any section, open a case study, show a specific part of a page, play a project's demo video where there is one, or start the 30-second tour${cvReady() ? ", and offer the CV as a PDF" : ""}. Ask it to show you, take you to, or play something.`,
+  ]);
 
   add("guide", howItWorks.title, howItWorks.path, [
     howItWorks.lede,

@@ -1,10 +1,12 @@
 /**
  * Recruiter questions for the guide's evaluation (3.4, GD9). Answerable cases name the pages
- * a source must come from and what the answer must say; out-of-scope cases must get "I don't know".
+ * a source must come from and what the answer must say; out-of-scope cases must get "I don't know";
+ * tool cases (5.6) must retrieve something, so the model is called, and call the expected page tool.
  */
 export type EvalCase =
   | { kind: "answer"; question: string; sources: string[]; mustInclude: RegExp[]; judge?: boolean }
-  | { kind: "refuse"; question: string; /** Clearly off-topic: retrieval alone must find nothing. */ offTopic?: boolean };
+  | { kind: "refuse"; question: string; /** Clearly off-topic: retrieval alone must find nothing. */ offTopic?: boolean }
+  | { kind: "tool"; question: string; tool: string; input: Record<string, string> };
 
 export const cases: EvalCase[] = [
   { kind: "answer", question: "When can Habib start full-time?", sources: ["/#intro"], mustInclude: [/February 2027/], judge: true },
@@ -30,6 +32,11 @@ export const cases: EvalCase[] = [
   { kind: "answer", question: "What did he build on Heat.IT?", sources: ["/#work"], mustInclude: [/Asset Manager/] },
   { kind: "answer", question: "How can I contact him?", sources: ["/#contact"], mustInclude: [/habibwasi9@gmail\.com|contact form|email/i] },
   { kind: "answer", question: "How does this assistant work?", sources: ["/guide"], mustInclude: [/retriev|RAG|embedd|search/i], judge: true },
+  { kind: "tool", question: "Take me to the contact form", tool: "scroll_to", input: { section: "contact" } },
+  { kind: "tool", question: "Show me his best project", tool: "open_case_study", input: { slug: "ridly" } },
+  { kind: "tool", question: "Can I see the Ridly demo?", tool: "play_demo", input: { slug: "ridly" } },
+  { kind: "tool", question: "Give me the tour", tool: "start_tour", input: {} },
+  // download_cv joins once the CV exists (7.1).
   { kind: "refuse", question: "What is the capital of France?", offTopic: true },
   { kind: "refuse", question: "Write me a poem about cats.", offTopic: true },
   { kind: "refuse", question: "What salary does Habib expect?" },

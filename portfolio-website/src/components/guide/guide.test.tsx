@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { createUIMessageStream, createUIMessageStreamResponse } from "ai";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { guide } from "@/content/guide";
+import { GuideCharacter } from "./guide-character";
 import { GuideLauncher } from "./guide-launcher";
 
 const fetchMock = vi.fn();
@@ -39,6 +40,83 @@ function answerResponse(text: string, sources: { n: number; title: string; url: 
     }),
   });
 }
+
+/** A canned answer that also calls one page tool (5.6). */
+function toolResponse(text: string, toolName: string, input: unknown) {
+  return createUIMessageStreamResponse({
+    stream: createUIMessageStream({
+      execute: ({ writer }) => {
+        writer.write({ type: "start", messageMetadata: { sources: [{ n: 1, title: "Contact", url: "/#contact" }] } });
+        writer.write({ type: "text-start", id: "t" });
+        writer.write({ type: "text-delta", id: "t", delta: text });
+        writer.write({ type: "text-end", id: "t" });
+        writer.write({ type: "tool-input-available", toolCallId: "call-1", toolName, input });
+      },
+    }),
+  });
+}
+
+describe("GuideCharacter (5.6)", () => {
+  it("takes a class for each of the five states, and the poke on top", () => {
+    for (const state of ["idle", "listening", "thinking", "talking", "pointing"] as const) {
+      const { container, unmount } = render(<GuideCharacter state={state} />);
+      expect(container.querySelector("svg")).toHaveClass("hw-guide", `hw-guide--${state}`);
+      unmount();
+    }
+    const { container } = render(<GuideCharacter state="talking" poke />);
+    expect(container.querySelector("svg")).toHaveClass("hw-guide--talking", "hw-guide--poke");
+    expect(container.querySelector(".hw-guide__pupils")).not.toBeNull();
+    expect(container.querySelector(".hw-guide__mouth")).not.toBeNull();
+  });
+});
+
+describe("guide states and page tools (5.6)", () => {
+  afterEach(() => {
+    document.getElementById("contact")?.remove();
+    document.querySelectorAll(".hw-guide-target").forEach((el) => el.classList.remove("hw-guide-target"));
+  });
+
+  const header = () => document.querySelector(".hw-guide-panel__header .hw-guide")!;
+
+  it("listens while the visitor types, then thinks while the answer is on its way", async () => {
+    fetchMock.mockReturnValue(new Promise(() => {}));
+    const { user, dialog } = await openPanel();
+    expect(header()).toHaveAttribute("data-state", "idle");
+    await user.type(within(dialog).getByRole("textbox", { name: guide.inputLabel }), "When");
+    expect(header()).toHaveAttribute("data-state", "listening");
+    await user.click(within(dialog).getByRole("button", { name: "Send" }));
+    await waitFor(() => expect(header()).toHaveAttribute("data-state", "thinking"));
+  });
+
+  it("runs a scroll_to call: outlines the section, shows the pointer and says what it showed", async () => {
+    const contact = document.createElement("section");
+    contact.id = "contact";
+    // jsdom lays nothing out; put the section on screen so the pointer shows.
+    contact.getBoundingClientRect = () => ({ left: 100, top: 100, right: 700, bottom: 500, width: 600, height: 400, x: 100, y: 100, toJSON() {} });
+    document.body.append(contact);
+    fetchMock.mockResolvedValue(toolResponse("Here is how to reach him [1].", "scroll_to", { section: "contact" }));
+    const { user, dialog } = await openPanel();
+    await user.type(within(dialog).getByRole("textbox", { name: guide.inputLabel }), "Take me to contact");
+    await user.click(within(dialog).getByRole("button", { name: "Send" }));
+
+    await waitFor(() => expect(contact).toHaveClass("hw-guide-target"));
+    expect(document.querySelector("[data-guide-pointer]")).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByRole("log", { hidden: true })).toHaveTextContent("Showing: Contact");
+    // One request: the tool's output never goes back to the model.
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("does nothing on the page for a tool input outside its enum", async () => {
+    fetchMock.mockResolvedValue(toolResponse("Sure.", "scroll_to", { section: "https://example.com" }));
+    const { user, dialog } = await openPanel();
+    await user.type(within(dialog).getByRole("textbox", { name: guide.inputLabel }), "Go");
+    await user.click(within(dialog).getByRole("button", { name: "Send" }));
+    await waitFor(() => expect(within(dialog).getByRole("log")).toHaveTextContent("Sure."));
+    expect(document.querySelector(".hw-guide-target")).toBeNull();
+    expect(document.querySelector("[data-guide-pointer]")).toBeNull();
+    expect(within(dialog).getByRole("log")).not.toHaveTextContent("Showing:");
+  });
+});
 
 describe("GuideLauncher", () => {
   it("is a labelled button and renders no panel before it is used", () => {

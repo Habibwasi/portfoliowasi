@@ -5,9 +5,10 @@ import { guide } from "@/content/guide";
 import index from "@/generated/guide-index.json";
 import { GUIDE_MODEL, MAX_OUTPUT_TOKENS } from "@/lib/guide/config";
 import { embedQuery } from "@/lib/guide/embed";
-import { guideInstructions, guideRequest, questionOf, sourcesOf, trimHistory } from "@/lib/guide/prompt";
+import { guideInstructions, guideRequest, questionOf, sourcesOf, textOnly, trimHistory } from "@/lib/guide/prompt";
 import type { GuideSource } from "@/lib/guide/answer";
 import { createSearcher, type GuideIndex } from "@/lib/guide/search";
+import { guideTools } from "@/lib/guide/tools";
 import { allowGuide } from "@/lib/rate-limit";
 
 export const maxDuration = 30;
@@ -39,7 +40,8 @@ function clientIp(request: Request): string {
 /**
  * The AI guide's chat (3.3): validate, rate-limit, retrieve, then answer from the sources.
  * With no relevant source the answer is a fixed "I don't know" and the model isn't called.
- * When busy (over a limit or no key) it says so and lists the matches instead (3.6).
+ * When busy (over a limit or no key) it says so and lists the matches instead (3.6). The model
+ * may also call one page tool (5.6), which the browser runs.
  */
 export async function POST(request: Request) {
   let body: unknown;
@@ -71,7 +73,9 @@ export async function POST(request: Request) {
   const result = streamText({
     model: createGroq({ apiKey })(GUIDE_MODEL),
     instructions: guideInstructions(hits),
-    messages: await convertToModelMessages(trimHistory(messages)),
+    messages: await convertToModelMessages(trimHistory(textOnly(messages))),
+    // The browser runs a tool and the chat doesn't go back to the model: one Groq request per question (5.6).
+    tools: guideTools(),
     maxOutputTokens: MAX_OUTPUT_TOKENS,
     maxRetries: 1,
     providerOptions: { groq: { reasoningEffort: "low", reasoningFormat: "hidden" } satisfies GroqLanguageModelChatOptions },

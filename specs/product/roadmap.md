@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0–4 done; Phase 5 next)
+Last updated: 2026-10-22 (Phases 0–4 done; Phase 5 built, waiting on CI and the preview)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -92,16 +92,18 @@ Spec: [phase-4-ai-story-about.md](../features/phase-4-ai-story-about.md)
 
 C17 (experience and skills side by side) is reinterpreted: experience lives on About, and skills on Home link to it.
 
-## Phase 5: Delight (after launch)
+## Phase 5: Delight · built (closes when CI and the Vercel preview pass on `redesign`)
+
+Spec: [phase-5-delight.md](../features/phase-5-delight.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 5.1 | Name animation: staggered reveal → text scramble, animating from visible, starting after `load` | C4, P1 | planned |
-| 5.2 | Physics letters (Matter.js, lazy): material feel, scramble on impact, one vermilion tile, paused offscreen, off for reduced motion | C4, V5, P2, P4 | planned |
-| 5.3 | Skills orbit with an AI ring, replacing the tag row on desktop | C13, V4, AI4 | planned |
-| 5.4 | Object navigation with hand-drawn objects next to the text menu | V1, P4 | planned |
-| 5.5 | Hero illustration and photo slots | V3 | planned |
-| 5.6 | Guide: five squash-and-stretch states, the poke, and the page tools (`scroll_to`, `open_case_study`, `highlight`, `play_demo`, `start_tour`, `download_cv`) with hop-and-point; reduced motion fades | GD2, GD6, GD8 | planned |
+| 5.1 | Name animation: staggered reveal → text scramble, animating from visible, starting after `load` | C4, P1 | done |
+| 5.2 | Physics letters (Matter.js, lazy): five tiles (H, W, A, S, I) beside the name; material feel, scramble on impact, one vermilion tile, paused offscreen, off for reduced motion | C4, V5, P2, P4 | done |
+| 5.3 | Skills orbit with an AI ring, replacing the tag row on desktop | C13, V4, AI4 | done |
+| 5.4 | Object navigation with hand-drawn objects next to the text menu | V1, P4 | done (drawings in 7.5) |
+| 5.5 | Hero illustration and photo slots | V3 | done (portrait in 7.5) |
+| 5.6 | Guide: five squash-and-stretch states, the poke, and the page tools (`scroll_to`, `open_case_study`, `highlight`, `play_demo`, `start_tour`, `download_cv`) with hop-and-point; reduced motion fades | GD2, GD6, GD8 | done (videos in 7.3) |
 
 ## Phase 6: Polish
 
@@ -121,7 +123,7 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 7.2 | Calendly URL | `NEXT_PUBLIC_CALENDLY_URL` in Vercel and `.env.local` | open |
 | 7.3 | Case study content: TopicTrail (role, problem, AI in the build, architecture diagrams, evaluation plan, dated progress notes, screens); Validation Portal (role, problem, AI in the build, demo video, screens, architecture diagram); Ridly (problem text, "what I built" decisions, one concrete example of correcting AI output, 3–5 screens, demo video, k6 run recording, the real architecture diagram). Videos go on YouTube with English captions; only the video ID goes in the content, plus an optional poster image | `src/content/case-studies/`, media in `public/work/<slug>/` | open |
 | 7.4 | Testimonial: quote, name and role of the Just Eat team leader, with their permission | `testimonial` in `src/content/site.ts` (closes 4.2) | open |
-| 7.5 | Photos with captions (three on About), line-art portrait, drawings of your own objects. Check the About facts taken from the mockup: every journey date, "SDU in Sønderborg", and "91% on time" at Just Eat | `about.photos` and `about.journey` in `src/content/about.ts` (4.4), hero (5.5), object nav (5.4) | open |
+| 7.5 | Photos with captions (three on About), line-art portrait, drawings of your own objects. Check the About facts taken from the mockup: every journey date, "SDU in Sønderborg", and "91% on time" at Just Eat | `about.photos` and `about.journey` in `src/content/about.ts` (4.4), `site.hero.portrait` (5.5), the object drawings in `src/components/object-drawings.tsx` (5.4; the mockup's laptop, stopwatch, sheet and envelope are stand-ins) | open |
 | 7.6 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | open |
 | 7.7 | Role text for the More projects (Undershelf, Deskinct, Medication Adherence App) | `src/content/projects.ts` | open |
 | 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY`. When adding to Production, check `VERCEL_SUPPORT_LARGE_FUNCTION=1` is there too (set for Preview on 2026-10-22) | open |
@@ -133,6 +135,7 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 - More testimonials (supervisors, teammates, uTest feedback)
 - Physics extras: letters spring back, skill words as debris, tilt-to-move on phones
 - Move TopicTrail's case study from "in progress" to complete once it has a demo and real retrieval numbers (around January 2027)
+- MAke the character follow thw mouse pointer as a pet moving around its owner, as jumping or hopping with  movemnet should be randon so it doesnot break or make the user feel disturbed
 
 ## Decisions log
 
@@ -167,6 +170,13 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 2026-10-22 | Skills live in one list (`skills.ts`) with their proofs; the AI toolkit and the Stack row both read it. The toolkit drops Llama 3.3 and RAGAS and adds "GPT-OSS via Groq"; this site and its guide count as proof | Mockup toolkit |
 | 2026-10-22 | The guide's "AI workflow" jump goes to `/#ai` | Earlier jump to Ridly's "AI in the build" |
 | 2026-10-22 | `VERCEL_SUPPORT_LARGE_FUNCTION=1` is set in Vercel: the preview deployment failed on the size of `/api/guide` (ONNX runtime) despite tracing only the Linux binary | Phase 3 "58 MB, far under 250 MB" |
+| 2026-10-22 | The physics letters are five tiles (H, W, A, S, I) beside the name; the `h1` never moves | Tech stack "the `h1` keeps `aria-label` and the tiles are `aria-hidden`" (name as tiles) |
+| 2026-10-22 | The name animates from visible: a lift wave, then a scramble drawn in an overlay so the text never changes | Design system AnimatedName (reveal from `opacity: 0`) |
+| 2026-10-22 | Physics runs only with a fine pointer and the art column showing; touch and phones get the still pile | — |
+| 2026-10-22 | The orbit shows all 21 skills in three rings; the Stack has three groups | Design system SkillOrbit (at most 6/5/3) |
+| 2026-10-22 | Guide states are CSS keyframes from the mockup playground, not Motion | Tech stack "Motion for the state animations" |
+| 2026-10-22 | A page tool runs in the browser without a second model call | Tech stack "`sendAutomaticallyWhen`" |
+| 2026-10-22 | The name's reveal lifts whole words, not letters, so Fraunces keeps its kerning; only a scrambling letter is positioned, so the `h1` stays the LCP element | Spec 5.1 "each letter rises" |
 
 ## Open decisions
 

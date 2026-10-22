@@ -138,35 +138,182 @@
   padding-bottom: var(--spacing-space-4);
 }
 .hw-hero__portrait {
+  position: relative;
   aspect-ratio: 4 / 5;
   max-width: 400px;
   margin-left: auto;
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
-.hw-hero__tile {
+.hw-hero__portrait > .hw-placeholder {
+  height: 100%;
+}
+.hw-hero__portrait img {
+  object-fit: cover;
+}
+
+/* The name (5.1): one span per letter, so it can lift and scramble without the text changing. */
+/*
+ * Words lift as blocks; letters stay inline so Fraunces keeps its kerning. Words are inline-block
+ * only while lifting, after the fonts have loaded: with the fallback font an inline-block line is
+ * taller, which would shift the page when Fraunces swaps in.
+ */
+.hw-name__word {
+  white-space: nowrap;
+}
+.hw-name.is-lifting .hw-name__word {
+  display: inline-block;
+  animation: hw-name-lift 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--w) * 90ms);
+}
+/*
+ * Only a scrambling letter is positioned (for its overlay). A positioned span would take its text
+ * away from the h1 for Largest Contentful Paint, and the name must stay the LCP element (P1).
+ */
+.hw-name__ch.is-scrambling {
+  position: relative;
+  color: transparent;
+}
+/* The scramble glyph is an overlay, so letter widths never change (no layout shift). */
+.hw-name__ch.is-scrambling::after,
+.hw-letter__face[data-glyph]::after {
+  content: attr(data-glyph);
   position: absolute;
-  bottom: 0;
-  width: 72px;
-  height: 84px;
+  inset: 0;
   display: grid;
   place-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  font-weight: 500;
+  color: var(--color-signal-ink);
+}
+@keyframes hw-name-lift {
+  0%, 100% { transform: none; }
+  40% { transform: translateY(-0.12em); }
+}
+
+/*
+ * Physics letters (5.2): a still pile at the foot of the portrait. When the engine runs, each
+ * tile keeps that layout position and is moved by an inline transform from its body (never by
+ * left/top, which would count as layout shift), and --lift grows its shadow.
+ */
+.hw-letters {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hw-letter {
+  --lift: 0;
+  position: absolute;
+  width: 72px;
+  height: 84px;
   border-radius: var(--radius-md);
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
   font-family: var(--font-display);
   font-size: 56px;
   font-weight: 600;
-  box-shadow: var(--shadow-letter);
+  line-height: 1;
+  box-shadow:
+    0 1px 0 rgba(28, 26, 22, 0.1),
+    0 calc(8px + 16px * var(--lift)) calc(18px + 14px * var(--lift)) rgba(28, 26, 22, calc(0.16 + 0.04 * var(--lift)));
+  user-select: none;
 }
-.hw-hero__tile--h {
-  left: 8px;
+.hw-letter--signal {
   background: var(--color-signal);
+  border-color: var(--color-signal);
   color: var(--color-on-signal);
-  transform: rotate(-9deg);
 }
-.hw-hero__tile--w {
-  left: 88px;
-  bottom: 6px;
-  background: var(--color-paper-raised);
-  border: 1px solid var(--color-line);
-  transform: rotate(6deg);
+.hw-letter--signal .hw-letter__face[data-glyph]::after {
+  color: var(--color-on-signal);
+}
+.hw-letter__face {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 100%;
+}
+.hw-letter__face[data-glyph] {
+  color: transparent;
+}
+.hw-letter__face.is-squashed {
+  animation: hw-letter-squash 120ms ease-out;
+}
+.hw-letter__face.is-poked {
+  animation: hw-guide-jelly 0.65s ease both;
+}
+@keyframes hw-letter-squash {
+  50% { transform: scale(1.12, 0.88); }
+}
+.hw-letter--1 { left: 8px; bottom: 0; transform: rotate(-9deg); }
+.hw-letter--2 { left: 84px; bottom: 6px; transform: rotate(6deg); }
+.hw-letter--3 { left: 160px; bottom: 0; transform: rotate(-3deg); }
+.hw-letter--4 { left: 46px; bottom: 86px; transform: rotate(4deg); }
+.hw-letter--5 { left: 124px; bottom: 90px; transform: rotate(-6deg); }
+.hw-hero__art:not([data-physics="off"]) .hw-letter {
+  pointer-events: auto;
+  cursor: grab;
+}
+.hw-hero__art:not([data-physics="off"]) .hw-letter:active {
+  cursor: grabbing;
+}
+
+/* Object navigation (5.4): drawings that lead to the sections, under the hero on Home. */
+.hw-objects {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-5);
+  padding: var(--spacing-space-4) var(--spacing-space-4) var(--spacing-space-3);
+  border-bottom: 1px solid var(--color-line-strong);
+}
+.hw-object {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+.hw-object__drawing {
+  display: block;
+  transition: transform 200ms ease-out, filter 200ms ease-out;
+}
+.hw-object__drawing svg {
+  display: block;
+}
+.hw-object:hover .hw-object__drawing {
+  transform: translateY(-4px) rotate(-3deg);
+  filter: drop-shadow(0 10px 12px rgba(28, 26, 22, 0.14));
+}
+.hw-object:hover .hw-label {
+  color: var(--color-signal-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hw-object__drawing {
+    transition: none;
+  }
+  .hw-object:hover .hw-object__drawing {
+    transform: none;
+  }
+  .hw-name.is-lifting .hw-name__word {
+    animation: none;
+  }
+}
+@media (max-width: 639.98px) {
+  .hw-objects {
+    flex-wrap: nowrap;
+    gap: var(--spacing-space-2);
+    padding: var(--spacing-space-3) 0;
+  }
+  .hw-object__drawing svg {
+    width: auto;
+    height: 48px;
+  }
 }
 @media (max-width: 639.98px) {
   .hw-hero {
@@ -522,6 +669,157 @@ a.hw-more__title span {
   .hw-stack {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--spacing-space-4);
+  }
+}
+
+/*
+ * Skills orbit (5.3): from 1200 px the three groups become rings around a dark core, AI tools
+ * outermost. Each item sits at angle --a on its ring's radius --r; the ring turns and the tag
+ * turns back, so it stays upright. Below 1200 px everything here is a plain row of tags.
+ */
+.hw-stack__orbit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-3);
+}
+.hw-orbit__item,
+.hw-orbit__upright {
+  display: contents;
+}
+.hw-orbit__core,
+.hw-orbit__pause {
+  display: none;
+}
+@media (min-width: 1200px) {
+  .hw-stack {
+    grid-template-columns: 680px minmax(0, 1fr);
+    align-items: center;
+  }
+  .hw-stack__orbit {
+    align-items: center;
+  }
+  .hw-orbit {
+    position: relative;
+    width: 640px;
+    height: 640px;
+    margin: 0 20px;
+    display: block;
+  }
+  .hw-orbit__ring {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hw-orbit__ring--ai {
+    --r: 260px;
+    --turn: 90s;
+  }
+  .hw-orbit__ring--language {
+    --r: 175px;
+    --turn: 60s;
+  }
+  .hw-orbit__ring--framework {
+    --r: 100px;
+    --turn: 40s;
+    --direction: reverse;
+  }
+  /* The ring line. */
+  .hw-orbit__ring::before {
+    content: "";
+    position: absolute;
+    left: calc(50% - var(--r));
+    top: calc(50% - var(--r));
+    width: calc(var(--r) * 2);
+    height: calc(var(--r) * 2);
+    border: 1px dashed var(--color-line-strong);
+    border-radius: 50%;
+    box-sizing: border-box;
+  }
+  .hw-orbit__ring--ai::before {
+    border: 1px solid var(--color-ink);
+  }
+  .hw-orbit__ring > .hw-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .hw-orbit__items {
+    position: absolute;
+    inset: 0;
+    display: block;
+    animation: hw-orbit-turn var(--turn) linear infinite var(--direction, normal);
+  }
+  .hw-orbit__item {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: block;
+    width: 0;
+    height: 0;
+    transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a)));
+  }
+  .hw-orbit__upright {
+    display: block;
+    width: 0;
+    height: 0;
+    animation: hw-orbit-unturn var(--turn) linear infinite var(--direction, normal);
+  }
+  .hw-orbit__upright .hw-tag {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: auto;
+  }
+  .hw-orbit__upright .hw-tag:is(:hover, :focus-visible, [aria-pressed="true"]) {
+    z-index: 1;
+  }
+  .hw-orbit:is(:hover, :focus-within, [data-paused]) :is(.hw-orbit__items, .hw-orbit__upright) {
+    animation-play-state: paused;
+  }
+  .hw-orbit__core {
+    position: absolute;
+    left: calc(50% - 36px);
+    top: calc(50% - 36px);
+    width: 72px;
+    height: 72px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hw-orbit__pause {
+    display: inline-flex;
+  }
+  .hw-orbit__pause[aria-pressed="true"] {
+    text-decoration-thickness: 2px;
+  }
+}
+@media (min-width: 1200px) and (prefers-reduced-motion: reduce) {
+  .hw-orbit__items,
+  .hw-orbit__upright {
+    animation: none;
+  }
+  .hw-orbit__pause {
+    display: none;
+  }
+}
+@keyframes hw-orbit-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes hw-orbit-unturn {
+  to {
+    transform: rotate(-360deg);
   }
 }
 

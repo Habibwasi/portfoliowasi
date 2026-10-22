@@ -2,6 +2,26 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 5: Delight (2026-10-22)
+
+Spec: [specs/features/phase-5-delight.md](specs/features/phase-5-delight.md) · Roadmap items 5.1–5.6 · Branch `phase-5-delight`, to merge into `redesign`
+
+**Status: built, not yet closed.** It closes when CI, the guide evaluation and the Vercel preview pass on `redesign`.
+
+**What changed.** The site moves now, and the guide can act on the page. The first view is still server-rendered and readable before any of it runs.
+
+- **Name (5.1):** after `load` and the fonts, the words lift in a short wave, then each letter flickers through mono glyphs and settles. It runs once per tab session, never under reduced motion, and the text never changes, so nothing shifts and the name stays Home's LCP element.
+- **Physics tiles (5.2):** five tiles (a vermilion H, then W, A, S, I) replace the static H and W beside the portrait. With a mouse, Matter.js loads once the name has settled; the tiles drop in and can be dragged, flicked and poked, and a hard landing squashes a tile and scrambles its letter. Paused offscreen and in a hidden tab. Phones, touch screens and reduced motion get the still pile, and Matter.js never loads there.
+- **Skills orbit (5.3):** from 1200 px the Stack becomes three rings around a dark core: AI tools outermost, then languages and data, then frameworks and tools. Hovering, focus or "Pause rotation" stops it. Below 1200 px it's three rows of tags. Same buttons either way.
+- **Object nav (5.4):** under the hero, the mockup's laptop, stopwatch, sheet and envelope lead to Work, About, CV (once it exists) and Contact. They're decorative for keyboards and screen readers; the header's text menu is the accessible route.
+- **Portrait slot (5.5):** `site.hero.portrait`, a placeholder until 7.5, then `next/image` in the same 4:5 box.
+- **Guide (5.6):** the header character now listens, thinks, talks and points, from the mockup playground's keyframes, and pokes when the panel opens or you click it. The model can call six page tools: `scroll_to`, `open_case_study`, `highlight`, `play_demo`, `start_tour`, `download_cv` (offered only once the CV exists, and it asks first). The browser runs the tool, outlines the target, and a small H hops onto its corner; the chat says "Showing: …". New "Getting around this site" chunk; index rebuilt.
+- **Revisit?** A tool call never goes back to the model, so each question is still one Groq request against the 90-a-day cap. The cost: the model can't comment on what the tool did.
+- **Revisit?** The orbit shows all 21 skills, more than the design system's 6/5/3, so the rings are fuller than the mockup. Tags on neighbouring rings can briefly overlap as they turn.
+- **Found while building:** letters as `inline-block` lost Fraunces' kerning ("W asi"); positioned letter spans took the name away from LCP (it fell to the next heading); and tiles that switched from `left`/`bottom` to `top` caused a 0.07 layout shift. All three are fixed, and e2e tests cover LCP and shift.
+- **Tests:** unit and component tests for skills families, the scramble, tile rules, tool schemas, request stripping, states, the tool runner and the CV card; end-to-end for the name, physics loading and pausing, the orbit, the object nav and two tool flows with axe. All 100 e2e tests passed twice in a row locally (desktop and phone). Typecheck and lint pass. The guide evaluation's retrieval passes all 27 cases, including the four new tool questions; the answer half needs `GROQ_EVAL_API_KEY` (7.8).
+- **Lighthouse (local):** Home's LCP is 2.58–2.63 s here, against 2.53–2.56 s for Phase 4 on the same machine, which also misses the 2.5 s budget locally. CI decides. Home's CLS is 0.034 (Phase 4: 0.017), all from web fonts swapping in.
+
 ## Phase 4: AI story, proof and About (2026-10-22)
 
 Spec: [specs/features/phase-4-ai-story-about.md](specs/features/phase-4-ai-story-about.md) · Roadmap items 4.1–4.4 · Branch `phase-4-ai-story-about`, merged into `redesign`
