@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0–3 done; Phase 4 in progress)
+Last updated: 2026-10-22 (Phases 0–4 done; Phase 5 next)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -79,16 +79,16 @@ Spec: [phase-3-guide.md](../features/phase-3-guide.md)
 | 3.5 | "How this guide works" link to its architecture | AI6 | done |
 | 3.6 | Search-only fallback: when the guide is busy (limit, no key, Groq error) it still says so, and lists the parts of the site that match the question, with links and excerpts | GD5 | done |
 
-## Phase 4: AI story, proof and About · in progress
+## Phase 4: AI story, proof and About · done (closed 2026-10-22)
 
 Spec: [phase-4-ai-story-about.md](../features/phase-4-ai-story-about.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 4.1 | "How I build with AI": AIWorkflow diagram (Plan → HITL → Build → Test → Ship), and AI toolkit tags, each linked to a project that proves it | AI2, AI6 | in progress (built, awaiting CI on `redesign`) |
+| 4.1 | "How I build with AI": AIWorkflow diagram (Plan → HITL → Build → Test → Ship), and AI toolkit tags, each linked to a project that proves it | AI2, AI6 | done |
 | 4.2 | Testimonial with the real quote, name and role, once supplied | C15 | moved to 7.4 (component and placeholder exist since 1.7) |
-| 4.3 | Skills as a tag row, each tag linked to the projects that use it (the orbit comes in Phase 5) | C13, C14, AI4 | in progress (built, awaiting CI on `redesign`) |
-| 4.4 | About page: short intro, photos (placeholders), the journey line (Upwork → uTest → Just Eat → Validation Portal → Ridly → TopicTrail → graduation), full QA record, CV and email | C18, C19, V3, V7 | in progress (built, awaiting CI on `redesign`); photos in 7.5 |
+| 4.3 | Skills as a tag row, each tag linked to the projects that use it (the orbit comes in Phase 5) | C13, C14, AI4 | done |
+| 4.4 | About page: short intro, photos (placeholders), the journey line (Upwork → uTest → Just Eat → Validation Portal → Ridly → TopicTrail → graduation), full QA record, CV and email | C18, C19, V3, V7 | done; photos in 7.5 |
 
 C17 (experience and skills side by side) is reinterpreted: experience lives on About, and skills on Home link to it.
 

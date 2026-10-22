@@ -1,6 +1,6 @@
 # Spec: Phase 4 — AI story, proof and About
 
-Roadmap items 4.1–4.4 · Status: in progress · Branch `phase-4-ai-story-about`, merged into `redesign`
+Roadmap items 4.1–4.4 · Status: done (closed 2026-10-22; CI, guide eval and Vercel pass on `redesign`, commit `1063fa4`) · Branch `phase-4-ai-story-about`, merged into `redesign`
 
 ## Goal
 

@@ -4,7 +4,9 @@ Each entry lists what changed, the key decisions and why, and what's left open. 
 
 ## Phase 4: AI story, proof and About (2026-10-22)
 
-Spec: [specs/features/phase-4-ai-story-about.md](specs/features/phase-4-ai-story-about.md) · Roadmap items 4.1–4.4 · Branch `phase-4-ai-story-about`
+Spec: [specs/features/phase-4-ai-story-about.md](specs/features/phase-4-ai-story-about.md) · Roadmap items 4.1–4.4 · Branch `phase-4-ai-story-about`, merged into `redesign`
+
+**Status: done.** CI, the guide evaluation and the Vercel preview pass on `redesign` (commit `1063fa4`). The first push failed the guide evaluation: the new question "Where has he worked before?" didn't retrieve the journey, because its chunk never said "worked" or "experience". The chunk is now labelled as work experience and education.
 
 **What changed.** Home now runs hero → selected work → **How I build with AI** → proof → **Stack** → contact, and the site has an **About** page.
 
