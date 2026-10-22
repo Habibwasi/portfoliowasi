@@ -23,12 +23,12 @@ describe("guide page tools (5.6)", () => {
     expect(new Set(targets).size).toBe(targets.length);
   });
 
-  it("leaves download_cv out while the CV is a placeholder", () => {
+  it("offers download_cv only once the CV exists (7.1)", () => {
     expect(cvReady(placeholder("CV PDF"))).toBe(false);
     expect(cvReady("/cv/Habib-Ahmed-Wasi-CV.pdf")).toBe(true);
     expect(Object.keys(guideTools(false))).toEqual(["scroll_to", "open_case_study", "highlight", "play_demo", "start_tour"]);
     expect(Object.keys(guideTools(true))).toContain("download_cv");
-    expect(toolAction("download_cv", {})).toBeNull();
+    expect(toolAction("download_cv", {})).toEqual({ kind: "cv", label: "CV" });
   });
 
   it("turns a valid call into a page action", () => {

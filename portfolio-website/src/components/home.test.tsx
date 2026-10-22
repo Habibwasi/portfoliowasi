@@ -83,6 +83,7 @@ describe("ObjectNav (5.4)", () => {
     expect(links.map((a) => [a.textContent, a.getAttribute("href")])).toEqual([
       ["Work", "#work"],
       ["About", "/about"],
+      ["CV", "/cv/Habib-Ahmed-Wasi-CV.pdf"],
       ["Contact", "#contact"],
     ]);
     for (const link of links) expect(link).toHaveAttribute("tabindex", "-1");
