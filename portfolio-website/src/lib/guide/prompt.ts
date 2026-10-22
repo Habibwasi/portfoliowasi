@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { site } from "@/content/site";
-import { HISTORY_MESSAGES, MAX_MESSAGES, MAX_QUESTION_LENGTH } from "./config";
+import { EXCERPT_LENGTH, HISTORY_MESSAGES, MAX_MESSAGES, MAX_QUESTION_LENGTH } from "./config";
 import type { SearchHit } from "./search";
 import type { GuideSource } from "./answer";
 
@@ -35,8 +35,16 @@ export function trimHistory(messages: GuideMessage[], keep = HISTORY_MESSAGES): 
   return start <= 0 ? recent : recent.slice(start);
 }
 
+/** The start of a chunk's text, cut at a word, for the busy fallback (3.6). */
+function excerptOf(text: string, length = EXCERPT_LENGTH): string {
+  const flat = text.replace(/\s+/g, " ").trim();
+  if (flat.length <= length) return flat;
+  const cut = flat.slice(0, length);
+  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+}
+
 export const sourcesOf = (hits: SearchHit[]): GuideSource[] =>
-  hits.map(({ chunk }, i) => ({ n: i + 1, title: chunk.title, url: chunk.url }));
+  hits.map(({ chunk }, i) => ({ n: i + 1, title: chunk.title, url: chunk.url, excerpt: excerptOf(chunk.text) }));
 
 /** Instructions for the model (GD5, GD8, AI3): sources only, third person, short, cited. */
 export function guideInstructions(hits: SearchHit[]): string {

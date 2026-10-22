@@ -1,6 +1,6 @@
 # Spec: Phase 3 — AI guide (useful first, animated later)
 
-Roadmap items 3.1–3.5 · Status: done (closed 2026-10-22; CI passes on `redesign`; live answers wait for the Groq keys, roadmap 7.8) · Branch `phase-3-guide`, merged into `redesign`
+Roadmap items 3.1–3.6 · Status: 3.1–3.5 done (closed 2026-10-22; CI passes on `redesign`; live answers wait for the Groq keys, roadmap 7.8). 3.6 added 2026-10-22 on branch `phase-3-search-fallback` · Branch `phase-3-guide`, merged into `redesign`
 
 ## Goal
 
@@ -33,6 +33,7 @@ The tile costs almost nothing on first load. The panel, the chat code and the mo
 | Tour | 5 stops on Home, 6 seconds each, about 30 s: intro → selected work → Ridly → proof → contact. It has Pause, Previous, Next and Stop. Started from another page, it goes to Home first | GD3, GD4. Pause covers WCAG 2.2.2 for content that moves on its own. |
 | Tour offer | On Home, after the first scroll past 240 px, a small bubble beside the tile: "New here? Take the 30-second tour" with "Start the tour" and "No thanks". Shown once per browser (`localStorage`, wrapped in try/catch) | GD3: never opens by itself, offers once. |
 | "How this guide works" | A page at `/guide` with the pipeline, the model, the limits, the evaluation and a link to the code. Its text is in the index too, so the guide can explain itself | AI6. A page is linkable and works without the panel. |
+| Busy fallback (3.6) | When the guide is busy (over a limit, no key, or a Groq error), it still says it is busy, and under that it lists the parts of the site that match the question: title, link and a short excerpt. Over a limit, the search is keyword-only (no embedding), so a visitor who is limited costs almost nothing | Groq's free tier allows about 100 answers a day (200K tokens). Past that, a visitor still gets something useful instead of a dead end. |
 | Eval key | `GROQ_EVAL_API_KEY` should come from a separate Groq organisation | Groq's limits are per organisation, so a second key in the same organisation shares the production quota. |
 
 ## Acceptance criteria
@@ -66,6 +67,14 @@ The tile costs almost nothing on first load. The panel, the chat code and the mo
   7. The stream's start metadata carries `sources: [{ n, title, url }]`. A Groq 429 or other provider error ends the stream with the busy message.
 - **Panel chat**: `useChat` with `DefaultChatTransport({ api: "/api/guide" })`. States: thinking ("Thinking…", announced), streaming, done, busy (429/503: "The assistant is busy right now. The quick jumps still work."), error (anything else: "Something went wrong. Try again, or use the quick jumps."). The input has a visible label, a 500-character limit and a Send button; it is disabled while an answer is streaming, and a Stop button shows instead. Each assistant answer ends with "Sources:" and its source links. The conversation survives client-side navigation and is lost on reload.
 
+### 3.6 Search-only fallback while busy
+- The busy cases no longer return a bare 429/503. The route streams a normal answer (status 200) whose text is the busy message ("The assistant is busy right now. The quick jumps still work.") and whose metadata is `{ sources, busy: true }`.
+- Order in the route: validate → rate limit → if limited, keyword-only search and the busy answer → embed and search → nothing found: "I don't know" (as before) → no `GROQ_API_KEY`: the busy answer with the matches → Groq.
+- Each source now also carries an `excerpt`: the chunk's first 160 characters or so, cut at a word, with "…" when shortened. The excerpt comes from the index, never from the model.
+- A Groq error mid-answer still ends the stream with `busy`. The panel then shows the busy message and the matches from that answer's metadata, and hides the empty answer.
+- Panel: under the busy message, "Meanwhile, these parts of the site match your question:" and a list named "Matching pages", each item a link with its title and the excerpt below it. With no matches, only the busy message shows. A bare 429/503 (from the platform, not the route) still shows the busy message.
+- The `/guide` page's "Limit" step says what happens when the guide is busy.
+
 ### 3.4 Guide evaluation
 - `evals/guide/cases.ts`: 20 cases. About 14 recruiter questions with the source URL expected in the top 4 and words the answer must contain (for example "When can Habib start?" → availability, "February 2027"). About 6 out-of-scope or unanswerable ones (capital of France, salary, a prompt injection, Rust) that must get "I don't know".
 - `evals/guide/guide.eval.ts`, run with `npm run eval:guide` (its own Vitest config, not part of `npm test`):
@@ -91,6 +100,10 @@ The tile costs almost nothing on first load. The panel, the chat code and the mo
 - Unit, index freshness: the committed index has the same chunk IDs and text as `buildChunks()`, the model `Xenova/gte-small` and 384-long embeddings.
 - Unit, `search`: BM25 ranks an exact keyword match first; cosine ranks the nearest vector first; RRF merges both; BM25-only works with no query vector; an off-topic query with no keyword hits and low cosine returns nothing.
 - Unit, route (mock model from `ai/test`, embedding stubbed): 400 for a bad body, a `system` message or a 501-character question; 429 when limited; 503 without a key; "I don't know" with no model call when nothing is found; with a match, the model gets the instructions, the numbered sources and at most 6 messages, and the stream carries `sources` metadata; a provider error becomes the busy message.
+- Unit, route (3.6): when limited, the response is a 200 stream with the busy text and `busy: true`, the matching sources carry excerpts, and the embedding isn't called; without a key, the same with the embedding used; a question with no match still gets "I don't know" without a key.
+- Unit, `sourcesOf`: excerpts are at most about 160 characters, end on a word with "…" when cut, and keep short text whole.
+- Component (3.6): a busy answer shows the busy message and a "Matching pages" list with links and excerpts; a Groq error mid-answer shows the busy message and the matches; a bare 429 shows the busy message alone.
+- E2E (3.6, desktop and phone): with a busy answer mocked, the log shows the busy message and a "Matching pages" list with the link and excerpt, and axe finds no violations.
 - Unit, limits: the daily cap and per-IP limit are both checked; missing config is open in development and closed in production.
 - Unit, renderer: `<script>` and `<img onerror>` render as text; `**bold**`, lists and `[2]` links work; a `[9]` with no matching source stays plain text.
 - Unit, tour: next, previous, pause, stop and auto-advance over 5 stops; it ends after the last stop.

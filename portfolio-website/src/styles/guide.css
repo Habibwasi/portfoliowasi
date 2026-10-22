@@ -192,6 +192,25 @@
 .hw-guide-sources a {
   color: var(--color-cobalt);
 }
+.hw-guide-matches {
+  margin-top: var(--spacing-space-1);
+  font-size: var(--text-small);
+  color: var(--color-ink);
+}
+.hw-guide-matches ul {
+  margin: var(--spacing-space-1) 0 0;
+  padding-left: 1.2em;
+}
+.hw-guide-matches li + li {
+  margin-top: var(--spacing-space-1);
+}
+.hw-guide-matches a {
+  color: var(--color-cobalt);
+}
+.hw-guide-matches li p {
+  margin: 0;
+  color: var(--color-ink-muted);
+}
 .hw-guide-panel__form {
   display: flex;
   flex-direction: column;

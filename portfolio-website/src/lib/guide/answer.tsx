@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
-/** A source sent by /api/guide with each answer; its URL comes from the index, never from the model. */
-export type GuideSource = { n: number; title: string; url: string };
+/** A source sent by /api/guide with each answer; its URL and excerpt come from the index, never from the model. */
+export type GuideSource = { n: number; title: string; url: string; excerpt?: string };
 
 const CITATION = /\[(\d+)\]/g;
 

@@ -124,11 +124,62 @@ describe("GuideLauncher", () => {
     expect(JSON.parse(init.body).messages.at(-1).parts[0].text).toBe("When can he start?");
   });
 
-  it("shows the busy state when the route is over its limit", async () => {
+  it("shows the busy state alone on a bare 429", async () => {
     fetchMock.mockResolvedValue(Response.json({ error: "busy" }, { status: 429 }));
     const { user, dialog } = await openPanel();
     await user.type(within(dialog).getByRole("textbox", { name: guide.inputLabel }), "Hi{Enter}");
     expect(await within(dialog).findByText(guide.messages.busy)).toBeInTheDocument();
+    expect(within(dialog).queryByRole("list", { name: guide.messages.matchesLabel })).not.toBeInTheDocument();
+  });
+
+  const matches = [
+    { n: 1, title: "Availability", url: "/#intro", excerpt: "Open to roles now, full-time from February 2027." },
+    { n: 2, title: "QA record", url: "/#proof", excerpt: "Tester at uTest." },
+  ];
+
+  it("while busy, lists the matching pages with links and excerpts (3.6)", async () => {
+    fetchMock.mockResolvedValue(
+      createUIMessageStreamResponse({
+        stream: createUIMessageStream({
+          execute: ({ writer }) => {
+            writer.write({ type: "start", messageMetadata: { sources: matches, busy: true } });
+            writer.write({ type: "text-start", id: "busy" });
+            writer.write({ type: "text-delta", id: "busy", delta: guide.messages.busy });
+            writer.write({ type: "text-end", id: "busy" });
+          },
+        }),
+      }),
+    );
+    const { user, dialog } = await openPanel();
+    await user.type(within(dialog).getByRole("textbox", { name: guide.inputLabel }), "When can he start?{Enter}");
+
+    const log = within(dialog).getByRole("log");
+    expect(await within(log).findByText(guide.messages.busy)).toBeInTheDocument();
+    expect(within(log).getByText(guide.messages.matchesIntro)).toBeInTheDocument();
+    const list = within(log).getByRole("list", { name: guide.messages.matchesLabel });
+    expect(within(list).getByRole("link", { name: "Availability" })).toHaveAttribute("href", "/#intro");
+    expect(within(list).getByRole("link", { name: "QA record" })).toHaveAttribute("href", "/#proof");
+    expect(within(list).getByText(matches[0].excerpt)).toBeInTheDocument();
+    expect(within(log).queryByRole("list", { name: "Sources" })).not.toBeInTheDocument();
+  });
+
+  it("when Groq fails mid-answer, shows the busy state and the matches (3.6)", async () => {
+    fetchMock.mockResolvedValue(
+      createUIMessageStreamResponse({
+        stream: createUIMessageStream({
+          execute: ({ writer }) => {
+            writer.write({ type: "start", messageMetadata: { sources: matches } });
+            writer.write({ type: "error", errorText: "busy" });
+          },
+        }),
+      }),
+    );
+    const { user, dialog } = await openPanel();
+    await user.type(within(dialog).getByRole("textbox", { name: guide.inputLabel }), "When can he start?{Enter}");
+
+    expect(await within(dialog).findByText(guide.messages.busy)).toBeInTheDocument();
+    const list = await within(dialog).findByRole("list", { name: guide.messages.matchesLabel });
+    expect(within(list).getAllByRole("link")).toHaveLength(2);
   });
 
   it("caps the question at 500 characters", async () => {

@@ -11,9 +11,9 @@ const openGuide = async (page: Page) => {
 };
 
 /** A canned UI message stream, so the chat is tested without Groq. */
-function streamBody(text: string, sources: { n: number; title: string; url: string }[]) {
+function streamBody(text: string, sources: { n: number; title: string; url: string; excerpt?: string }[], busy?: true) {
   return [
-    { type: "start", messageMetadata: { sources } },
+    { type: "start", messageMetadata: { sources, busy } },
     { type: "text-start", id: "t" },
     { type: "text-delta", id: "t", delta: text },
     { type: "text-end", id: "t" },
@@ -87,6 +87,27 @@ test.describe("AI guide", () => {
     await dialog.getByRole("button", { name: "Send" }).click();
     await expect(dialog.getByRole("log")).toContainText("February 2027");
     await expect(dialog.getByRole("list", { name: "Sources" }).getByRole("link", { name: "Availability" })).toHaveAttribute("href", "/#intro");
+  });
+
+  test("while busy, lists the matching pages, with no axe violations (3.6)", async ({ page }) => {
+    const busy = "The assistant is busy right now. The quick jumps still work.";
+    await page.route("**/api/guide", (route) =>
+      route.fulfill({
+        status: 200,
+        headers: { "content-type": "text/event-stream", "x-vercel-ai-ui-message-stream": "v1" },
+        body: streamBody(busy, [{ n: 1, title: "Availability", url: "/#intro", excerpt: "Open to roles now, full-time from February 2027." }], true),
+      }),
+    );
+    await page.goto("/");
+    const dialog = await openGuide(page);
+    await dialog.getByRole("textbox", { name: "Ask about Habib" }).fill("When can he start?");
+    await dialog.getByRole("button", { name: "Send" }).click();
+    await expect(dialog.getByRole("log")).toContainText(busy);
+    const matches = dialog.getByRole("list", { name: "Matching pages" });
+    await expect(matches.getByRole("link", { name: "Availability" })).toHaveAttribute("href", "/#intro");
+    await expect(matches).toContainText("full-time from February 2027");
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
   });
 
   test("has no axe violations with the panel open", async ({ page }) => {

@@ -94,20 +94,38 @@ describe("POST /api/guide", () => {
     expect((await post({ messages: [message("user", "Hi"), message("assistant", "Hello", 1)] })).status).toBe(400);
   });
 
-  it("answers busy when the visitor or the site is over the limit", async () => {
+  it("over the limit, says it is busy and lists keyword matches without embedding the question (3.6)", async () => {
     allowGuide.mockResolvedValue(false);
-    const response = await post(ask("When can he start?"));
-    expect(response.status).toBe(429);
-    expect(await response.json()).toEqual({ error: "busy" });
+    const response = await post(ask("When is he available full-time?"));
+    expect(response.status).toBe(200);
     expect(allowGuide).toHaveBeenCalledWith("1.2.3.4");
+
+    const { text, metadata } = await readStream(response);
+    expect(text).toBe(guide.messages.busy);
+    expect(metadata.busy).toBe(true);
+    expect(metadata.sources.some((s: { url: string }) => s.url === "/#intro")).toBe(true);
+    expect(metadata.sources[0]).toMatchObject({ n: 1, title: expect.any(String), excerpt: expect.any(String) });
+    expect(embedQuery).not.toHaveBeenCalled();
+    expect(model.doStreamCalls).toHaveLength(0);
   });
 
-  it("answers busy without a Groq key", async () => {
+  it("without a Groq key, says it is busy and lists the matches from the full search (3.6)", async () => {
     vi.stubEnv("GROQ_API_KEY", "");
     vi.spyOn(console, "error").mockImplementation(() => {});
-    const response = await post(ask("When can he start?"));
-    expect(response.status).toBe(503);
-    expect(await response.json()).toEqual({ error: "busy" });
+    const response = await post(ask("When is he available full-time?"));
+    expect(response.status).toBe(200);
+    const { text, metadata } = await readStream(response);
+    expect(text).toBe(guide.messages.busy);
+    expect(metadata.busy).toBe(true);
+    expect(metadata.sources.length).toBeGreaterThan(0);
+    expect(embedQuery).toHaveBeenCalled();
+  });
+
+  it("still says it doesn't know without a Groq key when nothing matches", async () => {
+    vi.stubEnv("GROQ_API_KEY", "");
+    const { text, metadata } = await readStream(await post(ask("What is the capital of France?")));
+    expect(text).toBe(guide.messages.dontKnow);
+    expect(metadata.busy).toBeUndefined();
   });
 
   it("says it doesn't know, without calling the model, when nothing on the site matches", async () => {
@@ -154,7 +172,9 @@ describe("POST /api/guide", () => {
   it("turns a provider error into the busy message", async () => {
     model = failingModel();
     vi.spyOn(console, "error").mockImplementation(() => {});
-    const { errors } = await readStream(await post(ask("When is he available full-time?")));
+    const { errors, metadata } = await readStream(await post(ask("When is he available full-time?")));
     expect(errors).toEqual(["busy"]);
+    // The panel shows these as the fallback (3.6).
+    expect(metadata.sources.length).toBeGreaterThan(0);
   });
 });

@@ -11,7 +11,7 @@ import { MAX_QUESTION_LENGTH } from "@/lib/guide/config";
 import { initialTour, tourReducer } from "@/lib/guide/tour";
 import { GuideCharacter } from "./guide-character";
 
-type GuideMessage = UIMessage<{ sources?: GuideSource[] }>;
+type GuideMessage = UIMessage<{ sources?: GuideSource[]; busy?: boolean }>;
 
 const TARGET_CLASS = "hw-guide-target";
 const stops = guide.tour.stops;
@@ -93,7 +93,11 @@ export default function GuidePanel({ open, onClose, tourRequest }: { open: boole
     if (!isDocked()) onClose();
   };
 
-  const failure = error && (error.message.includes("busy") ? guide.messages.busy : guide.messages.error);
+  const failedBusy = Boolean(error?.message.includes("busy"));
+  const failure = error && (failedBusy ? guide.messages.busy : guide.messages.error);
+  // A Groq error mid-answer leaves an empty answer whose sources become the busy fallback (3.6).
+  const last = messages.at(-1);
+  const failedAnswer = error && last?.role === "assistant" && !textOf(last) ? last : undefined;
 
   return (
     <section
@@ -168,12 +172,17 @@ export default function GuidePanel({ open, onClose, tourRequest }: { open: boole
             <p key={message.id} className="hw-guide-msg hw-guide-msg--user">
               {textOf(message)}
             </p>
-          ) : (
+          ) : message === failedAnswer ? null : (
             <AssistantMessage key={message.id} message={message} />
           ),
         )}
         {status === "submitted" && <p className="hw-guide-msg hw-guide-msg--status">{guide.messages.thinking}</p>}
-        {failure && <p className="hw-guide-msg hw-guide-msg--status">{failure}</p>}
+        {failure && (
+          <div className="hw-guide-msg hw-guide-msg--status">
+            <p>{failure}</p>
+            {failedBusy && <Matches sources={failedAnswer?.metadata?.sources ?? []} />}
+          </div>
+        )}
       </div>
 
       <form className="hw-guide-panel__form" onSubmit={onSubmit}>
@@ -212,9 +221,35 @@ export default function GuidePanel({ open, onClose, tourRequest }: { open: boole
   );
 }
 
+/** The search-only fallback while the guide is busy (3.6): matching pages with excerpts. */
+function Matches({ sources }: { sources: GuideSource[] }) {
+  if (sources.length === 0) return null;
+  return (
+    <div className="hw-guide-matches">
+      <p>{guide.messages.matchesIntro}</p>
+      <ul aria-label={guide.messages.matchesLabel}>
+        {sources.map((source) => (
+          <li key={source.n}>
+            <Link href={source.url}>{source.title}</Link>
+            {source.excerpt && <p>{source.excerpt}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function AssistantMessage({ message }: { message: GuideMessage }) {
   const text = textOf(message);
   const sources = message.metadata?.sources ?? [];
+  if (message.metadata?.busy) {
+    return (
+      <div className="hw-guide-msg hw-guide-msg--assistant">
+        <p>{text}</p>
+        <Matches sources={sources} />
+      </div>
+    );
+  }
   const shown = text ? citedSources(text, sources) : [];
   return (
     <div className="hw-guide-msg hw-guide-msg--assistant">

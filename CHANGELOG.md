@@ -2,6 +2,20 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 3 follow-up: search-only fallback while busy (2026-10-22)
+
+Spec: [specs/features/phase-3-guide.md](specs/features/phase-3-guide.md), section 3.6 · Branch `phase-3-search-fallback`, merged into `redesign`
+
+**What changed.** When the guide is busy (a visitor or the site is over its limit, there's no Groq key, or Groq fails), it still says "The assistant is busy right now", and under that it lists the parts of the site that match the question: a link and a short excerpt for each. Before, a busy guide was a dead end.
+
+- **Route:** the busy cases are now a normal streamed answer with `busy: true` and the matches, instead of a bare 429 or 503. Over a limit the search is keyword-only, so a limited visitor never loads the embedding model. A question with no match still gets "I don't know", key or no key.
+- **Sources** carry an `excerpt` (about 160 characters, cut at a word), taken from the index, never from the model.
+- **Panel:** a "Matching pages" list under the busy message. A Groq error mid-answer shows the same list from that answer's sources.
+- **`/guide`:** the "Limit" step explains the fallback; the index was rebuilt.
+- **Why:** Groq's free tier for `gpt-oss-120b` allows 200,000 tokens a day, which is roughly 100 answers. Past that, visitors still get something useful.
+- **Tests:** 203 unit and component tests (6 new), 72 end-to-end (2 new, with axe), lint and typecheck clean.
+- **Open:** the site-wide cap is still 300 a day, above Groq's real limit of roughly 100 answers. Lowering it to about 90 would make the guide go busy just before Groq does. **Revisit?**
+
 ## Phase 3: AI guide (2026-10-22, closed the same day)
 
 Spec: [specs/features/phase-3-guide.md](specs/features/phase-3-guide.md) · Roadmap items 3.1–3.5 · Branch `phase-3-guide`, merged into `redesign`

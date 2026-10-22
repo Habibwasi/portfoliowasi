@@ -23,5 +23,7 @@ export const MAX_QUESTION_LENGTH = 500;
 export const MAX_MESSAGES = 20;
 /** Messages actually sent to the model. */
 export const HISTORY_MESSAGES = 6;
+/** Length of the excerpt each source carries for the busy fallback (3.6). */
+export const EXCERPT_LENGTH = 160;
 /** gpt-oss counts its reasoning tokens in this limit. */
 export const MAX_OUTPUT_TOKENS = 700;
