@@ -53,7 +53,8 @@ export function buildChunks(): GuideChunk[] {
     `${home.stack.techGroup}. ${techSkills.map(skillText).join(" ")}`,
   ]);
 
-  add("journey", `Journey: ${about.journey.heading}`, `${about.path}#${about.anchors.journey}`, [
+  add("journey", `Journey: work experience and education`, `${about.path}#${about.anchors.journey}`, [
+    "Where Habib has worked and studied: his work experience, jobs and education, in order.",
     about.intro,
     about.journey.entries.map((e) => `${journeyDate(e.month)}: ${e.title}. ${e.line}`).join(" "),
   ]);
