@@ -110,6 +110,40 @@ test.describe("AI guide", () => {
     expect(results.violations).toEqual([]);
   });
 
+  test("a long answer scrolls inside the conversation and never runs under the question field", async ({ page }) => {
+    const excerpt = "Ridly. What I built. I built Ridly alone: the shared Kotlin Multiplatform module, the Android app, the iOS app and the NestJS API. All 387 commits in the…";
+    const sources = [1, 2, 3, 4].map((n) => ({ n, title: `Ridly part ${n}`, url: "/work/ridly", excerpt }));
+    await page.route("**/api/guide", (route) =>
+      route.fulfill({
+        status: 200,
+        headers: { "content-type": "text/event-stream", "x-vercel-ai-ui-message-stream": "v1" },
+        body: streamBody("The assistant is busy right now. The quick jumps still work.", sources, true),
+      }),
+    );
+    await page.goto("/");
+    const dialog = await openGuide(page);
+    for (const question of ["What is Ridly built with?", "Who built Ridly?"]) {
+      await dialog.getByRole("textbox", { name: "Ask about Habib" }).fill(question);
+      await dialog.getByRole("button", { name: "Send" }).click();
+      await expect(dialog.getByRole("log").getByText(question)).toBeVisible();
+    }
+    const log = dialog.getByRole("log");
+    await expect(log.getByRole("link", { name: "Ridly part 4" }).last()).toBeInViewport();
+    const logBox = (await log.boundingBox())!;
+    const fieldBox = (await dialog.getByRole("textbox", { name: "Ask about Habib" }).boundingBox())!;
+    // The conversation ends above the field, and its content stays inside it (it scrolls).
+    expect(logBox.y + logBox.height).toBeLessThanOrEqual(fieldBox.y);
+    const overflowing = await log.evaluate((el) => {
+      const bottom = el.getBoundingClientRect().bottom;
+      return [...el.querySelectorAll("p, li")].some((child) => {
+        const rect = child.getBoundingClientRect();
+        return rect.top < bottom - 1 && rect.bottom > bottom + 1 && getComputedStyle(el).overflowY === "visible";
+      });
+    });
+    expect(overflowing).toBe(false);
+    expect(await log.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
+  });
+
   test("has no axe violations with the panel open", async ({ page }) => {
     await page.goto("/");
     await openGuide(page);

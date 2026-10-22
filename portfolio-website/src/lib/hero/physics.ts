@@ -9,7 +9,13 @@ export type PhysicsControl = {
   stop: () => void;
 };
 
-const STEP_MS = 1000 / 60;
+/** Fixed physics step, run as often as real time needs, whatever the screen's refresh rate. */
+const STEP_MS = 1000 / 120;
+/** After a long gap (a hidden tab, a slow frame), catch up at most this much. */
+const MAX_CATCH_UP_MS = 100;
+/** Top row first, so a tile is never popped into the one above it: I, S, then H, W, A. */
+const POP_ORDER = [4, 3, 0, 1, 2];
+const POP_STAGGER_MS = 110;
 /** A press that moves less than this, this quickly, is a poke rather than a drag. */
 const POKE_PX = 4;
 const POKE_MS = 250;
@@ -34,11 +40,19 @@ function scrambleTile(face: HTMLElement) {
   );
 }
 
+/** A tile's resting place in the still pile: layout offset and the tilt its CSS gives it. */
+function restOf(el: HTMLElement) {
+  const transform = getComputedStyle(el).transform;
+  const { a, b } = new DOMMatrix(transform === "none" ? undefined : transform);
+  return { left: el.offsetLeft, top: el.offsetTop, angle: Math.atan2(b, a) };
+}
+
 /**
- * Drops the letter tiles into the art column and lets the mouse push them (5.2). The tiles are
- * DOM elements placed from the bodies on every frame. The loop stops while paused and when
- * every body is asleep, and wakes on the next press. The mouse never captures the wheel or touch,
- * so the page always scrolls (P2).
+ * Pops the letter tiles out of their pile and lets the mouse push them (5.2). Each body starts
+ * exactly where its tile rests, so nothing jumps; the tiles are popped up and fall back. They are
+ * placed from the bodies on every frame by transform only, so nothing repaints or shifts. The loop
+ * stops while paused and when every body is asleep, and wakes on the next press. The mouse never
+ * captures the wheel or touch, so the page always scrolls (P2).
  */
 export function startPhysics(Matter: Matter, art: HTMLElement, tileEls: HTMLElement[]): PhysicsControl {
   const { Bodies, Body, Composite, Engine, Events, Mouse, MouseConstraint, Sleeping } = Matter;
@@ -54,22 +68,21 @@ export function startPhysics(Matter: Matter, art: HTMLElement, tileEls: HTMLElem
     Bodies.rectangle(width + wall / 2, height / 2 - 1000, wall, height + 2000, { isStatic: true }),
   ]);
 
-  // Each tile starts above the pile and falls in, a little after the one before.
   const faces = tileEls.map((el) => el.querySelector<HTMLElement>(".hw-letter__face")!);
-  // Spread across the column so no two tiles start overlapping (overlaps push them apart hard).
-  const gap = Math.max(TILE_WIDTH + 4, (width - TILE_WIDTH - 16) / Math.max(1, tileEls.length - 1));
-  const bodies = tileEls.map((_, i) =>
-    Bodies.rectangle(Math.min(width - TILE_WIDTH / 2 - 8, TILE_WIDTH / 2 + 8 + i * gap), TILE_HEIGHT / 2 + 8 - (i % 2) * 40, TILE_WIDTH, TILE_HEIGHT, {
+  const lifts = tileEls.map((el) => el.querySelector<HTMLElement>(".hw-letter__lift"));
+  const rest = tileEls.map(restOf);
+  const bodies = rest.map((r) =>
+    Bodies.rectangle(r.left + TILE_WIDTH / 2, r.top + TILE_HEIGHT / 2, TILE_WIDTH, TILE_HEIGHT, {
       chamfer: { radius: 10 },
       restitution: 0.2,
       friction: 0.6,
       frictionAir: 0.012,
-      angle: (i % 2 ? 1 : -1) * 0.08,
+      angle: r.angle,
     }),
   );
   // Heavier to turn than a real tile: they tilt and tumble a little but mostly land upright.
   bodies.forEach((body) => Body.setInertia(body, body.inertia * 6));
-  bodies.forEach((body, i) => setTimeout(() => Composite.add(engine.world, body), i * 140));
+  Composite.add(engine.world, bodies);
 
   const mouse = Mouse.create(art);
   // Matter listens for the wheel (and cancels it) and for touch; the page must keep scrolling.
@@ -111,38 +124,66 @@ export function startPhysics(Matter: Matter, art: HTMLElement, tileEls: HTMLElem
 
   let frame = 0;
   let paused = false;
+  let last = 0;
+  let behind = 0;
+  const previous = bodies.map((b) => ({ x: b.position.x, y: b.position.y, angle: b.angle }));
+  const shown = bodies.map(() => -1);
 
-  // Tiles keep their resting layout position; the body moves them by transform only, so the
-  // physics never causes a layout shift (CLS).
-  const rest = tileEls.map((el) => ({ left: el.offsetLeft, top: el.offsetTop }));
-
-  const draw = () => {
+  // Draws each tile between the last two physics steps, so motion is even at any refresh rate.
+  // Only transform and opacity change, and both stay on the compositor.
+  const draw = (alpha: number) => {
     bodies.forEach((body, i) => {
-      const x = body.position.x - TILE_WIDTH / 2 - rest[i].left;
-      const y = body.position.y - TILE_HEIGHT / 2 - rest[i].top;
-      const el = tileEls[i];
-      el.style.transform = `translate(${x}px, ${y}px) rotate(${body.angle}rad)`;
-      el.style.setProperty("--lift", liftOf(height - (body.position.y + TILE_HEIGHT / 2)).toFixed(2));
+      const p = previous[i];
+      const x = p.x + (body.position.x - p.x) * alpha;
+      const y = p.y + (body.position.y - p.y) * alpha;
+      const angle = p.angle + (body.angle - p.angle) * alpha;
+      const dx = (x - TILE_WIDTH / 2 - rest[i].left).toFixed(2);
+      const dy = (y - TILE_HEIGHT / 2 - rest[i].top).toFixed(2);
+      tileEls[i].style.transform = `translate(${dx}px, ${dy}px) rotate(${angle.toFixed(4)}rad)`;
+      const lift = Math.round(liftOf(height - (y + TILE_HEIGHT / 2)) * 20) / 20;
+      const shadow = lifts[i];
+      if (shadow && lift !== shown[i]) {
+        shadow.style.opacity = String(lift);
+        shown[i] = lift;
+      }
     });
   };
 
-  const tick = () => {
-    Engine.update(engine, STEP_MS);
-    draw();
-    const resting = bodies.every((b) => b.isSleeping || !engine.world.bodies.includes(b)) && !drag.body;
-    const allIn = bodies.every((b) => engine.world.bodies.includes(b));
-    frame = resting && allIn ? 0 : requestAnimationFrame(tick);
+  const tick = (now: number) => {
+    behind += last ? Math.min(now - last, MAX_CATCH_UP_MS) : STEP_MS;
+    last = now;
+    while (behind >= STEP_MS) {
+      bodies.forEach((b, i) => Object.assign(previous[i], { x: b.position.x, y: b.position.y, angle: b.angle }));
+      Engine.update(engine, STEP_MS);
+      behind -= STEP_MS;
+    }
+    draw(behind / STEP_MS);
+    const resting = bodies.every((b) => b.isSleeping) && !drag.body;
+    frame = resting ? 0 : requestAnimationFrame(tick);
   };
 
-  const wake = () => {
+  function wake() {
     if (paused || frame) return;
     bodies.forEach((b) => Sleeping.set(b, false));
+    last = 0;
+    behind = 0;
     frame = requestAnimationFrame(tick);
-  };
+  }
   art.addEventListener("mousedown", wake);
 
+  // Pop the tiles up, one after another; the first frame looks exactly like the still pile.
+  const pops = POP_ORDER.filter((i) => i < bodies.length).map((i, n) =>
+    setTimeout(() => {
+      if (paused) return;
+      Sleeping.set(bodies[i], false);
+      Body.setVelocity(bodies[i], { x: (Math.random() - 0.5) * 4, y: -9 - Math.random() * 3 });
+      Body.setAngularVelocity(bodies[i], (Math.random() - 0.5) * 0.12);
+      wake();
+    }, n * POP_STAGGER_MS),
+  );
+
   art.dataset.physics = "running";
-  frame = requestAnimationFrame(tick);
+  wake();
 
   return {
     pause() {
@@ -157,6 +198,7 @@ export function startPhysics(Matter: Matter, art: HTMLElement, tileEls: HTMLElem
       wake();
     },
     stop() {
+      pops.forEach(clearTimeout);
       cancelAnimationFrame(frame);
       frame = 0;
       paused = true;
@@ -166,10 +208,8 @@ export function startPhysics(Matter: Matter, art: HTMLElement, tileEls: HTMLElem
       art.removeEventListener("mousedown", handlers.mousedown);
       art.removeEventListener("mouseup", handlers.mouseup);
       Engine.clear(engine);
-      for (const el of tileEls) {
-        el.style.removeProperty("transform");
-        el.style.removeProperty("--lift");
-      }
+      for (const el of tileEls) el.style.removeProperty("transform");
+      for (const shadow of lifts) shadow?.style.removeProperty("opacity");
       art.dataset.physics = "off";
     },
   };

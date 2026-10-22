@@ -95,6 +95,7 @@ export function LetterTiles() {
     <div ref={ref} className="hw-letters" aria-hidden="true">
       {tiles.map((tile, i) => (
         <span key={tile.letter} className={cn("hw-letter", `hw-letter--${i + 1}`, tile.signal && "hw-letter--signal")}>
+          <span className="hw-letter__lift" />
           <span className="hw-letter__face" data-letter={tile.letter}>
             {tile.letter}
           </span>

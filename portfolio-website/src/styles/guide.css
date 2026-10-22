@@ -264,9 +264,18 @@
   opacity: 0.45;
   cursor: default;
 }
+/*
+ * The conversation scrolls on its own between the jumps and the question field. Without its own
+ * overflow, a long answer painted on over the field and the footer (it looked cut off).
+ */
+.hw-guide-panel > :not(.hw-guide-panel__log) {
+  flex: none;
+}
 .hw-guide-panel__log {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 120px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-3);

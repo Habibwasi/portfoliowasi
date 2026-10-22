@@ -195,7 +195,7 @@
 /*
  * Physics letters (5.2): a still pile at the foot of the portrait. When the engine runs, each
  * tile keeps that layout position and is moved by an inline transform from its body (never by
- * left/top, which would count as layout shift), and --lift grows its shadow.
+ * left/top, which would count as layout shift), and its lift shadow fades in while it is up.
  */
 .hw-letters {
   position: absolute;
@@ -203,7 +203,6 @@
   pointer-events: none;
 }
 .hw-letter {
-  --lift: 0;
   position: absolute;
   width: 72px;
   height: 84px;
@@ -215,10 +214,17 @@
   font-size: 56px;
   font-weight: 600;
   line-height: 1;
-  box-shadow:
-    0 1px 0 rgba(28, 26, 22, 0.1),
-    0 calc(8px + 16px * var(--lift)) calc(18px + 14px * var(--lift)) rgba(28, 26, 22, calc(0.16 + 0.04 * var(--lift)));
+  box-shadow: var(--shadow-letter);
   user-select: none;
+}
+/* The shadow grows while a tile is in the air: a softer second shadow that only fades (opacity). */
+.hw-letter__lift {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: 0 24px 32px rgba(28, 26, 22, 0.2);
+  opacity: 0;
+  pointer-events: none;
 }
 .hw-letter--signal {
   background: var(--color-signal);
@@ -253,9 +259,14 @@
 .hw-letter--3 { left: 160px; bottom: 0; transform: rotate(-3deg); }
 .hw-letter--4 { left: 46px; bottom: 86px; transform: rotate(4deg); }
 .hw-letter--5 { left: 124px; bottom: 90px; transform: rotate(-6deg); }
+/* While the engine runs, each tile and its shadow are their own layers, so moving them never repaints. */
 .hw-hero__art:not([data-physics="off"]) .hw-letter {
+  will-change: transform;
   pointer-events: auto;
   cursor: grab;
+}
+.hw-hero__art:not([data-physics="off"]) .hw-letter__lift {
+  will-change: opacity;
 }
 .hw-hero__art:not([data-physics="off"]) .hw-letter:active {
   cursor: grabbing;

@@ -2,6 +2,16 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 5 follow-up: smoother tiles, guide answers that scroll (2026-10-22)
+
+Reported on the preview: the page lagged, the letter tiles fell unevenly, and guide answers looked cut off.
+
+- **Tiles:** a trace showed the tiles repainted about twice a frame while falling (261 paints and 421 ms of raster work in 2 s), because the growing shadow changed `box-shadow` every frame and the tiles had no layers of their own. Now each tile is its own layer, moved by transform only, and the extra shadow fades in by opacity: 0 repaints and 1 ms of raster in the same 2 s. The engine also ran one step per screen refresh, so on a 120 or 144 Hz screen the fall was 2–2.4× too fast and any dropped frame hitched. It now steps on real time (fixed 1/120 s steps, drawn between steps).
+- **Start of the drop:** the tiles used to jump from the pile to the top of the column before falling. Now they start exactly where the still pile is and are popped up, top row first, so the motion is continuous.
+- **Guide:** a long answer didn't scroll; it painted over the question field and the footer. The conversation now scrolls on its own between the jumps and the field and follows the newest message, unless you've scrolled up to read. This dates from Phase 3; the bigger header and the busy fallback's four excerpts made it show.
+- **Not changed:** on the preview the guide has no Groq key yet (7.8), so every answer is the busy fallback: the matching pages, with excerpts cut at about 160 characters on purpose.
+- **Load:** locally, nothing in the page load stands out beyond the tile repaints above. Vercel adds its toolbar script to protected previews, which production won't have.
+
 ## Phase 5: Delight (2026-10-22)
 
 Spec: [specs/features/phase-5-delight.md](specs/features/phase-5-delight.md) · Roadmap items 5.1–5.6 · Branch `phase-5-delight`, merged into `redesign`

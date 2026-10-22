@@ -164,6 +164,9 @@ export default function GuidePanel({ open, onClose, tourRequest }: { open: boole
   const [typing, setTyping] = useState(false);
   const [poke, setPoke] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const logRef = useRef<HTMLDivElement>(null);
+  // Follow the newest message, unless the visitor has scrolled up to read.
+  const following = useRef(true);
   const { tour, act } = useTour(tourRequest, open);
   const tools = usePageTools(onClose);
 
@@ -219,6 +222,7 @@ export default function GuidePanel({ open, onClose, tourRequest }: { open: boole
     event.preventDefault();
     const question = input.trim();
     if (!question || pending) return;
+    following.current = true;
     void sendMessage({ text: question });
     setInput("");
     setTyping(false);
@@ -234,6 +238,16 @@ export default function GuidePanel({ open, onClose, tourRequest }: { open: boole
   // A Groq error mid-answer leaves an empty answer whose sources become the busy fallback (3.6).
   const last = messages.at(-1);
   const failedAnswer = error && last?.role === "assistant" && !textOf(last) ? last : undefined;
+
+  useEffect(() => {
+    const log = logRef.current;
+    if (open && log && following.current) log.scrollTop = log.scrollHeight;
+  }, [open, messages, status, failure]);
+
+  const onLogScroll = () => {
+    const log = logRef.current!;
+    following.current = log.scrollHeight - log.scrollTop - log.clientHeight < 40;
+  };
 
   return (
     <section
@@ -304,7 +318,7 @@ export default function GuidePanel({ open, onClose, tourRequest }: { open: boole
         </div>
       )}
 
-      <div className="hw-guide-panel__log" role="log" aria-live="polite" aria-busy={pending} aria-label="Conversation">
+      <div ref={logRef} className="hw-guide-panel__log" role="log" aria-live="polite" aria-busy={pending} aria-label="Conversation" onScroll={onLogScroll}>
         <p className="hw-guide-msg hw-guide-msg--assistant">{guide.intro}</p>
         {messages.map((message) =>
           message.role === "user" ? (
