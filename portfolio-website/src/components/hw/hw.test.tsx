@@ -106,6 +106,13 @@ describe("ProjectCard", () => {
     expect(within(links[0]).getByRole("heading", { name: project.title })).toBeInTheDocument();
   });
 
+  it("names the link by its title and describes it by its summary (6.1)", () => {
+    render(<ProjectCard project={project} />);
+    const link = screen.getByRole("link");
+    expect(link).toHaveAccessibleName(project.title);
+    expect(link).toHaveAccessibleDescription(project.summary);
+  });
+
   it("shows at most two metrics and three tags", () => {
     render(<ProjectCard project={project} />);
     expect(screen.queryByText("Platforms")).not.toBeInTheDocument();

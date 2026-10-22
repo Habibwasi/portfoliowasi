@@ -38,7 +38,7 @@ Full plan in [specs/product/roadmap.md](specs/product/roadmap.md). What changed 
 - **Motion:** Motion (`motion/react`) through `LazyMotion`
 - **Email:** Resend, for the contact form
 - **Tests:** Vitest + Testing Library, Playwright + axe, Lighthouse CI
-- **Hosting:** Vercel, with Vercel Analytics
+- **Hosting:** Vercel, with Vercel Analytics and Umami Cloud for events
 - **AI guide:** Vercel AI SDK v7 with GPT-OSS 120B on Groq; a build-time RAG index (gte-small embeddings via Transformers.js) committed as JSON, hybrid BM25 + cosine search; Upstash rate limits
 
 ## Getting started
@@ -60,7 +60,8 @@ Environment variables (all listed in `.env.example`):
 | `GROQ_API_KEY`, `GROQ_EVAL_API_KEY` | AI guide and its evaluation (Phase 3) |
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Rate limiting (Phase 1 onwards) |
 | `NEXT_PUBLIC_CALENDLY_URL` | "Book a call" |
-| `NEXT_PUBLIC_SITE_URL` | Metadata, sitemap and social previews |
+| `NEXT_PUBLIC_SITE_URL` | Metadata, sitemap and social previews; the only host Umami counts |
+| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Umami Cloud events (Production only); without it the script never loads |
 | `VERCEL_SUPPORT_LARGE_FUNCTION=1` | Vercel only: lets the `/api/guide` function past the size check (not needed locally) |
 
 ## Scripts

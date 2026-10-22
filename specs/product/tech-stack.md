@@ -36,7 +36,7 @@ Two constraints shape the choices:
 | Guide character | Inline SVG + CSS, Motion for the state animations | Add |
 | Testing | Vitest + Testing Library, Playwright + axe, Lighthouse CI, a TypeScript eval script for the guide | Add |
 | CI/CD | GitHub Actions, then Vercel preview and production deploys | Add |
-| Analytics | `@vercel/analytics` page views (Hobby). Custom events are an open decision: Umami or Plausible. | Keep |
+| Analytics | `@vercel/analytics` page views (Hobby), plus Umami Cloud (free Hobby plan, no cookies) for case study views and the CV, email and Calendly clicks. The script loads only with `NEXT_PUBLIC_UMAMI_WEBSITE_ID` and counts only the production host | Keep, add Umami |
 
 ## Removed from the current app
 
@@ -180,7 +180,7 @@ browser: onToolCall → scroll_to / open_case_study / highlight / play_demo / st
 
 - **CSP:** a static Content Security Policy header in `next.config.ts`:
   - `frame-src` for YouTube's privacy-enhanced domain
-  - `connect-src` for analytics
+  - `script-src` and `connect-src` for analytics (Vercel, `cloud.umami.is`, `gateway.umami.is`)
   - `default-src 'self'`
 
   A nonce-based CSP is avoided because in Next.js it forces every page into dynamic rendering.

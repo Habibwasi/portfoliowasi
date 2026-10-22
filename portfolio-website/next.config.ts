@@ -5,15 +5,16 @@ const isDev = process.env.NODE_ENV !== "production";
 /**
  * Static Content Security Policy. A nonce-based CSP would force every page into
  * dynamic rendering, so inline scripts and styles (Next's RSC payload, Motion's
- * style attributes) are allowed instead. Dev adds eval and websockets for HMR.
+ * style attributes) are allowed instead. Dev adds eval and websockets for HMR. Umami Cloud
+ * (6.2) loads from cloud.umami.is and sends to gateway.umami.is.
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://cloud.umami.is${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://github.com https://*.githubusercontent.com",
   "font-src 'self'",
-  `connect-src 'self' https://vitals.vercel-insights.com${isDev ? " ws: http://localhost:*" : ""}`,
+  `connect-src 'self' https://vitals.vercel-insights.com https://gateway.umami.is${isDev ? " ws: http://localhost:*" : ""}`,
   "frame-src https://www.youtube-nocookie.com",
   "media-src 'self'",
   "object-src 'none'",
