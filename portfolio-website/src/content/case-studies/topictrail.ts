@@ -1,4 +1,3 @@
-import { placeholder } from "../placeholder";
 import type { CaseStudy } from "../types";
 
 /**
@@ -45,7 +44,10 @@ export const topictrail: CaseStudy = {
   },
   aiInTheBuild: {
     heading: "AI in the build",
-    body: [placeholder("Which AI tools help build TopicTrail, and where you review or overrule them")],
+    body: [
+      "We use Claude Code, GitHub Copilot and Codex. None of them makes a decision on its own: I step in at every design decision, because they sometimes give wrong answers, and sometimes very confident wrong answers.",
+      "So I watch what the agent is doing while it works, check its reasoning against the research and the requirements, and debug the tests myself instead of trusting a green run.",
+    ],
   },
   solution: {
     heading: "The planned pipeline",

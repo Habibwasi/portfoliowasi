@@ -44,6 +44,14 @@ test.describe("keyboard", () => {
       let stops = 0;
       for (; stops < 150; stops++) {
         await page.keyboard.press("Tab");
+        // Focus scrolls smoothly (scroll-behavior: smooth); judge the stop once the scroll has settled.
+        await page.waitForFunction(
+          () =>
+            new Promise((resolve) => {
+              const y = scrollY;
+              setTimeout(() => resolve(scrollY === y), 120);
+            }),
+        );
         const stop = await page.evaluate(() => {
           const el = document.activeElement as HTMLElement | null;
           if (!el || el === document.body) return null;

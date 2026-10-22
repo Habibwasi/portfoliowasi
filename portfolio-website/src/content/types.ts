@@ -116,4 +116,6 @@ export type Testimonial = {
   quote: Content<string>;
   name: Content<string>;
   role: string;
+  /** Shown instead of the quote when set: a screenshot of the original, with its full text as alt. */
+  screenshot?: { src: string; width: number; height: number; alt: string; source: string };
 };

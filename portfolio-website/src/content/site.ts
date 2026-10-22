@@ -120,4 +120,11 @@ export const testimonial: Testimonial = {
     "Habib is incredibly efficient at his tasks and his performance numbers were among the highest in the country. He is reliable, good at problem solving and flexible.",
   name: "Kasper Krogh",
   role: "Team Lead, Just Eat Takeaway.com",
+  screenshot: {
+    src: "/proof/kasper-krogh-recommendation.png",
+    width: 765,
+    height: 165,
+    alt: "LinkedIn recommendation from Kasper Krogh, Team Lead, 20 October 2026, who managed Habib directly: “I have been very fortunate to have Habib as one of my employees during my employment as Team Lead at Just Eat Takeaway.com. Habib is incredibly efficient at his tasks and his performance numbers were among the highest in the country. He is reliable, good at problem solving and flexible. I can only give my warmest recommendations and trust he will be a great addition in his future positions.”",
+    source: "Recommendation on LinkedIn, 20 October 2026",
+  },
 };

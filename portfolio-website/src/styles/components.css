@@ -306,6 +306,17 @@ a.hw-card:hover {
   border-radius: var(--radius-md);
   max-width: 720px;
 }
+/* The original recommendation as a screenshot: shown at its own size, never stretched. */
+.hw-quote--screenshot {
+  max-width: 813px;
+}
+.hw-quote--screenshot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: var(--spacing-space-4);
+  border-radius: var(--radius-sm);
+}
 .hw-quote__text {
   font-family: var(--font-display);
   font-style: italic;
