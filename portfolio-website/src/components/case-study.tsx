@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { caseStudySectionId, type CaseStudySectionName } from "@/content/anchors";
 import { caseStudyEyebrow, nextCaseStudy } from "@/content/case-studies";
 import { isPlaceholder } from "@/content/placeholder";
 import { featuredProjects } from "@/content/projects";
@@ -33,8 +34,8 @@ function Media({ item, className }: { item: MediaItem; className?: string }) {
 }
 
 /** One numbered section: label and h2 on the left, the write-up on the right. */
-function Section({ number, name, section, children }: { number: number; name: string; section?: CaseStudySection; children?: React.ReactNode }) {
-  const id = `cs-${name.toLowerCase().replace(/[^a-z]+/g, "-")}`;
+function Section({ number, name, section, children }: { number: number; name: CaseStudySectionName; section?: CaseStudySection; children?: React.ReactNode }) {
+  const id = caseStudySectionId(name);
   return (
     <section className="hw-container hw-cs-section" aria-labelledby={id}>
       <div className="hw-cs-section__grid">

@@ -13,7 +13,8 @@ The site is being rebuilt in phases, spec-first and test-first. The live version
 | 0 | Foundation: design tokens, content layer, base components, tests, CI | Done |
 | 1 | Launch: new Home, case study template, TopicTrail and Validation Portal case studies, working contact | Done |
 | 2 | Ridly case study, per-page social previews, click-to-load video player | Done |
-| 3–6 | AI guide, AI story and About page, delight, polish | Planned |
+| 3 | AI guide: corner tile, panel with jumps and a 30-second tour, RAG chat with sources, nightly evaluation, "How this guide works" page | Built; live answers need the Groq keys (roadmap 7.8) |
+| 4–6 | AI story and About page, delight, polish | Planned |
 | 7 | Content handover: CV, Calendly, screens, videos, testimonial, photos | Last |
 
 Full plan in [specs/product/roadmap.md](specs/product/roadmap.md). What changed and why: [CHANGELOG.md](CHANGELOG.md).
@@ -38,7 +39,7 @@ Full plan in [specs/product/roadmap.md](specs/product/roadmap.md). What changed 
 - **Email:** Resend, for the contact form
 - **Tests:** Vitest + Testing Library, Playwright + axe, Lighthouse CI
 - **Hosting:** Vercel, with Vercel Analytics
-- **Planned:** an AI guide on the Vercel AI SDK with GPT-OSS on Groq, and a build-time RAG index (see the tech stack doc)
+- **AI guide:** Vercel AI SDK v7 with GPT-OSS 120B on Groq; a build-time RAG index (gte-small embeddings via Transformers.js) committed as JSON, hybrid BM25 + cosine search; Upstash rate limits
 
 ## Getting started
 
@@ -75,16 +76,20 @@ Run these from `portfolio-website/`.
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:e2e` | Playwright end-to-end and axe accessibility tests on desktop and phone, against a production build (run `npm run build` first; `npx playwright install chromium` once) |
 | `npm run lhci` | Lighthouse on a phone profile against the production build |
+| `npm run guide:index` | Rebuilds the AI guide's index (`src/generated/guide-index.json`) after a content change; a unit test fails until you do |
+| `npm run eval:guide` | The guide's evaluation: retrieval always, answers through the real route when `GROQ_EVAL_API_KEY` is set |
 
 CI (`.github/workflows/ci.yml`) runs on every push and pull request:
 1. Lint, typecheck, unit tests and build.
 2. Then, in parallel: the Playwright suite, and Lighthouse.
 
+`.github/workflows/guide-eval.yml` runs the guide's evaluation nightly and on demand.
+
 ## Project structure
 
 ```
 portfoliowasi/
-├── .github/workflows/ci.yml     CI pipeline
+├── .github/workflows/           CI pipeline, nightly guide evaluation
 ├── specs/
 │   ├── product/                 mission, tech stack, roadmap
 │   └── features/                one spec per feature or phase

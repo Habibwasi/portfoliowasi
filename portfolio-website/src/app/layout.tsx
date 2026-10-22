@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { GuideLauncher } from "@/components/guide/guide-launcher";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { anchors } from "@/content/anchors";
@@ -60,6 +61,7 @@ export default function RootLayout({
         <SiteHeader />
         <main id={anchors.main}>{children}</main>
         <SiteFooter />
+        <GuideLauncher />
         <Analytics />
       </body>
     </html>

@@ -8,4 +8,5 @@ afterEach(() => {
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/",
+  useRouter: () => ({ push: vi.fn(), prefetch: vi.fn() }),
 }));

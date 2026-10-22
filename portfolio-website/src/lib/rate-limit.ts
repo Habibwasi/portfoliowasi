@@ -35,3 +35,42 @@ export async function allowContact(ip: string): Promise<boolean> {
     return true;
   }
 }
+
+type GuideLimiters = { visitor: Ratelimit; site: Ratelimit };
+
+let guideLimiters: GuideLimiters | null | undefined;
+
+/**
+ * 10 questions per IP per 10 minutes, and 300 a day across the site, which keeps the guide
+ * inside Groq's free tier (about 1,000 requests a day for gpt-oss-120b).
+ */
+function getGuideLimiters(): GuideLimiters | null {
+  if (guideLimiters !== undefined) return guideLimiters;
+  const url = process.env.KV_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return (guideLimiters = null);
+  const redis = new Redis({ url, token });
+  guideLimiters = {
+    visitor: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(10, "10 m"), prefix: "ratelimit:guide", timeout: 3000 }),
+    site: new Ratelimit({ redis, limiter: Ratelimit.fixedWindow(300, "1 d"), prefix: "ratelimit:guide-daily", timeout: 3000 }),
+  };
+  return guideLimiters;
+}
+
+/**
+ * Whether this IP may ask the guide another question. Fails closed, unlike the contact form:
+ * every question costs model quota. Without Upstash it is open outside production only, so
+ * local dev and tests work.
+ */
+export async function allowGuide(ip: string): Promise<boolean> {
+  try {
+    const limiters = getGuideLimiters();
+    if (!limiters) return process.env.NODE_ENV !== "production";
+    // The visitor's limit first, so a limited visitor doesn't spend the site's daily cap.
+    if (!(await limiters.visitor.limit(ip)).success) return false;
+    return (await limiters.site.limit("site")).success;
+  } catch (error) {
+    console.error("Guide rate limit unavailable:", error);
+    return false;
+  }
+}

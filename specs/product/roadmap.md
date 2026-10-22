@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0–2 done; Phase 3 next)
+Last updated: 2026-10-22 (Phases 0–2 done; Phase 3 built, waiting for CI on `redesign`)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -66,15 +66,17 @@ Spec: [phase-2-ridly.md](../features/phase-2-ridly.md)
 | 2.2 | Per-page OG images with Fraunces TTF | P6 | done |
 | 2.3 | Video facade: YouTube privacy-enhanced embed, poster, captions, loads on click | C11, P2 | done (videos in Phase 7) |
 
-## Phase 3: AI guide (useful first, animated later)
+## Phase 3: AI guide (useful first, animated later) · in progress
+
+Spec: [phase-3-guide.md](../features/phase-3-guide.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 3.1 | Collapsed "H" tile on every page, with CSS idle and blink only. The panel loads on first interaction. | GD1, GD3 | planned |
-| 3.2 | Panel without the model: header labelled "AI assistant"; "Jump to" row (tour, best project, AI workflow, proof, contact); 30-second tour; one-time tour offer after the first scroll; 400 px side panel on desktop, bottom sheet on phones; closable, keyboard-operable, a plain chat for screen readers | GD3, GD4, GD7, GD8 | planned |
-| 3.3 | RAG chat: build-time JSON index, `gte-small` embeddings, hybrid search, `gpt-oss-120b` on Groq, sources on every answer, "I don't know" fallback, third-person voice, per-IP and daily limits, "busy" state | GD5, GD9, AI3 | planned |
-| 3.4 | Guide evaluation: about 20 recruiter questions, citation, refusal and tool checks, run nightly on a separate key | GD9 | planned |
-| 3.5 | "How this guide works" link to its architecture | AI6 | planned |
+| 3.1 | Collapsed "H" tile on every page, with CSS idle and blink only. The panel loads on first interaction. | GD1, GD3 | done |
+| 3.2 | Panel without the model: header labelled "AI assistant"; "Jump to" row (tour, best project, AI workflow, proof, contact); 30-second tour; one-time tour offer after the first scroll; 400 px side panel on desktop, bottom sheet on phones; closable, keyboard-operable, a plain chat for screen readers | GD3, GD4, GD7, GD8 | done |
+| 3.3 | RAG chat: build-time JSON index, `gte-small` embeddings, hybrid search, `gpt-oss-120b` on Groq, sources on every answer, "I don't know" fallback, third-person voice, per-IP and daily limits, "busy" state | GD5, GD9, AI3 | done (live answers need the Groq keys, 7.8) |
+| 3.4 | Guide evaluation: about 20 recruiter questions, citation and refusal checks (tool checks arrive with 5.6), run nightly on a separate key | GD9 | done (answers run once `GROQ_EVAL_API_KEY` is set, 7.8) |
+| 3.5 | "How this guide works" link to its architecture | AI6 | done |
 
 ## Phase 4: AI story, proof and About
 
@@ -119,6 +121,7 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 7.5 | Photos with captions, line-art portrait, drawings of your own objects; journey dates checked | About page (4.4), hero (5.5), object nav (5.4) | open |
 | 7.6 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | open |
 | 7.7 | Role text for the More projects (Undershelf, Deskinct, Medication Adherence App) | `src/content/projects.ts` | open |
+| 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY` | open |
 
 ## Later (not scheduled)
 
@@ -154,6 +157,9 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 2026-10-21 | Stay on Vercel Hobby | — |
 | 2026-10-21 | All content and assets (CV, Calendly, case study material, testimonial, photos, profiles) are supplied at the end, in Phase 7; placeholders stay until then | Per-feature "once supplied" |
 | 2026-10-21 | No production deploy until every phase is done: phases collect on `redesign` (Vercel preview); `main` is merged after Phase 7 | Phase 1 "deploy to production" |
+| 2026-10-22 | The guide's index is committed (`src/generated/guide-index.json`) and rebuilt with `npm run guide:index`; a unit test catches a stale index | Tech stack "written at build time" |
+| 2026-10-22 | The guide's "Best project" jump goes to Ridly; "AI workflow" goes to Ridly's "AI in the build" until 4.1 adds `#ai` on Home | — |
+| 2026-10-22 | `GROQ_EVAL_API_KEY` must come from a separate Groq organisation, because Groq's limits are per organisation | Tech stack "separate key" |
 
 ## Open decisions
 

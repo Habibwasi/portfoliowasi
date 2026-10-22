@@ -32,6 +32,22 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  // The guide embeds questions with Transformers.js on onnxruntime-node (native binaries), so neither is bundled.
+  serverExternalPackages: ["@huggingface/transformers", "onnxruntime-node"],
+  // Transformers.js loads onnxruntime-node dynamically, so file tracing misses it. The package ships
+  // every platform (288 MB); Vercel runs Linux x64 (45 MB), so only that binary goes in.
+  outputFileTracingIncludes: {
+    "/api/guide": [
+      "node_modules/onnxruntime-node/package.json",
+      "node_modules/onnxruntime-node/dist/**",
+      "node_modules/onnxruntime-node/bin/napi-v6/linux/x64/**",
+      "node_modules/onnxruntime-common/**",
+    ],
+  },
+  // The web runtime isn't used on the server.
+  outputFileTracingExcludes: {
+    "/api/guide": ["node_modules/onnxruntime-web/**"],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

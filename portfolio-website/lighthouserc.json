@@ -6,7 +6,8 @@
       "url": [
         "http://localhost:3200/",
         "http://localhost:3200/work/validation-portal",
-        "http://localhost:3200/work/ridly"
+        "http://localhost:3200/work/ridly",
+        "http://localhost:3200/guide"
       ],
       "numberOfRuns": 3,
       "settings": {

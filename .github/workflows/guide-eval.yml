@@ -1,0 +1,37 @@
+name: Guide evaluation
+
+# The AI guide's evaluation (roadmap 3.4): retrieval every night; answers through the real
+# route too once the GROQ_EVAL_API_KEY secret exists (a separate Groq organisation, so the
+# evaluation doesn't use the production quota).
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: portfolio-website
+
+jobs:
+  eval:
+    name: Retrieval and answers
+    runs-on: ubuntu-latest
+    env:
+      GROQ_EVAL_API_KEY: ${{ secrets.GROQ_EVAL_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: redesign
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: portfolio-website/package-lock.json
+      - run: npm ci
+      - name: Answers are skipped without the secret
+        if: ${{ env.GROQ_EVAL_API_KEY == '' }}
+        run: echo "::notice::GROQ_EVAL_API_KEY is not set; only retrieval is evaluated."
+      - run: npm run eval:guide

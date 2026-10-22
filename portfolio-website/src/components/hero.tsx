@@ -20,7 +20,7 @@ export function Hero() {
   const { location, status, languages } = site.availability;
 
   return (
-    <section className="hw-container hw-hero" aria-labelledby="hero-name">
+    <section id={anchors.intro} className="hw-container hw-hero" aria-labelledby="hero-name">
       <div className="hw-hero__text">
         <span className="hw-label">{site.roleLine}</span>
         <h1 id="hero-name" className="hw-hero__name">

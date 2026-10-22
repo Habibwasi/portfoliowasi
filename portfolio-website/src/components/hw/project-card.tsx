@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { projectCardId } from "@/content/anchors";
 import { isPlaceholder } from "@/content/placeholder";
 import type { Project } from "@/content/types";
 import { Metrics } from "./metric";
@@ -43,14 +44,14 @@ export function ProjectCard({ project }: { project: Project }) {
 
   if (!project.caseStudyReady) {
     return (
-      <article className="hw-card" aria-label={project.title}>
+      <article id={projectCardId(project.slug)} className="hw-card" aria-label={project.title}>
         {body}
       </article>
     );
   }
 
   return (
-    <a className="hw-card" href={href}>
+    <a id={projectCardId(project.slug)} className="hw-card" href={href}>
       {body}
     </a>
   );

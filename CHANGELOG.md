@@ -2,6 +2,58 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 3: AI guide (2026-10-22)
+
+Spec: [specs/features/phase-3-guide.md](specs/features/phase-3-guide.md) · Roadmap items 3.1–3.5 · Branch `phase-3-guide`, merged into `redesign`
+
+**Status: built and verified locally; waiting for CI on `redesign`.** The guide works end to end except for live answers, which need a `GROQ_API_KEY` (roadmap 7.8). Until then the chat shows its "busy" state, and the jumps and the tour work as normal.
+
+The vermilion "H" now sits bottom-right on every page. Opened, it docks a 400 px panel on desktop and reflows the page, or slides up as a sheet on phones. It has a "Jump to" row, a 30-second tour of Home, and a chat that answers from the site's own text with source links. `/guide` explains how it works.
+
+### Verification
+
+| Check | Result |
+| --- | --- |
+| Lint, typecheck | Pass |
+| Unit and component tests | 197 passed (was 144). The route is tested with the AI SDK's mock model |
+| E2E + axe, desktop and phone | 70 passed (was 50). Zero axe violations with the panel open and on `/guide`. The chat is tested with `/api/guide` mocked at the network level |
+| Retrieval evaluation (`npm run eval:guide`, real gte-small embeddings) | 22 of 22: the expected source is in the top 4 for all 16 recruiter questions, and both clearly off-topic questions retrieve nothing. The 22 answer checks are skipped without `GROQ_EVAL_API_KEY` |
+| Production build | Pass. `/guide` and its OG image are static. The `/api/guide` function traces to 58 MB, with only the Linux x64 ONNX runtime |
+| Lighthouse, phone (local) | All four pages within budget: `/` LCP 2.33 s, CLS 0.017; `/work/ridly` 2.23 s; `/work/validation-portal` 2.27 s; `/guide` 1.97 s |
+| Live answers from Groq | **Not checked.** There is no Groq key yet |
+
+### What changed
+
+- **Tile (3.1):** `src/components/guide/guide-launcher.tsx` draws the design system's "H" with CSS idle and blink, which stop under reduced motion. The panel is a separate chunk, preloaded on hover or focus and loaded on click. Before that, no panel markup is on the page.
+- **Panel (3.2):** `guide-panel.tsx` is a non-modal dialog labelled "AI assistant". Escape closes it and focus goes back to the tile. The conversation is a `role="log"`.
+  - *Jump to:* the tour (the only primary button), Best project (Ridly), AI workflow (Ridly's "AI in the build" until 4.1), Proof, Contact. These are real links; on a phone the sheet closes after a jump.
+  - *Tour:* 5 stops, 6 s each, with Pause, Previous, Next and Stop. Each stop is outlined in cobalt. On a phone the sheet shrinks to the tour card during the tour.
+  - *Tour offer:* on Home, after the first scroll, shown once per browser.
+  - *Page IDs:* the hero got `#intro` and the Ridly card `#work-ridly`. Case study section IDs now come from one helper in `anchors.ts`.
+- **RAG chat (3.3):**
+  - *Chunks:* `src/lib/guide/chunks.ts` turns `src/content` into 25 chunks (case study sections, projects, intro, QA record, contact, `/guide`). Placeholders are never indexed.
+  - *Index:* `npm run guide:index` embeds the chunks with gte-small and writes the committed `src/generated/guide-index.json` (94 KB).
+  - *Search:* `search.ts` combines BM25 and cosine with reciprocal rank fusion and returns the top 4.
+  - *Route:* `POST /api/guide` validates the request with Zod (user and assistant text only, questions up to 500 characters). It rate-limits each visitor to 10 questions per 10 minutes and the site to 300 a day, failing closed. It then embeds the question (falling back to keyword search after 4 s) and streams GPT-OSS 120B with low reasoning effort. Source links go out as message metadata. With no match it answers "I don't know" without calling the model; Groq errors show "busy".
+  - *Rendering:* answers go through a small renderer (paragraphs, lists, bold, `[n]` links) that never parses HTML.
+- **Evaluation (3.4):** `evals/guide/` holds 22 cases, the runner and an LLM faithfulness judge on 5 answers. `.github/workflows/guide-eval.yml` runs it nightly and on demand.
+- **How this guide works (3.5):** `/guide`, with the build and request pipelines as numbered steps, the model, the limits, the evaluation and links to the code. It is in the sitemap, Lighthouse measures it, and its text is indexed so the guide can explain itself.
+- **Dependencies:** `ai` 7.0.148, `@ai-sdk/react` 4.0.152, `@ai-sdk/groq` 4.0.67, `@huggingface/transformers` 4.3.1, `@vercel/functions` 3.10.2, and `tsx` (dev).
+- **README** status, stack and scripts brought up to date.
+
+### Key decisions and why
+
+1. **The index is committed, not built during `next build`.** CI and Vercel never download the model, and a unit test fails if content changes without `npm run guide:index`. This follows the decisions log ("RAG index as JSON in the repo").
+2. **Off-topic gate.** gte-small's scores are compressed: off-topic questions scored up to 0.75, relevant ones 0.80 and up. The model is skipped when no chunk shares a keyword and none reaches 0.76, or when nothing reaches 0.74 at all. That second rule stops a stray keyword ("write" in "write me a poem") from counting. Questions close to Habib that the site doesn't answer (salary, Rust, weather) reach the model, which is told to say "I don't know". The answer evaluation checks that once a key exists. **Revisit?** If the live eval shows the model answering those, raise the thresholds.
+3. **Function size.** Transformers.js loads `onnxruntime-node` dynamically, so file tracing missed it entirely; including the whole package pulled in every platform (313 MB, over Vercel's 250 MB). The config now includes only the Linux x64 binary: 58 MB in total. The model files (about 34 MB) download from the Hugging Face Hub on a cold start and are cached in the temp folder.
+4. **No Markdown library.** Answers are a few sentences, and a small renderer can't output HTML at all, which is stricter than a library with HTML disabled.
+5. **Eval key from a separate Groq organisation.** Groq's limits are per organisation, so a second key in the same one would share the production quota.
+
+### Left for you
+
+- **Groq keys** (roadmap 7.8): `GROQ_API_KEY` in Vercel (Preview and Production) and `.env.local`; `GROQ_EVAL_API_KEY` from a second Groq organisation, as a GitHub Actions secret. After that, check a first real answer on the preview and run `npm run eval:guide`.
+- **Cold start on Vercel.** The first question on a fresh instance downloads the embedding model and is answered by keyword search alone. Worth watching on the preview once the key exists.
+
 ## Phase 2: Ridly case study (2026-10-22, closed the same day)
 
 Spec: [specs/features/phase-2-ridly.md](specs/features/phase-2-ridly.md) · Roadmap items 2.1–2.3 · Branch `phase-2-ridly`, merged into `redesign`
