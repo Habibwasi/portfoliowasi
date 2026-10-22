@@ -4,7 +4,7 @@ import { createUIMessageStream, createUIMessageStreamResponse } from "ai";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { guide } from "@/content/guide";
 import { GuideCharacter } from "./guide-character";
-import { GuideLauncher } from "./guide-launcher";
+import { GuideLauncher, scrollToClear } from "./guide-launcher";
 
 const fetchMock = vi.fn();
 
@@ -55,6 +55,19 @@ function toolResponse(text: string, toolName: string, input: unknown) {
     }),
   });
 }
+
+describe("scrollToClear (6.1, WCAG 2.4.11)", () => {
+  const launcher = { top: 600, bottom: 700, left: 1000, right: 1260 };
+
+  it("scrolls a focused link under the launcher up past it, with a gap", () => {
+    expect(scrollToClear({ top: 640, bottom: 664, left: 1100, right: 1200 }, launcher)).toBe(80);
+  });
+
+  it("leaves links beside or above the launcher alone", () => {
+    expect(scrollToClear({ top: 640, bottom: 664, left: 100, right: 300 }, launcher)).toBe(0);
+    expect(scrollToClear({ top: 500, bottom: 524, left: 1100, right: 1200 }, launcher)).toBe(0);
+  });
+});
 
 describe("GuideCharacter (5.6)", () => {
   it("takes a class for each of the five states, and the poke on top", () => {
