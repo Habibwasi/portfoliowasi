@@ -17,6 +17,7 @@ Branch `phase-7-case-studies`.
 - **Tooling:** `agentRules: false` stops `next dev` writing an `AGENTS.md` into the repo when an AI agent runs it.
 - **Checked:** typecheck and lint pass; the production build passes; 162 end-to-end tests pass locally (16 skipped by design). Unit tests run in CI only (Smart App Control). Two e2e tests were updated for the CV viewer and the portrait.
 - **Lighthouse fix:** CI's phone run put the About page's LCP at 3.41 s (budget 2.5 s): the first Sønderborg photo is the largest element and loaded lazily. It now preloads, and images are served as AVIF first (WebP as fallback). Locally About went to 2.17–2.28 s; the other pages are unchanged.
+- **Validation Portal, AI in the build (7.3):** the last bracketed placeholder on the site is gone. It's your real example from the repo: a debugging change put the first 8–10 characters of the Groq key into the translation endpoint's error message (`bfc2f92`, `4f95082`), and you removed it about 20 minutes later (`821b2c1`). The guide's index is rebuilt with it.
 - **Heads-up:** `next build` warns that Next.js 16.4.0 has a known security advisory. It doesn't fail the build in CI or on Vercel. Upgrading is a separate step.
 - **Left open:** drawings of your own objects (optional) and checking the About facts (7.5); the rest of Phase 7 (7.6–7.11).
 
