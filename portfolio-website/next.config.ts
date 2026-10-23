@@ -33,6 +33,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  // Don't let `next dev` write an AGENTS.md into the repo when an AI coding agent runs it.
+  agentRules: false,
   // The guide embeds questions with Transformers.js on onnxruntime-node (native binaries), so neither is bundled.
   serverExternalPackages: ["@huggingface/transformers", "onnxruntime-node"],
   // Transformers.js loads onnxruntime-node dynamically, so file tracing misses it. The package ships

@@ -2,6 +2,23 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 7.5 and fixes: photos, portrait, CV viewer, the landing (2026-10-23)
+
+Branch `phase-7-case-studies`.
+
+- **Header name:** the header said "Habib Wasi"; it now shows the full name, **Habib Ahmed Wasi**. On phones it's 18 px and can take two lines, so the four nav links still fit at 320 px.
+- **Landing:** Home's first screen is the landing only. Hero and object nav fill the viewport (`.hw-landing`, `100svh` minus the header), so Selected work no longer peeks into the first view on phones and tall screens.
+- **Empty space at the bottom:** the page reserved room for the guide tile under the footer (96 px, plus 96 px of body padding below 1024 px, and 240 px while the tour offer showed). All of it is gone. The footer keeps its links out of the tile's corner instead, and the tour offer hides while the footer is on screen. The keyboard test confirms no focused link is covered (WCAG 2.4.11).
+- **Portrait (7.5):** a pixel-art portrait made from your photo fills the hero slot (`public/hero/portrait.png`, 17 KB, preloaded). From desktop width it's now Home's largest paint (about 180 ms locally); on phones it's hidden and the name still is. The LCP test checks both.
+- **About photos (7.5):** the three photo cards are collages: Sønderborg harbour (September 2023), uTest (profile, badges and your article) and the October 2026 job fairs in Vejle and Sønderborg. Every picture has alt text, and none carries GPS or camera data. Your originals (`photos/`, `personalphoto.jpg`) stay out of git through a new root `.gitignore`.
+- **CV viewer:** every CV link (header, hero, contact, case studies, object nav, the guide's offer) opens the CV's two pages in a modal, with "Download PDF" at the top; the buttons say "View CV". The pages are images because a PDF in a frame shows nothing on Android; `scripts/cv-pages.py` renders them, so rerun it whenever the PDF changes. New-tab and modified clicks, and visitors without JavaScript, still get the PDF.
+- **Analytics:** opening the CV still counts as `CV download` with where it was clicked; a real download from the viewer is recorded with place `cv-viewer`. **Revisit?** In Umami, the event name now means "opened the CV".
+- **Stack logos:** each skill button carries its logo (Simple Icons, CC0) or a small drawn icon for concepts like TDD and RAG; brand tags take their brand colour on hover.
+- **Tooling:** `agentRules: false` stops `next dev` writing an `AGENTS.md` into the repo when an AI agent runs it.
+- **Checked:** typecheck and lint pass; the production build passes; 162 end-to-end tests pass locally (16 skipped by design). Unit tests run in CI only (Smart App Control). Two e2e tests were updated for the CV viewer and the portrait.
+- **Heads-up:** `next build` warns that Next.js 16.4.0 has a known security advisory. It doesn't fail the build in CI or on Vercel. Upgrading is a separate step.
+- **Left open:** drawings of your own objects (optional) and checking the About facts (7.5); the rest of Phase 7 (7.6–7.11).
+
 ## Phase 7.3: Ridly and Validation Portal case studies (2026-10-22)
 
 Branch `phase-7-case-studies`. TopicTrail stays placeholders until Habib sends its files.

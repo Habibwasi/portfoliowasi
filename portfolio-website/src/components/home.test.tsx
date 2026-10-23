@@ -1,7 +1,7 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { aiSkills, frameworkSkills, languageSkills } from "@/content/skills";
+import { aiSkills, frameworkSkills, languageSkills, skills } from "@/content/skills";
 import { placeholder } from "@/content/placeholder";
 import { ContactForm } from "./contact-form";
 import { ContactSection } from "./contact-section";
@@ -11,6 +11,7 @@ import { ObjectNav } from "./object-nav";
 import { AiWorkflow } from "./ai-workflow";
 import { ActionButton } from "./hw";
 import { Proof } from "./proof";
+import { skillLogoNames } from "./skill-logo";
 import { Stack } from "./stack";
 
 describe("Hero", () => {
@@ -27,7 +28,7 @@ describe("Hero", () => {
     const primary = screen.getByRole("link", { name: "View case studies" });
     expect(primary).toHaveAttribute("href", "#work");
     expect(primary).toHaveClass("hw-btn--primary");
-    const cv = screen.getByRole("link", { name: "Download CV" });
+    const cv = screen.getByRole("link", { name: "View CV" });
     expect(cv).toHaveAttribute("href", "/cv/Habib-Ahmed-Wasi-CV.pdf");
     expect(cv).toHaveAttribute("download");
   });
@@ -68,9 +69,9 @@ describe("Hero motion (5.1, 5.2, 5.5)", () => {
     expect(layer.querySelectorAll(".hw-letter--signal")).toHaveLength(1);
   });
 
-  it("shows the portrait slot as a labelled placeholder until it is drawn", () => {
+  it("shows the pixelated portrait in the art slot", () => {
     render(<Hero />);
-    expect(screen.getByText("[Line-art portrait]")).toBeInTheDocument();
+    expect(screen.getByAltText("Pixel-art portrait of Habib Ahmed Wasi")).toHaveAttribute("src", "/hero/portrait.png");
   });
 });
 
@@ -155,7 +156,7 @@ describe("ContactSection", () => {
     const section = document.getElementById("contact")!;
     expect(within(section).getByRole("heading", { level: 2, name: "Have a role in mind?" })).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "Email me" })).toHaveAttribute("href", "mailto:habibwasi9@gmail.com");
-    expect(within(section).getByRole("link", { name: "Download CV" })).toHaveAttribute("href", "/cv/Habib-Ahmed-Wasi-CV.pdf");
+    expect(within(section).getByRole("link", { name: "View CV" })).toHaveAttribute("href", "/cv/Habib-Ahmed-Wasi-CV.pdf");
     expect(within(section).getByText("[Calendly URL]")).toBeInTheDocument();
     const primaries = section.querySelectorAll(".hw-btn--primary");
     expect(primaries).toHaveLength(1);
@@ -259,6 +260,15 @@ describe("Stack", () => {
     expect(within(frameworks).getAllByRole("button")).toHaveLength(frameworkSkills.length);
     expect(within(ai).getByRole("button", { name: aiSkills[0].name })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText(`Selected · ${aiSkills[0].name}`)).toBeInTheDocument();
+  });
+
+  it("puts a decorative logo before every skill name, leaving the button named by the skill", () => {
+    render(<Stack />);
+    for (const skill of skills) {
+      const button = screen.getByRole("button", { name: skill.name });
+      expect(button.querySelector("svg.hw-tag__logo")).toHaveAttribute("aria-hidden", "true");
+    }
+    expect([...skillLogoNames].sort()).toEqual(skills.map((s) => s.name).sort());
   });
 
   it("spaces each ring's tags evenly around the orbit (5.3)", () => {

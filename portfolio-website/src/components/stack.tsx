@@ -6,6 +6,7 @@ import { home } from "@/content/site";
 import { aiSkills, frameworkSkills, languageSkills, skills, type Skill } from "@/content/skills";
 import { cn } from "@/lib/utils";
 import { SectionHead } from "./section-head";
+import { SkillLogo, skillBrand } from "./skill-logo";
 
 type Ring = "ai" | "language" | "framework";
 
@@ -34,11 +35,13 @@ function SkillGroup({
             <span className="hw-orbit__upright">
               <button
                 type="button"
-                className={cn("hw-tag hw-tag--button", skill.kind === "ai" && "hw-tag--ai")}
+                className={cn("hw-tag hw-tag--button hw-tag--logo", skill.kind === "ai" && "hw-tag--ai")}
+                style={{ "--brand": skillBrand(skill.name) } as CSSProperties}
                 aria-pressed={skill.name === selected}
                 aria-controls="stack-proofs"
                 onClick={() => onSelect(skill.name)}
               >
+                <SkillLogo name={skill.name} />
                 {skill.name}
               </button>
             </span>

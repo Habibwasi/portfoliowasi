@@ -28,7 +28,7 @@ export function SiteHeader() {
       <header className="hw-header">
         <div className="hw-container hw-header__inner">
           <Link className="hw-wordmark" href="/">
-            {site.shortName}
+            {site.name}
           </Link>
           <NavLinks items={navItems()} />
         </div>

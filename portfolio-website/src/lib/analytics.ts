@@ -43,6 +43,7 @@ export function linkEvent(href: string, targets: Targets): AnalyticsEvent | null
  */
 export function placeOf(el: Element): string {
   if (el.closest("[data-guide-panel]")) return "guide";
+  if (el.closest(".hw-cv")) return "cv-viewer";
   if (el.closest("body > header")) return "header";
   if (el.closest("body > footer")) return "footer";
   return el.closest("section[id], article[id]")?.id || "page";

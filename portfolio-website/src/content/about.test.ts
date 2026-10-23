@@ -30,15 +30,12 @@ describe("about (4.4)", () => {
     ]);
   });
 
-  it("keeps the photos as visible placeholders until they are supplied", () => {
+  it("fills the three photo cards with pictures that all have alt text", () => {
     expect(about.photos).toHaveLength(3);
-    expect(listPlaceholders(about.photos)).toEqual([
-      "Photo 1",
-      "Photo 1 caption: where, when",
-      "Photo 2",
-      "Photo 2 caption: where, when",
-      "Photo 3",
-      "Photo 3 caption: where, when",
-    ]);
+    expect(listPlaceholders(about.photos)).toEqual([]);
+    for (const photo of about.photos) {
+      expect(photo.images.length).toBeGreaterThan(0);
+      for (const image of photo.images) expect(image.alt).not.toBe("");
+    }
   });
 });

@@ -26,9 +26,14 @@ test.describe("Home → contact → CV", () => {
     await expect(contact.getByRole("heading", { level: 2 })).toBeInViewport();
     await expect(contact.getByRole("link", { name: "Email me" })).toHaveAttribute("href", "mailto:habibwasi9@gmail.com");
 
-    // The CV (7.1) downloads as a PDF.
-    const [download] = await Promise.all([page.waitForEvent("download"), contact.getByRole("link", { name: "Download CV" }).click()]);
+    // The CV (7.1) opens in a viewer, which downloads it as a PDF.
+    await contact.getByRole("link", { name: "View CV" }).click();
+    const viewer = page.getByRole("dialog", { name: "Habib Ahmed Wasi's CV" });
+    await expect(viewer.getByRole("img", { name: /page 1 of 2/ })).toBeVisible();
+    const [download] = await Promise.all([page.waitForEvent("download"), viewer.getByRole("link", { name: "Download PDF" }).click()]);
     expect(download.suggestedFilename()).toBe("Habib-Ahmed-Wasi-CV.pdf");
+    await viewer.getByRole("button", { name: "Close" }).click();
+    await expect(viewer).toBeHidden();
     const call = contact.getByRole("link", { name: "Book a call" });
     await expect(call.or(contact.getByText("[Calendly URL]"))).toBeVisible();
   });

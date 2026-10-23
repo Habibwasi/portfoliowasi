@@ -49,6 +49,7 @@ export function GuideLauncher() {
   const [open, setOpen] = useState(false);
   const [tourRequest, setTourRequest] = useState(0);
   const [offer, setOffer] = useState(false);
+  const [footerInView, setFooterInView] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const launcherRef = useRef<HTMLDivElement>(null);
   const wasOpen = useRef(false);
@@ -62,7 +63,12 @@ export function GuideLauncher() {
       const by = scrollToClear(target.getBoundingClientRect(), launcher.getBoundingClientRect());
       if (by > 0) window.scrollBy({ top: by });
     };
-    const onFocus = (event: FocusEvent) => clear(event.target as Element | null);
+    const onFocus = (event: FocusEvent) => {
+      const target = event.target as Element | null;
+      // Hide the offer before measuring, rather than waiting for the observer below.
+      if (target?.closest?.("footer")) setFooterInView(true);
+      clear(target);
+    };
     document.addEventListener("focusin", onFocus);
     if (offer) clear(document.activeElement);
     return () => document.removeEventListener("focusin", onFocus);
@@ -78,6 +84,15 @@ export function GuideLauncher() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
+
+  // The offer steps aside while the footer is on screen, so the footer needs no room reserved for it.
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!offer || !footer || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(([entry]) => setFooterInView(entry.isIntersecting));
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, [offer]);
 
   // The open panel reflows the page on desktop (GD7); closing it returns focus to the tile.
   useEffect(() => {
@@ -108,7 +123,7 @@ export function GuideLauncher() {
   return (
     <>
       <div ref={launcherRef} className="hw-guide-launcher">
-        {offer && !open && (
+        {offer && !open && !footerInView && (
           <div className="hw-guide-offer" role="region" aria-label="Tour offer">
             <p>{guide.offer.text}</p>
             <div className="hw-guide-offer__actions">

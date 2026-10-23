@@ -152,7 +152,7 @@ export function CaseStudyView({ project, study }: { project: Project; study: Cas
               Next project <span aria-hidden="true">→</span>
             </Button>
             <ActionButton href={site.cv} download>
-              Download CV
+              View CV
             </ActionButton>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
+import { CvViewer } from "@/components/cv-viewer";
 import { GuideLauncher } from "@/components/guide/guide-launcher";
 import { SiteAnalytics } from "@/components/site-analytics";
 import { SiteFooter } from "@/components/site-footer";
@@ -61,6 +62,7 @@ export default function RootLayout({
         <SiteHeader />
         <main id={anchors.main}>{children}</main>
         <SiteFooter />
+        <CvViewer />
         <GuideLauncher />
         <SiteAnalytics />
       </body>

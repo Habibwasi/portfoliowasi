@@ -46,19 +46,20 @@ test.describe("hero name (5.1)", () => {
   });
 });
 
-test.describe("hero name as LCP (5.1, P1)", () => {
-  test("is the largest contentful paint on Home", async ({ page }) => {
+test.describe("hero LCP (5.1, P1)", () => {
+  // The name is the LCP on phones; from desktop width the preloaded portrait (7.5) is larger.
+  test("is the name or the portrait on Home", async ({ page, isMobile }) => {
     await page.goto("/");
     const lcp = await page.evaluate(
       () =>
         new Promise<string>((resolve) => {
           new PerformanceObserver((list) => {
             const last = list.getEntries().at(-1) as PerformanceEntry & { element?: Element };
-            resolve(last.element?.id ?? "");
+            resolve(last.element?.id || last.element?.getAttribute("src") || "");
           }).observe({ type: "largest-contentful-paint", buffered: true });
         }),
     );
-    expect(lcp).toBe("hero-name");
+    expect(lcp).toBe(isMobile ? "hero-name" : "/hero/portrait.png");
   });
 });
 

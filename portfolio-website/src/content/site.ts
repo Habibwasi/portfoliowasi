@@ -3,7 +3,6 @@ import type { Content, Testimonial } from "./types";
 
 export const site = {
   name: "Habib Ahmed Wasi",
-  shortName: "Habib Wasi",
   roleLine: "Software engineer · AI-native · Denmark",
   /** 20 words or fewer (C2). */
   intro:
@@ -26,11 +25,8 @@ export const site = {
   /** Public path of the CV PDF (7.1); every CV button, the nav item and the guide's offer use it. */
   cv: "/cv/Habib-Ahmed-Wasi-CV.pdf" as Content<string>,
   hero: {
-    /**
-     * The line-art portrait beside the name (5.5, V3). Once drawn, replace the placeholder with
-     * { src: "/hero/portrait.png", alt: "…" }; the 4:5 slot stays the same size (7.5).
-     */
-    portrait: placeholder("Line-art portrait") as Content<{ src: string; alt: string }>,
+    /** The pixelated portrait beside the name (5.5, 7.5): a 64×80 grid scaled up, filling the 4:5 slot. */
+    portrait: { src: "/hero/portrait.png", alt: "Pixel-art portrait of Habib Ahmed Wasi" } as Content<{ src: string; alt: string }>,
   },
   /** Set NEXT_PUBLIC_CALENDLY_URL (Vercel project settings) to switch "Book a call" on. */
   calendly: (process.env.NEXT_PUBLIC_CALENDLY_URL || placeholder("Calendly URL")) as Content<string>,

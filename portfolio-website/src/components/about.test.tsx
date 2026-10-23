@@ -11,12 +11,15 @@ describe("About", () => {
     expect(screen.getByText(/graduating in January 2027/)).toBeInTheDocument();
   });
 
-  it("shows the three photo slots as placeholders", () => {
+  it("shows the three photo collages with their captions and described pictures", () => {
     render(<About />);
-    for (const n of [1, 2, 3]) {
-      expect(screen.getByText(`[Photo ${n}]`)).toBeInTheDocument();
-      expect(screen.getByText(`[Photo ${n} caption: where, when]`)).toBeInTheDocument();
-    }
+    const list = screen.getByRole("list", { name: "Photos" });
+    const figures = within(list).getAllByRole("figure");
+    expect(figures).toHaveLength(3);
+    about.photos.forEach((photo, i) => {
+      expect(figures[i]).toHaveTextContent(photo.caption);
+      expect(within(figures[i]).getAllByRole("img")).toHaveLength(photo.images.length);
+    });
   });
 
   it("lists the journey in order, linking back to the work", () => {
@@ -48,6 +51,6 @@ describe("About", () => {
     render(<About />);
     expect(screen.getByRole("heading", { name: "The full story, on paper" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Email me" })).toHaveAttribute("href", "mailto:habibwasi9@gmail.com");
-    expect(screen.getByRole("link", { name: "Download CV" })).toHaveAttribute("href", "/cv/Habib-Ahmed-Wasi-CV.pdf");
+    expect(screen.getByRole("link", { name: "View CV" })).toHaveAttribute("href", "/cv/Habib-Ahmed-Wasi-CV.pdf");
   });
 });
