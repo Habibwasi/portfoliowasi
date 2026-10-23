@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { caseStudies, getCaseStudy, nextCaseStudy, publishedProjects } from "./case-studies";
 import { isPlaceholder } from "./placeholder";
@@ -28,6 +30,15 @@ describe("case studies", () => {
     expect(nextCaseStudy("validation-portal").slug).toBe("topictrail");
   });
 
+  it.each(Object.values(caseStudies))("$slug only shows images that exist, each with alt text (7.3, P4)", (study) => {
+    const media = [study.hero, ...study.screens, ...study.architectureMedia, ...(study.testRun ? [study.testRun] : [])];
+    for (const item of media) {
+      if (isPlaceholder(item.src) || !item.src.startsWith("/")) continue;
+      expect(existsSync(path.join(__dirname, "../../public", item.src)), item.src).toBe(true);
+      expect(item.alt?.length, item.src).toBeGreaterThan(20);
+    }
+  });
+
   it.each(Object.values(caseStudies))("$slug uses valid YouTube IDs for its videos (2.3)", (study) => {
     const media = [study.hero, ...study.screens, ...study.architectureMedia, ...(study.testRun ? [study.testRun] : [])];
     for (const item of media) {
@@ -52,7 +63,7 @@ describe("Ridly", () => {
     expect(search.label).toMatch(/p95/);
     expect(search.note).toMatch(/300 virtual users/);
     expect(study.testEvidence.body.join(" ")).toMatch(/p95 of 96 ms/);
-    expect(study.testEvidence.body.join(" ")).toMatch(/300 to 600 to 1,500/);
+    expect(study.testEvidence.body.join(" ")).toMatch(/1,200 are active/);
   });
 
   it("names only the AI tools actually used (AI5)", () => {
@@ -76,6 +87,14 @@ describe("Validation Portal", () => {
     expect(text).not.toMatch(/Llama/i);
   });
 
+  it("covers the question drafts, the bias check and translation (7.3)", () => {
+    const solution = study.solution.body.join(" ");
+    expect(solution).toMatch(/drafts questions/);
+    expect(solution).toMatch(/bias/);
+    expect(solution).toMatch(/eight languages/);
+    expect(study.facts).toContainEqual({ label: "My role", value: "Built solo" });
+  });
+
   it("says plainly that it has no automated tests, and shows no test run (C11 exception)", () => {
     expect(study.testEvidence.body.join(" ")).toMatch(/no automated tests/i);
     expect(study.testRun).toBeUndefined();
@@ -91,8 +110,16 @@ describe("TopicTrail", () => {
     }
   });
 
-  it("keeps screens and demo as placeholders until they exist", () => {
-    expect(isPlaceholder(study.hero.src)).toBe(true);
-    expect(study.screens.every((s) => isPlaceholder(s.src))).toBe(true);
+  it("shows the planned design, not screens or a demo, while nothing runs (7.3)", () => {
+    expect(study.hero.kind).toBe("architecture");
+    expect(study.screens).toEqual([]);
+    expect(study.facts).toContainEqual({ label: "My role", value: "Team of two" });
+  });
+
+  it("dates every progress note", () => {
+    for (const note of study.testEvidence.points ?? []) {
+      // A date with a year before the colon, or the "Next:" line.
+      expect(typeof note === "string" && /^(Next|[^:]*\b20\d\d):/.test(note), String(note)).toBe(true);
+    }
   });
 });

@@ -39,6 +39,9 @@ test.describe("keyboard", () => {
       test.skip(isMobile, "phones have no Tab key");
       await page.goto(path);
       await settle(page);
+      // Smooth scrolling is cosmetic; without it each Tab lands at once, so the walk judges where
+      // a focused element ends up, not a frame of the animation.
+      await page.addStyleTag({ content: "html { scroll-behavior: auto !important; }" });
       const problems: string[] = [];
       let first: string | null = null;
       let stops = 0;
@@ -54,13 +57,13 @@ test.describe("keyboard", () => {
           const x = rect.left + rect.width / 2;
           const y = rect.top + rect.height / 2;
           const top = document.elementFromPoint(x, y);
-          const covered = !!top && !el.contains(top) && !top.contains(el);
+          const covered = !!top && !el.contains(top) && !top.contains(el) ? `${top.tagName.toLowerCase()}.${top.className}` : "";
           return { id: name + `@${Math.round(rect.top + scrollY)}`, name, ring, covered, size: rect.width > 0 && rect.height > 0 };
         });
         if (!stop || stop.id === first) break;
         first ??= stop.id;
         if (!stop.ring) problems.push(`${stop.name}: no focus ring`);
-        if (stop.covered) problems.push(`${stop.name}: covered`);
+        if (stop.covered) problems.push(`${stop.name}: covered by ${stop.covered}`);
         if (!stop.size) problems.push(`${stop.name}: no size`);
       }
       expect(problems).toEqual([]);

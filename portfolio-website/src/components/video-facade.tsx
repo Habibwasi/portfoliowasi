@@ -22,6 +22,8 @@ type VideoFacadeProps = {
   title: string;
   /** Poster image under /public; without one the frame shows a plain paper poster. */
   poster?: string;
+  /** Load the poster early: it is the case study hero, often the page's largest paint. */
+  preload?: boolean;
 };
 
 /**
@@ -30,7 +32,7 @@ type VideoFacadeProps = {
  * the click swaps in the youtube-nocookie player and moves focus to it. The guide can start it
  * too (PLAY_DEMO_EVENT), muted, because browsers block sound without the visitor's own click.
  */
-export function VideoFacade({ videoId, title, poster }: VideoFacadeProps) {
+export function VideoFacade({ videoId, title, poster, preload }: VideoFacadeProps) {
   const [playing, setPlaying] = useState<false | "sound" | "muted">(false);
   const player = useRef<HTMLIFrameElement>(null);
   const link = useRef<HTMLAnchorElement>(null);
@@ -71,7 +73,7 @@ export function VideoFacade({ videoId, title, poster }: VideoFacadeProps) {
 
   return (
     <a ref={link} className="hw-video" href={`https://www.youtube.com/watch?v=${id}`} onClick={play} aria-label={`Play video: ${title}`}>
-      {poster && <Image src={poster} alt="" fill sizes="(max-width: 640px) 100vw, 1200px" style={{ objectFit: "cover" }} />}
+      {poster && <Image src={poster} alt="" fill preload={preload} sizes="(max-width: 640px) 100vw, 1200px" style={{ objectFit: "cover" }} />}
       <span className="hw-video__play" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="28" height="28" focusable="false">
           <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" />

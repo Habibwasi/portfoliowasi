@@ -178,7 +178,7 @@ export const skills: Skill[] = [
     name: "k6",
     kind: "tech",
     family: "framework",
-    proofs: [project("ridly", "Load test ramped 300 → 600 → 1,500 virtual users", "Test evidence")],
+    proofs: [project("ridly", "Load test ramped up to 1,200 virtual users", "Test evidence")],
   },
   {
     name: "TDD",

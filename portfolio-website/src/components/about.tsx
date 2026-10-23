@@ -1,32 +1,38 @@
 import Image from "next/image";
 import { about, journeyDate } from "@/content/about";
-import { isPlaceholder } from "@/content/placeholder";
 import { site } from "@/content/site";
-import { ActionButton, Button, ContentSlot, Metric } from "./hw";
+import { ActionButton, Button, Metric } from "./hw";
 
-/** Three photos with captions (V3); placeholders until 7.5. */
+/** Rendered width of each tile, so next/image picks a sensible size; the cards are ~380px wide. */
+const tileSizes = {
+  mosaic: ["(min-width: 1024px) 380px, 100vw", "(min-width: 1024px) 190px, 50vw"],
+  stack: ["(min-width: 1024px) 340px, 90vw", "(min-width: 1024px) 340px, 90vw"],
+  pair: ["(min-width: 1024px) 380px, 100vw", "(min-width: 1024px) 380px, 100vw"],
+} as const;
+
+/** Three photo cards with captions (V3, 7.5), each a small collage. */
 function Photos() {
   return (
     <ul className="hw-about__photos" aria-label="Photos">
-      {about.photos.map((photo, i) => (
-        <li key={i}>
+      {about.photos.map((photo, card) => (
+        <li key={photo.caption}>
           <figure className="hw-about__photo">
-            <ContentSlot value={photo.src}>
-              {(src) => (
-                <Image
-                  src={src}
-                  alt={isPlaceholder(photo.caption) ? "" : photo.caption}
-                  width={600}
-                  height={750}
-                  sizes="(min-width: 1024px) 380px, 100vw"
-                />
-              )}
-            </ContentSlot>
-            <figcaption>
-              <ContentSlot value={photo.caption} inline>
-                {(caption) => caption}
-              </ContentSlot>
-            </figcaption>
+            <div className={`hw-collage hw-collage--${photo.layout}`}>
+              {photo.images.map((image, i) => (
+                <div key={image.src} className="hw-collage__tile">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    sizes={tileSizes[photo.layout][i === 0 ? 0 : 1]}
+                    // The first card's top picture is in the first view and is the page's LCP: load it at once.
+                    preload={card === 0 && i === 0}
+                  />
+                </div>
+              ))}
+            </div>
+            <figcaption>{photo.caption}</figcaption>
           </figure>
         </li>
       ))}
@@ -101,7 +107,7 @@ export function About() {
         </h2>
         <div className="hw-actions">
           <ActionButton href={site.cv} variant="primary" download>
-            Download CV
+            View CV
           </ActionButton>
           <Button href={`mailto:${site.email}`}>Email me</Button>
         </div>

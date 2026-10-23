@@ -2,6 +2,44 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Phase 7.5 and fixes: photos, portrait, CV viewer, the landing (2026-10-23)
+
+Branch `phase-7-case-studies`.
+
+- **Header name:** the header said "Habib Wasi"; it now shows the full name, **Habib Ahmed Wasi**. On phones it's 18 px and can take two lines, so the four nav links still fit at 320 px.
+- **Landing:** Home's first screen is the landing only. Hero and object nav fill the viewport (`.hw-landing`, `100svh` minus the header), so Selected work no longer peeks into the first view on phones and tall screens.
+- **Empty space at the bottom:** the page reserved room for the guide tile under the footer (96 px, plus 96 px of body padding below 1024 px, and 240 px while the tour offer showed). All of it is gone. The footer keeps its links out of the tile's corner instead, and the tour offer hides while the footer is on screen. The keyboard test confirms no focused link is covered (WCAG 2.4.11).
+- **Portrait (7.5):** a pixel-art portrait made from your photo fills the hero slot (`public/hero/portrait.png`, 17 KB, preloaded). From desktop width it's now Home's largest paint (about 180 ms locally); on phones it's hidden and the name still is. The LCP test checks both.
+- **About photos (7.5):** the three photo cards are collages: Sønderborg harbour (September 2023), uTest (profile, badges and your article) and the October 2026 job fairs in Vejle and Sønderborg. Every picture has alt text, and none carries GPS or camera data. Your originals (`photos/`, `personalphoto.jpg`) stay out of git through a new root `.gitignore`.
+- **CV viewer:** every CV link (header, hero, contact, case studies, object nav, the guide's offer) opens the CV's two pages in a modal, with "Download PDF" at the top; the buttons say "View CV". The pages are images because a PDF in a frame shows nothing on Android; `scripts/cv-pages.py` renders them, so rerun it whenever the PDF changes. New-tab and modified clicks, and visitors without JavaScript, still get the PDF.
+- **Analytics:** opening the CV still counts as `CV download` with where it was clicked; a real download from the viewer is recorded with place `cv-viewer`. **Revisit?** In Umami, the event name now means "opened the CV".
+- **Stack logos:** each skill button carries its logo (Simple Icons, CC0) or a small drawn icon for concepts like TDD and RAG; brand tags take their brand colour on hover.
+- **Tooling:** `agentRules: false` stops `next dev` writing an `AGENTS.md` into the repo when an AI agent runs it.
+- **Checked:** typecheck and lint pass; the production build passes; 162 end-to-end tests pass locally (16 skipped by design). Unit tests run in CI only (Smart App Control). Two e2e tests were updated for the CV viewer and the portrait.
+- **Lighthouse fix:** CI's phone run put the About page's LCP at 3.41 s (budget 2.5 s): the first Sønderborg photo is the largest element and loaded lazily. It now preloads, and images are served as AVIF first (WebP as fallback). Locally About went to 2.17–2.28 s; the other pages are unchanged.
+- **Heads-up:** `next build` warns that Next.js 16.4.0 has a known security advisory. It doesn't fail the build in CI or on Vercel. Upgrading is a separate step.
+- **Left open:** drawings of your own objects (optional) and checking the About facts (7.5); the rest of Phase 7 (7.6–7.11).
+
+## Phase 7.3: Ridly and Validation Portal case studies (2026-10-22)
+
+Branch `phase-7-case-studies`. TopicTrail stays placeholders until Habib sends its files.
+
+- **Ridly:** the problem, three decisions with their reasons (direct MobilePay payment, SKAT-rate pricing in whole øre, the two trip models) and the Prisma 7 correction as the AI example, all drafted from HOP-KMP for your review. Five screens from the README gallery, framed as phones. A new architecture diagram drawn from your `hop-dataflow.drawio`. A Home card cover made of three screens.
+- **Ridly, corrected:** pushes go through FCM and APNs, not a BullMQ queue. CI builds iOS but can't fail on it (`xcpretty || true`), so the page no longer says it builds both apps. The known limits from the codebase audit (overbooking under concurrent bookings, partial settlement creation, recurring-trip idempotency, backend tests not in CI) are stated as the next work.
+- **Validation Portal:** built solo; the problem; three decisions (AI drafts that the founder must save, the AI behind session-checked serverless functions from day one, guest access deleted after seven days); Copilot and Claude Code; the model history (OpenAI → Gemini → Groq). New in the text: the AI question generator, the Mom Test bias check, translation into eight languages and the read-only report link. Five screens taken from the live demo reel, an architecture diagram drawn from the code, and a card cover.
+- **Site:** media can be phone-shaped (`shape: "phone"`); desktop screenshots show two per row; a unit test checks every case study image exists and has alt text.
+- **Accessibility fix found on the way:** the guide tile could cover a focused link near the bottom of the screen (the flaky keyboard test). `scroll-padding-bottom: 120px` keeps focus clear of it (WCAG 2.4.11).
+- **Videos:** the Ridly film (`GB39N2Kh7Jk`, with its own poster) and the Validation Portal walkthrough (`DqSZ-N4Znnc`) play behind the click-to-load facade, and the guide's `play_demo` now offers both.
+- **k6, corrected to the repo:** the site said the ramp went to 1,500 users; `load-test.js` peaks at 1,200 (800 searching, 400 signed in). Every mention now says 1,200. With no results committed, the test-run frame shows the ramp as configured, labelled that way, with the 96 ms point at 300 users.
+- **TopicTrail:** written from the project files: the problem (from the proposal and PRD), your part of a two-person team, four decisions (the 0.1 watch-ratio threshold, keyword as the baseline for semantic search, privacy and the ToS limits, the move from a local-first Electron app to a server with per-user encryption), the evaluation plan, and dated progress. The hero is a new planned-architecture diagram; your class diagram sits under Architecture. "Local, first, opt-in capture" is gone, because the October design changed it.
+- **Testimonial (7.4):** Kasper Krogh's LinkedIn recommendation, shown as the screenshot you sent (LinkedIn's tabs cropped off), with the full text as alt text. Two of its sentences stay in the content for the guide.
+- **TopicTrail AI section:** Claude Code, GitHub Copilot and Codex, and how you step in at every design decision because they can be confidently wrong.
+- **Focus never hides under the guide (WCAG 2.4.11):** when a focused element sits under the guide tile or the tour offer, the page scrolls it clear; the browser's own focus scrolling skips elements that are already on screen. The page also leaves room for the offer while it shows.
+- **Keyboard test, steadied:** it turns smooth scrolling off during the walk, so it judges where focus lands, not a frame of the scroll animation (the cause of the intermittent CI failures).
+- **Lighthouse fix:** Validation Portal's page missed the 2.5 s LCP budget in CI (3.16 s) once its video poster arrived, because the poster loaded lazily. The case study hero now preloads; locally that page went from 3.28 s to 2.21–2.47 s.
+- **Footer fix:** at the very bottom of a page the guide tile covered the footer's last link; the footer has room for it now.
+- **Left open:** upload `ridly-film.vtt` to the Ridly video as English subtitles (the Validation Portal video has captions burned in); one concrete example of correcting Copilot or Claude Code on Validation Portal; TopicTrail.
+
 ## Phase 6: Polish (2026-10-22)
 
 Spec: [specs/features/phase-6-polish.md](specs/features/phase-6-polish.md) · Roadmap items 6.1–6.2 · Branch `phase-6-polish`, merged into `redesign`

@@ -22,7 +22,7 @@ export function ContactSection() {
       <div className="hw-actions">
         <Button href={mailto}>Email me</Button>
         <ActionButton href={site.cv} download>
-          Download CV
+          View CV
         </ActionButton>
         <ActionButton href={site.calendly} target="_blank" rel="noopener noreferrer">
           Book a call

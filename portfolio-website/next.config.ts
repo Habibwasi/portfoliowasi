@@ -33,6 +33,10 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  // Don't let `next dev` write an AGENTS.md into the repo when an AI coding agent runs it.
+  agentRules: false,
+  // AVIF first (about 20% smaller than WebP): the About page's LCP is a photo, on a phone budget of 2.5 s.
+  images: { formats: ["image/avif", "image/webp"] },
   // The guide embeds questions with Transformers.js on onnxruntime-node (native binaries), so neither is bundled.
   serverExternalPackages: ["@huggingface/transformers", "onnxruntime-node"],
   // Transformers.js loads onnxruntime-node dynamically, so file tracing misses it. The package ships

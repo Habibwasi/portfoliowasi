@@ -27,6 +27,18 @@ function rememberOffer() {
   }
 }
 
+type Box = Pick<DOMRect, "top" | "bottom" | "left" | "right">;
+
+/**
+ * How far to scroll so a focused element clears the fixed launcher (WCAG 2.4.11), or 0 when it
+ * doesn't overlap. scroll-padding can't do this: the browser doesn't scroll an element that is
+ * already inside the viewport, even when the launcher covers it.
+ */
+export function scrollToClear(target: Box, launcher: Box, gap = 16): number {
+  const overlaps = target.right > launcher.left && target.left < launcher.right && target.bottom > launcher.top && target.top < launcher.bottom;
+  return overlaps ? target.bottom - launcher.top + gap : 0;
+}
+
 /**
  * The collapsed guide on every page (3.1): the "H" tile bottom-right. It never opens by itself;
  * on Home it offers the tour once, after the first scroll (GD3).
@@ -37,8 +49,30 @@ export function GuideLauncher() {
   const [open, setOpen] = useState(false);
   const [tourRequest, setTourRequest] = useState(0);
   const [offer, setOffer] = useState(false);
+  const [footerInView, setFooterInView] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const launcherRef = useRef<HTMLDivElement>(null);
   const wasOpen = useRef(false);
+
+  // Keep the focused element clear of the tile and the tour offer, which sit fixed over the page:
+  // when focus moves, and when the offer appears over whatever already has focus.
+  useEffect(() => {
+    const clear = (target: Element | null) => {
+      const launcher = launcherRef.current;
+      if (!launcher || !target || target === document.body || launcher.contains(target)) return;
+      const by = scrollToClear(target.getBoundingClientRect(), launcher.getBoundingClientRect());
+      if (by > 0) window.scrollBy({ top: by });
+    };
+    const onFocus = (event: FocusEvent) => {
+      const target = event.target as Element | null;
+      // Hide the offer before measuring, rather than waiting for the observer below.
+      if (target?.closest?.("footer")) setFooterInView(true);
+      clear(target);
+    };
+    document.addEventListener("focusin", onFocus);
+    if (offer) clear(document.activeElement);
+    return () => document.removeEventListener("focusin", onFocus);
+  }, [offer]);
 
   useEffect(() => {
     if (pathname !== "/" || offerSeen()) return;
@@ -50,6 +84,15 @@ export function GuideLauncher() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
+
+  // The offer steps aside while the footer is on screen, so the footer needs no room reserved for it.
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!offer || !footer || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(([entry]) => setFooterInView(entry.isIntersecting));
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, [offer]);
 
   // The open panel reflows the page on desktop (GD7); closing it returns focus to the tile.
   useEffect(() => {
@@ -79,8 +122,8 @@ export function GuideLauncher() {
 
   return (
     <>
-      <div className="hw-guide-launcher">
-        {offer && !open && (
+      <div ref={launcherRef} className="hw-guide-launcher">
+        {offer && !open && !footerInView && (
           <div className="hw-guide-offer" role="region" aria-label="Tour offer">
             <p>{guide.offer.text}</p>
             <div className="hw-guide-offer__actions">

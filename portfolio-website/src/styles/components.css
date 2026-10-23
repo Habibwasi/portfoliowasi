@@ -160,6 +160,20 @@ ul.hw-tags {
   background: var(--color-signal);
   border-color: var(--color-signal);
 }
+/* A tag with a logo before its name (Stack, 5.3); light tags show the brand colour on hover. */
+.hw-tag--logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.hw-tag__logo {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.hw-tag--logo:not(.hw-tag--ai, [aria-pressed="true"]):hover .hw-tag__logo {
+  color: var(--brand, currentColor);
+}
 
 /* Metric */
 .hw-metric {
@@ -306,6 +320,17 @@ a.hw-card:hover {
   border-radius: var(--radius-md);
   max-width: 720px;
 }
+/* The original recommendation as a screenshot: shown at its own size, never stretched. */
+.hw-quote--screenshot {
+  max-width: 813px;
+}
+.hw-quote--screenshot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: var(--spacing-space-4);
+  border-radius: var(--radius-sm);
+}
 .hw-quote__text {
   font-family: var(--font-display);
   font-style: italic;
@@ -399,6 +424,12 @@ a.hw-card:hover {
   color: var(--color-signal-ink);
 }
 @media (max-width: 639.98px) {
+  /* The full name next to four links: smaller, and free to take two lines. */
+  .hw-wordmark {
+    font-size: 18px;
+    line-height: 1.1;
+    white-space: normal;
+  }
   .hw-textnav {
     gap: var(--spacing-space-3);
   }
@@ -438,6 +469,8 @@ a.hw-card:hover {
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-space-4);
+  /* Keeps the links out of the guide tile's corner (right 96px), so it never covers one (2.4.11). */
+  padding-inline-end: calc(var(--spacing-space-4) + 96px);
 }
 .hw-footer__links {
   display: flex;
@@ -505,4 +538,81 @@ a.hw-card:hover {
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+/* CV viewer: the CV's pages in a modal, the download at the top (cv-viewer.tsx). */
+.hw-cv {
+  width: min(880px, 100vw - 32px);
+  max-width: none;
+  height: calc(100dvh - 32px);
+  max-height: none;
+  margin: 16px auto;
+  padding: 0;
+  display: none;
+  flex-direction: column;
+  background: var(--color-paper-sunk);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lift);
+  color: var(--color-ink);
+  overflow: hidden;
+}
+.hw-cv[open] {
+  display: flex;
+}
+.hw-cv::backdrop {
+  background: rgba(28, 26, 22, 0.6);
+}
+html:has(.hw-cv[open]) {
+  overflow: hidden;
+}
+.hw-cv__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  padding: var(--spacing-space-2) var(--spacing-space-3);
+  background: var(--color-paper-raised);
+  border-bottom: 1px solid var(--color-line);
+}
+.hw-cv__bar .hw-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.hw-cv__title {
+  min-width: 0;
+  margin: 0 auto 0 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hw-cv__pages {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-3);
+  padding: var(--spacing-space-3);
+}
+.hw-cv__page {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  box-shadow: var(--shadow-letter);
+}
+@media (max-width: 480px) {
+  .hw-cv {
+    width: 100vw;
+    height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+  }
+  .hw-cv__pages {
+    padding: var(--spacing-space-2);
+  }
 }

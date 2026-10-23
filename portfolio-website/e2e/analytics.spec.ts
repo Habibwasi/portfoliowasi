@@ -42,13 +42,19 @@ test.describe("analytics", () => {
     expect(await calls(page)).toEqual([["Calendly click", { place: "contact" }]]);
   });
 
-  test("records a CV download from the header, and the PDF still downloads", async ({ page, isMobile }) => {
+  test("records the CV opening from the header, and its download from the viewer", async ({ page, isMobile }) => {
     await page.goto("/");
     const nav = page.getByRole("navigation", { name: "Main" });
     test.skip(isMobile && !(await nav.getByRole("link", { name: "CV" }).isVisible()), "the CV nav item is hidden on this phone");
-    const [download] = await Promise.all([page.waitForEvent("download"), nav.getByRole("link", { name: "CV" }).click()]);
+    await nav.getByRole("link", { name: "CV" }).click();
+    const viewer = page.getByRole("dialog", { name: "Habib Ahmed Wasi's CV" });
+    await expect(viewer).toBeVisible();
+    const [download] = await Promise.all([page.waitForEvent("download"), viewer.getByRole("link", { name: "Download PDF" }).click()]);
     expect(download.suggestedFilename()).toBe("Habib-Ahmed-Wasi-CV.pdf");
-    expect(await calls(page)).toEqual([["CV download", { place: "header" }]]);
+    expect(await calls(page)).toEqual([
+      ["CV download", { place: "header" }],
+      ["CV download", { place: "cv-viewer" }],
+    ]);
   });
 
   test("doesn't record other links", async ({ page }) => {

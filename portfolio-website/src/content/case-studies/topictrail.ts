@@ -1,74 +1,96 @@
-import { placeholder } from "../placeholder";
 import type { CaseStudy } from "../types";
 
 /**
- * In progress (bachelor project, due January 2027): design and plans only, no results.
- * Everything still to be supplied is a placeholder (roadmap: "Content and assets to supply").
+ * In progress (bachelor project with one teammate, due January 2027): design and plans only, no
+ * results. Facts come from the project files (proposal, PRD, requirements, ToS feasibility, research
+ * themes, biweekly report of 13 October, tech stack options of 14 October, class diagram of
+ * 15 October; read 2026-10-22). Nothing runs yet, so the hero is the planned architecture and
+ * there are no screens.
  */
 export const topictrail: CaseStudy = {
   slug: "topictrail",
   contextLine:
-    "A memory for what you browse: it keeps the pages you actually engaged with and finds them again by meaning, not only by keyword.",
+    "A memory for what you browse: it keeps the videos and pages you actually engaged with and finds them again by meaning, not only by keyword.",
   facts: [
-    { label: "My role", value: placeholder("Role on TopicTrail") },
+    { label: "My role", value: "Team of two" },
     { label: "Type", value: "Bachelor project, SDU" },
-    { label: "Status", value: "In progress, due January 2027" },
+    { label: "Started", value: "September 2026" },
+    { label: "Status", value: "In design, building next" },
   ],
   hero: {
-    kind: "demo",
-    src: placeholder("TopicTrail demo, once it runs"),
-    caption: placeholder("Demo caption: one line on what it shows"),
+    kind: "architecture",
+    src: "/work/topictrail/architecture.svg",
+    caption: "The planned system: a Chrome extension that keeps only engaged content, a server that searches it, and a dashboard.",
+    alt: "Planned architecture. A Chrome extension asks for consent, captures what the user watches or reads, keeps items with a watch ratio of 0.1 or more, and queues them until they sync. A server searches by keyword and meaning and runs embeddings and summaries with self-hosted models. Content is stored in PostgreSQL, encrypted with a per-user key. A web dashboard shows topics, search, summaries and privacy controls.",
   },
   problem: {
     heading: "Why it needs to exist",
-    body: [placeholder("TopicTrail problem: who loses what they read, how they cope today, and what it costs them")],
+    body: [
+      "Every day people pass useful things online: a video, an article, a post in a feed. A day later it is gone. Browser history records where you have been, not what you took in, and bookmarks and note apps only work if you stop to save something at the moment you see it.",
+      "Short-video feeds make it worse, because they are built for scrolling on. TopicTrail asks whether the keeping and organising can happen by itself: notice what someone actually engaged with, and let them find it again later by what it was about.",
+    ],
   },
   role: {
     heading: "What I'm building",
-    body: [],
+    body: [
+      "We are two students, supervised at SDU. We wrote the requirements together and split the rest: my parts are the research on implicit interaction, short-form video and how to evaluate retrieval, the system architecture and the API design. The tech stack is a joint decision.",
+    ],
     points: [
-      placeholder("The part you own, in one line"),
-      placeholder("A design decision you made and why"),
-      placeholder("How you test it"),
+      "Engagement is measured, not guessed. A watch ratio divides the seconds watched by the video's length, and only items at 0.1 or more are kept: 10 seconds of a 60-second video counts, 5 seconds doesn’t. The threshold is a setting, and per-category thresholds are left for later.",
+      "Keyword search is the baseline. Semantic search over embeddings is added on top, and the plan compares keyword, semantic and the combination instead of assuming that the newer method wins.",
+      "Privacy is part of the design, not a checkbox. Capture starts only after an explicit opt-in, an indicator shows whenever tracking is on, sensitive sites such as banking, email and health are excluded by default, and pausing, excluding a site and deleting an item or a date range are real API endpoints. A terms-of-service review sets the scope: read only what the page already shows the user, never fetch anything in the background, keep titles and metadata only.",
+      "The design changed when it had to. The first version kept everything in the browser and showed it in an Electron app. The October design moves search and summaries to a server, with each user’s content encrypted under their own key, so deleting an account makes every copy, backups included, unreadable.",
     ],
   },
   aiInTheBuild: {
     heading: "AI in the build",
-    body: [placeholder("Which AI tools help build TopicTrail, and where you review or overrule them")],
+    body: [
+      "We use Claude Code, GitHub Copilot and Codex. None of them makes a decision on its own: I step in at every design decision, because they sometimes give wrong answers, and sometimes very confident wrong answers.",
+      "So I watch what the agent is doing while it works, check its reasoning against the research and the requirements, and debug the tests myself instead of trusting a green run.",
+    ],
   },
   solution: {
     heading: "The planned pipeline",
     body: [
-      "Planned: capture is local-first and opt-in. Only pages you engaged with past an engagement threshold are kept (0.1 in the current design).",
-      "Planned: retrieval is a RAG pipeline that combines keyword search with semantic search over vector embeddings, so a half-remembered idea still finds the page.",
+      "A Chrome extension watches what the user plays or reads on YouTube and ordinary web pages, and filters it by engagement. Only engaged items are kept, with their title, link, date and type; query strings are stripped so search terms and tokens are never stored. They wait in a local queue and sync when they can.",
+      "On the dashboard the user can browse by topic or search by words or meaning, and ask for a short summary that links back to every source. Summaries are written only after a search, not for every item, to keep the work and the cost down.",
     ],
   },
-  screens: [
-    {
-      kind: "screens",
-      src: placeholder("TopicTrail screens, 3 to 5"),
-      caption: placeholder("One line per screen"),
-    },
-  ],
+  screens: [],
   architecture: {
     heading: "How it fits together",
-    body: [placeholder("TopicTrail architecture: one paragraph on how capture, indexing and search connect")],
+    body: [
+      "Three parts. The extension holds the consent manager, the capture script, the engagement detector and a sync client with an offline queue. The web app is the dashboard. The server has a sync service, a privacy service for settings, export and deletion, a search service, and a summarizer that calls a self-hosted model.",
+      "Embeddings and summaries run as background jobs on our own servers, so captured content never goes to an outside AI provider. The source link, title, text and embedding of every item are stored encrypted with a key that belongs to that user.",
+      "Six complete stacks were compared in October, from a Supabase or TypeScript start to an EU self-hosted setup, against how fast each ships and how few parties touch user content. The choice is the next step.",
+    ],
   },
   architectureMedia: [
     {
       kind: "architecture",
-      src: placeholder("TopicTrail architecture diagrams"),
-      caption: placeholder("Diagram caption"),
+      src: "/work/topictrail/class-diagram.png",
+      caption: "The simplified class diagram (15 October 2026): extension, web app, server services and the stored data.",
+      alt: "UML class diagram. Browser extension: ConsentManager, ContentCaptureScript, BrowserExtension, EngagementDetector with a threshold, ExtensionStorage and SyncClient. Web app: WebApp. Server services: SyncService, PrivacyService, SearchService with keyword and semantic search, and Summarizer with a self-hosted model. Stored data in PostgreSQL: UserSettings, User, ContentItem, Topic and Summary.",
     },
   ],
   testEvidence: {
     heading: "Evaluation plan and progress",
-    body: [placeholder("TopicTrail evaluation plan: how retrieval quality is measured, against what")],
-    points: [placeholder("Progress notes, each with a date")],
+    body: [
+      "Personal search can’t be tested on a shared benchmark, because everyone’s archive is different and private. So each participant will be tested on their own TopicTrail archive, with tasks built from what they actually watched: find a known item (“what article did I read last week?”), look up a fact (“what did I read about AI?”) and gather everything on a subject.",
+      "Search is judged by comparing keyword, semantic and combined retrieval on those tasks. Summaries are judged on faithfulness, context precision and recall, and answer relevance, plus human spot checks. The research behind the plan also recommends MRR and Hit@k for re-finding and V-measure for topics; those are kept for after the first version.",
+    ],
+    points: [
+      "September 2026: project proposal, scoped to Chrome and YouTube first.",
+      "30 September to 13 October 2026: literature review in six themes, three of them mine, and the product requirements document.",
+      "6 October 2026: terms-of-service and GDPR review: feasible, with conditions.",
+      "14 October 2026: six complete tech stacks compared.",
+      "15 October 2026: class diagram for the extension, web app and server design.",
+      "Next: choose the stack, design the API and data model, then build the extension’s capture and engagement detection.",
+    ],
   },
   impact: [
     { value: "0.1", label: "Engagement threshold", note: "Design parameter from the PRD" },
-    { value: "Local", label: "First, opt-in capture", note: "Planned design" },
+    { value: "3", label: "Search task types", note: "Planned evaluation: known item, fact, gather" },
   ],
-  stack: ["RAG pipeline", "Vector embeddings", "Keyword + semantic search", "TDD"],
+  stack: ["Chrome extension (MV3)", "RAG pipeline", "Vector embeddings", "Keyword + semantic search", "PostgreSQL", "Per-user encryption", "Self-hosted LLM"],
 };

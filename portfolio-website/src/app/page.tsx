@@ -6,12 +6,17 @@ import { ObjectNav } from "@/components/object-nav";
 import { Proof } from "@/components/proof";
 import { Stack } from "@/components/stack";
 
-/** Home: hero → object nav → featured work → how I build with AI → proof → stack → contact. */
+/**
+ * Home: hero → object nav → featured work → how I build with AI → proof → stack → contact.
+ * The hero and object nav fill the first screen on their own; the sections start below it.
+ */
 export default function Home() {
   return (
     <>
-      <Hero />
-      <ObjectNav />
+      <div className="hw-landing">
+        <Hero />
+        <ObjectNav />
+      </div>
       <FeaturedWork />
       <AiWorkflow />
       <Proof />

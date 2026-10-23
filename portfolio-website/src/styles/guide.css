@@ -171,6 +171,13 @@
 }
 
 /* The one-time tour offer, a bubble above the tile. */
+/*
+ * While the tour offer shows, the launcher covers the bottom 247px (desktop) instead of 108px:
+ * keep focused links clear of it (2.4.11). It hides while the footer is on screen.
+ */
+html:has(.hw-guide-offer) {
+  scroll-padding-bottom: 260px;
+}
 .hw-guide-offer {
   max-width: 260px;
   padding: var(--spacing-space-3);
@@ -380,10 +387,6 @@
 }
 
 @media (max-width: 1023.98px) {
-  /* Room for the tile at the end of every page, so it never covers the footer. */
-  body {
-    padding-bottom: 96px;
-  }
   .hw-guide-launcher {
     right: var(--spacing-space-3);
     bottom: var(--spacing-space-3);

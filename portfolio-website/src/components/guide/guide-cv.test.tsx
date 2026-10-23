@@ -33,8 +33,8 @@ describe("download_cv (5.6)", () => {
     await user.click(within(dialog).getByRole("button", { name: "Send" }));
 
     const card = await waitFor(() => within(dialog).getByRole("group", { name: "CV" }));
-    expect(card).toHaveTextContent("Download Habib's CV (PDF)?");
-    const download = within(card).getByRole("link", { name: "Download" });
+    expect(card).toHaveTextContent("See Habib's CV?");
+    const download = within(card).getByRole("link", { name: "View CV" });
     expect(download).toHaveAttribute("href", "/cv/Habib-Ahmed-Wasi-CV.pdf");
     expect(download).toHaveAttribute("download");
     expect(click).not.toHaveBeenCalled();

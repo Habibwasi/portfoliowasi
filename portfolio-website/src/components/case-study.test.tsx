@@ -30,10 +30,10 @@ describe("CaseStudyView", () => {
     expect(screen.getByText("Case study 03 / 03 · Full-stack + LLM")).toBeInTheDocument();
   });
 
-  it("states facts, with missing ones as placeholders", () => {
+  it("states facts", () => {
     renderStudy("validation-portal");
     const facts = screen.getByRole("group", { name: "Project facts" });
-    expect(within(facts).getByText("[Role on Validation Portal]")).toBeInTheDocument();
+    expect(within(facts).getByText("Built solo")).toBeInTheDocument();
     expect(within(facts).getByText("Live")).toBeInTheDocument();
   });
 

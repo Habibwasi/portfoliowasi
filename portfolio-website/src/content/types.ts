@@ -39,6 +39,8 @@ export type MediaItem = {
   alt?: string;
   /** Poster image under /public for a video; without one the player shows a plain paper poster. */
   poster?: string;
+  /** A phone screenshot: framed tall instead of 16:10. */
+  shape?: "phone";
 };
 
 export type ProjectStatus = "complete" | "in-progress";
@@ -114,4 +116,6 @@ export type Testimonial = {
   quote: Content<string>;
   name: Content<string>;
   role: string;
+  /** Shown instead of the quote when set: a screenshot of the original, with its full text as alt. */
+  screenshot?: { src: string; width: number; height: number; alt: string; source: string };
 };

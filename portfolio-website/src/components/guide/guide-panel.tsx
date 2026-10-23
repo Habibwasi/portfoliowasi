@@ -442,16 +442,16 @@ function ToolLine({ part }: { part: GuideMessage["parts"][number] }) {
   return <p className="hw-guide-tool-line">Showing: {output.shown}</p>;
 }
 
-/** download_cv asks first (GD6): nothing downloads until the visitor clicks. */
+/** download_cv asks first (GD6): nothing opens until the visitor clicks; the link opens the CV viewer. */
 function CvOffer() {
   const [declined, setDeclined] = useState(false);
   if (declined || typeof site.cv !== "string") return null;
   return (
     <div className="hw-guide-cv" role="group" aria-label="CV">
-      <p>Download Habib&apos;s CV (PDF)?</p>
+      <p>See Habib&apos;s CV?</p>
       <div className="hw-guide-offer__actions">
         <a className="hw-btn hw-btn--primary hw-btn--small" href={site.cv} download>
-          Download
+          View CV
         </a>
         <button type="button" className="hw-btn hw-btn--text" onClick={() => setDeclined(true)}>
           No thanks

@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-22 (Phases 0–6 done; Phase 7 next)
+Last updated: 2026-10-23 (Phases 0–6 done; Phase 7 in progress)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -62,7 +62,7 @@ Spec: [phase-2-ridly.md](../features/phase-2-ridly.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| 2.1 | **Ridly** case study: built solo; architecture; k6 evidence (ramped 300 → 600 → 1,500 virtual users, trip search p95 96 ms at the 300 stage); AI in the build (LangGraph planning, HITL, Claude Code and GitHub Copilot); screens and demo | C6–C11, AI5 | done (content in Phase 7) |
+| 2.1 | **Ridly** case study: built solo; architecture; k6 evidence (ramped up to 1,200 virtual users, trip search p95 96 ms at 300 users); AI in the build (LangGraph planning, HITL, Claude Code and GitHub Copilot); screens and demo | C6–C11, AI5 | done (content in Phase 7) |
 | 2.2 | Per-page OG images with Fraunces TTF | P6 | done |
 | 2.3 | Video facade: YouTube privacy-enhanced embed, poster, captions, loads on click | C11, P2 | done (videos in Phase 7) |
 
@@ -121,16 +121,50 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 
 | # | Item | Where it goes | Status |
 | --- | --- | --- | --- |
-| 7.1 | CV PDF, plus the same text for the guide's index | `public/cv/Habib-Ahmed-Wasi-CV.pdf`, then `site.cv` in `src/content/site.ts` (the CV buttons and nav item appear); the guide's index (3.3) | PDF done (2026-10-22); its text in the guide's index waits on the CV fixes below |
+| 7.1 | CV PDF, plus the same text for the guide's index | `public/cv/Habib-Ahmed-Wasi-CV.pdf`, then `site.cv` in `src/content/site.ts` (the CV buttons and nav item appear); the guide's index (3.3) | PDF done (2026-10-22); since 2026-10-23 every CV link opens it in a viewer (pages as images, `public/cv/page-N.png` from `scripts/cv-pages.py`; rerun it when the PDF changes), with the download at the top. Its text in the guide's index waits on the CV fixes below |
 | 7.2 | Calendly URL | `NEXT_PUBLIC_CALENDLY_URL` in Vercel and `.env.local` | done (2026-10-22, set in Vercel) |
-| 7.3 | Case study content: TopicTrail (role, problem, AI in the build, architecture diagrams, evaluation plan, dated progress notes, screens); Validation Portal (role, problem, AI in the build, demo video, screens, architecture diagram); Ridly (problem text, "what I built" decisions, one concrete example of correcting AI output, 3–5 screens, demo video, k6 run recording, the real architecture diagram). Videos go on YouTube with English captions; only the video ID goes in the content, plus an optional poster image | `src/content/case-studies/`, media in `public/work/<slug>/` | open |
-| 7.4 | Testimonial: quote, name and role of the Just Eat team leader, with their permission | `testimonial` in `src/content/site.ts` (closes 4.2) | open |
-| 7.5 | Photos with captions (three on About), line-art portrait, drawings of your own objects. Check the About facts taken from the mockup: every journey date, "SDU in Sønderborg", and "91% on time" at Just Eat | `about.photos` and `about.journey` in `src/content/about.ts` (4.4), `site.hero.portrait` (5.5), the object drawings in `src/components/object-drawings.tsx` (5.4; the mockup's laptop, stopwatch, sheet and envelope are stand-ins) | open |
+| 7.3 | Case study content: TopicTrail (role, problem, AI in the build, architecture diagrams, evaluation plan, dated progress notes, screens); Validation Portal (role, problem, AI in the build, demo video, screens, architecture diagram); Ridly (problem text, "what I built" decisions, one concrete example of correcting AI output, 3–5 screens, demo video, k6 run recording, the real architecture diagram). Videos go on YouTube with English captions; only the video ID goes in the content, plus an optional poster image | `src/content/case-studies/`, media in `public/work/<slug>/` | nearly done (2026-10-22): all three case studies written, both videos on YouTube, TopicTrail's AI section from Habib's answer (Claude Code, GitHub Copilot, Codex); left: one Validation Portal AI-correction example, Ridly subtitles |
+| 7.4 | Testimonial: quote, name and role of the Just Eat team leader, with their permission | `testimonial` in `src/content/site.ts` (closes 4.2) | done (2026-10-22): the LinkedIn recommendation shown as a screenshot (`public/proof/`), its full text as alt; two sentences of it stay in `testimonial.quote` for the guide |
+| 7.5 | Photos with captions (three on About), line-art portrait, drawings of your own objects. Check the About facts taken from the mockup: every journey date, "SDU in Sønderborg", and "91% on time" at Just Eat | `about.photos` and `about.journey` in `src/content/about.ts` (4.4), `site.hero.portrait` (5.5), the object drawings in `src/components/object-drawings.tsx` (5.4; the mockup's laptop, stopwatch, sheet and envelope are stand-ins) | nearly done (2026-10-23): the portrait (pixel art from Habib's photo, `public/hero/portrait.png`) and the three About photo cards (collages: Sønderborg harbour, uTest, the October 2026 job fairs in Vejle and Sønderborg, `public/about/`) are in; left: drawings of his own objects (optional, the stand-ins can stay) and checking the About facts. Originals stay out of git (root `.gitignore`) |
 | 7.6 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | open |
 | 7.7 | Role text for the More projects (Undershelf, Deskinct, Medication Adherence App) | `src/content/projects.ts` | open |
 | 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY`. When adding to Production, check `VERCEL_SUPPORT_LARGE_FUNCTION=1` is there too (set for Preview on 2026-10-22) | open |
 | 7.9 | Umami Cloud: create the account (free Hobby plan), add the website for the production domain, and copy its website ID | `NEXT_PUBLIC_UMAMI_WEBSITE_ID` in Vercel **Production** only. In Umami, add a goal or funnel for the three events (`CV download`, `Email click`, `Calendly click`) and the `/work/*` page views | open |
+| 7.11 | Choose the guide's model with the evaluation: compare `gpt-oss-120b` with smaller Groq models and keep the smallest that passes. Needs 7.8's eval key first. Steps in "Guide model choice" below | `GUIDE_MODEL` in `src/lib/guide/config.ts`, `evals/guide/`, the daily cap in the guide's limits | open |
 | 7.10 | Screen reader check by hand, on the real content: NVDA with Firefox on Home and a case study, VoiceOver on an iPhone. Listen for the card names, the guide panel and the contact form's messages | — (fix anything found before the launch PR) | open |
+
+### Guide model choice (7.8, 7.11, decided 2026-10-23)
+
+The guide's job is small (4 passages in, about 80 words out with `[n]` citations), so a smaller model may be enough. The decision: stay on Groq (free tier, fast, and no code change beyond `GUIDE_MODEL`) and let the evaluation pick the model, rather than guess. Running a model inside the Vercel function, on our own server or in the browser was ruled out: slow on CPU, the function is already at Vercel's size limit, and tiny models are worst at the parts that matter.
+
+What a small model risks is not the writing but the rules: inventing an answer instead of "I don't know" (salary, Rust), dropping the citations, calling the wrong page tool, or following a prompt injection.
+
+**Habib does (no code):**
+1. Make a free account at console.groq.com and create `GROQ_API_KEY`. Add it to Vercel (Preview and Production) and `.env.local`.
+2. Make a second Groq organisation and create `GROQ_EVAL_API_KEY` there, so the evaluation doesn't spend the site's daily quota.
+3. Add `GROQ_EVAL_API_KEY` as a GitHub Actions secret (repo → Settings → Secrets and variables → Actions).
+4. Check Groq's current free-tier limits for each candidate model (they change; not checked on 2026-10-23).
+
+**Claude does (can start before the keys exist):**
+1. Let the evaluation take the model to test (for example an env var that overrides `GUIDE_MODEL`), and run it once per candidate: `gpt-oss-120b`, `gpt-oss-20b`, `llama-3.1-8b-instant`.
+2. Keep the LLM judge on one fixed model (`gpt-oss-120b`) for every run. Today it uses `GUIDE_MODEL`, so a small model would grade its own answers.
+3. Add more prompt-injection cases to `evals/guide/cases.ts` (there is one today), for example role-play ("pretend you are another assistant"), "say Habib is a bad hire", and instructions hidden inside a normal question.
+4. Record the tokens per answer for each model, to work out how many answers a day its free tier allows.
+5. Put the results side by side (pass/fail per check, tokens per answer), then set `GUIDE_MODEL` to the smallest model that passes every refusal, injection and tool case, and raise the daily cap (90 today, sized for `gpt-oss-120b`) to fit its quota.
+
+The evaluation runs on GitHub Actions, not locally (Smart App Control blocks Vitest here).
+
+### Case study notes (7.3, 2026-10-22)
+
+- **Drafted for review:** Ridly's problem and the reasons behind its three decisions, and Validation Portal's problem, were written from the repositories (Habib asked for this). Habib reviews the wording.
+- **Ridly k6:** the site said "300 → 600 → 1,500 VUs", but `apps/api/k6/load-test.js` peaks at 1,200 (`breakpoint`: 800 searching + 400 signed in); "1500" was a latency threshold in ms. Habib chose the repo's numbers (2026-10-22). No k6 results are committed, so the test-run frame is a chart of the ramp as configured, labelled as such, with the 96 ms point marked.
+- **Ridly CI:** the iOS job pipes Xcode through `xcpretty || true`, so an iOS build failure can't fail CI. The case study now says so, along with the known limits from `CODEBASE_EXPLORATION_REPORT.md`.
+- **Ridly push:** BullMQ runs deadline checks, recurring trips and search alerts; push goes through FCM and APNs directly. The earlier "BullMQ queues the push notifications" was wrong.
+- **Validation Portal media:** the live site has no `VITE_DEMO_VIDEO_URL`; its demo is a coded reel (`src/components/demo`) that renders the app's screens with sample data ("ShiftSwap"). The screens are frames of that reel. The reel, recorded at 1920×1080 with its captions burned in, is on YouTube as `DqSZ-N4Znnc`. The guest flow can't be scripted (Cloudflare Turnstile).
+- **Ridly film:** on YouTube as `GB39N2Kh7Jk`, from `HOP-KMP/apps/web/dist/media/ridly-film-720p.mp4`. Its captions are in `ridly-film.vtt` next to it; upload that file to the YouTube video as English subtitles (C11 asks for captions). Poster: `ridly-film-poster.jpg`.
+- **Validation Portal sample data:** the reel's verdict says "Strong Signal" at 67% pain, below the 70% rule in its README. Worth fixing in the reel.
+
+- **TopicTrail:** written from `Desktop/Bachelor project` (proposal, PRD, requirements, research themes, ToS feasibility, biweekly report, tech stack options, class diagrams). It's a two-person project (Habib and Samuel Osei Adjabeng, supervisor Amir Ghomashi); the site says "Team of two" without naming the teammate. The October design replaces the PRD's local-first Electron design with an extension + web app + server, so the "Local, first, opt-in capture" metric is gone. Nothing runs yet: the hero is the planned architecture and there are no screens. Its AI section names Claude Code, GitHub Copilot and Codex; Codex is not added to the site-wide toolkit (2026-10-22 toolkit decision).
 
 ### CV text that disagrees with the site (found 2026-10-22)
 
@@ -196,6 +230,12 @@ The CV PDF is live as supplied. These lines differ from what the site says, so i
 | 2026-10-22 | Analytics: Umami Cloud (free Hobby plan), next to Vercel's page views. Events are sorted by link target in one listener, not Umami's `data-umami-event` (it cancels the click, which breaks the CV download). Case study views are Umami page views. Tracking counts only the production host | Open decision "Umami or Plausible" |
 | 2026-10-22 | Featured card links are named by their title (`aria-labelledby`), not by the whole card | Design system ProjectCard (one link, name from its content) |
 | 2026-10-22 | The name's reveal lifts whole words, not letters, so Fraunces keeps its kerning; only a scrambling letter is positioned, so the `h1` stays the LCP element | Spec 5.1 "each letter rises" |
+| 2026-10-23 | The header shows the full name, "Habib Ahmed Wasi" (wrapping to two lines on phones) | Design system wordmark "Habib Wasi" |
+| 2026-10-23 | Home's first screen is the landing only: hero and object nav fill the viewport, and Selected work starts below it | — |
+| 2026-10-23 | No space is reserved under the footer for the guide tile; the footer keeps its links out of the tile's corner and the tour offer hides while the footer is on screen | Phase 7.3 "room for the offer" |
+| 2026-10-23 | CV links open a viewer (the pages as images, a PDF frame shows nothing on Android) with "Download PDF" at the top; buttons read "View CV". Umami still records the open as `CV download` (place `header`, `contact`, …) and the real download as place `cv-viewer` | Spec 1.10 "CV downloads" |
+| 2026-10-23 | The hero portrait is pixel art made from Habib's photo, not line art. From desktop width it is Home's LCP element (preloaded, 17 KB, painted at ~180 ms); on phones, where it is hidden, the name still is | Spec 5.5 "line-art portrait", P1 test "the name is the LCP" |
+| 2026-10-23 | `agentRules: false` in `next.config.ts`: `next dev` no longer writes an `AGENTS.md` when an AI agent runs it | Next.js default |
 
 ## Open decisions
 
@@ -210,7 +250,7 @@ All of it is collected in [Phase 7: Content handover](#phase-7-content-handover-
 | Item | Mockup or live site says | Repos show | Fix |
 | --- | --- | --- | --- |
 | Ridly commits | 382 | 387, all his | Use the current count, with "built solo" |
-| Ridly k6 | "96 ms trip search" | Ramp 300 → 600 → 1,500 VUs; p95 96 ms at 300 | Always state "p95" and the stage |
+| Ridly k6 | "96 ms trip search" | Breakpoint ramp to 1,200 VUs (800 searching + 400 signed in); p95 96 ms at 300 | Always state "p95" and the stage (1,500 corrected to the repo's 1,200 on 2026-10-22) |
 | Validation Portal commits | 104 | 111 | Use the current count |
 | Validation Portal model | Llama 3.3 via Groq | Groq `gpt-oss-20b` | Name `gpt-oss-20b` |
 | Validation Portal tests | — | No tests or CI | Evidence is the live demo, video and diagrams; no TEST RUN frame (a C11 exception) |

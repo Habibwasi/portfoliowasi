@@ -1,6 +1,5 @@
-import { placeholder } from "./placeholder";
 import { qaRecord } from "./site";
-import type { Content, Metric } from "./types";
+import type { Metric } from "./types";
 
 /**
  * The About page (4.4, C18, C19): intro, photos, the journey line and the full QA record.
@@ -15,20 +14,23 @@ export type JourneyEntry = {
   href?: string;
 };
 
-export type Photo = {
-  src: Content<string>;
-  caption: Content<string>;
+export type CollageImage = { src: string; alt: string; width: number; height: number };
+
+/**
+ * One photo card (7.5): a few pictures laid out as a collage. "mosaic" puts the first picture
+ * across the top and the rest in a 2×2 grid; "stack" shows screenshots as cards on paper;
+ * "pair" puts a wide picture over a tall one.
+ */
+export type Collage = {
+  layout: "mosaic" | "stack" | "pair";
+  caption: string;
+  images: CollageImage[];
 };
 
 const anchors = {
   journey: "journey",
   qaRecord: "qa-record",
 } as const;
-
-const photo = (n: number): Photo => ({
-  src: placeholder(`Photo ${n}`),
-  caption: placeholder(`Photo ${n} caption: where, when`),
-});
 
 export const about = {
   path: "/about",
@@ -39,7 +41,36 @@ export const about = {
     "Habib Ahmed Wasi's path from Upwork, uTest and Just Eat to three projects and graduating from SDU in January 2027, with his full QA record.",
   intro:
     "I'm finishing a BSc in Software Engineering at the University of Southern Denmark in Sønderborg, graduating in January 2027. Alongside it I've supported clients on Upwork, tested software on uTest and delivered for Just Eat.",
-  photos: [photo(1), photo(2), photo(3)],
+  photos: [
+    {
+      layout: "mosaic",
+      caption: "Sønderborg, September 2023: my first weeks in Denmark, on the harbour by the SDU campus.",
+      images: [
+        { src: "/about/sonderborg-campus.jpg", alt: "Red-brick and glass buildings along Sønderborg harbour on a sunny day", width: 1200, height: 900 },
+        { src: "/about/sonderborg-sculpture.jpg", alt: "A steel sculpture on the grass by the harbour, with the Alsik tower behind", width: 800, height: 600 },
+        { src: "/about/sonderborg-promenade.jpg", alt: "The harbour promenade and the steel sculpture under a blue sky", width: 800, height: 600 },
+        { src: "/about/sonderborg-harbour.jpg", alt: "A wooden walkway curving along the water towards the town", width: 800, height: 600 },
+        { src: "/about/sonderborg-boardwalk.jpg", alt: "The boardwalk along the water, with the church spire in the distance", width: 800, height: 600 },
+      ],
+    },
+    {
+      layout: "stack",
+      caption: "uTest by Applause, since June 2024: my profile, community badges and my article on rating growth.",
+      images: [
+        { src: "/about/utest-profile-wide.png", alt: "My uTest profile: 440 uPoints, ranked 3,470 of 2,916,456", width: 1220, height: 563 },
+        { src: "/about/utest-badges.png", alt: "uTest community badges, including Best of the Net and So Popular", width: 710, height: 435 },
+        { src: "/about/utest-article.png", alt: "My uTest article, Quality Over Chaos: How I Jumped 25% in Rating by Focusing on Reliability, with 143 likes", width: 918, height: 224 },
+      ],
+    },
+    {
+      layout: "pair",
+      caption: "Job fairs, October 2026: two of them, in Vejle and in Sønderborg.",
+      images: [
+        { src: "/about/job-fair-vejle.jpg", alt: "Students and company stands under the arched roof of the job fair in Vejle", width: 1024, height: 577 },
+        { src: "/about/job-fair-sdu.jpg", alt: "The job fair in Sønderborg seen from above, a crowd between the stands in the atrium", width: 805, height: 1406 },
+      ],
+    },
+  ] satisfies Collage[],
   journey: {
     eyebrow: "Journey",
     heading: "Each step led to the next",

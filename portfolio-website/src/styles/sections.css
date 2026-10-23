@@ -92,6 +92,17 @@
   }
 }
 
+/* Landing: hero and object nav own the first screen (below the 64px header); Selected work starts under it. */
+.hw-landing {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - 64px);
+}
+.hw-landing > .hw-hero {
+  flex: 1;
+  align-content: center;
+}
+
 /* Hero (1.1) */
 .hw-hero {
   display: flex;
@@ -150,6 +161,7 @@
 }
 .hw-hero__portrait img {
   object-fit: cover;
+  image-rendering: pixelated;
 }
 
 /* The name (5.1): one span per letter, so it can lift and scramble without the text changing. */
@@ -861,13 +873,81 @@ a.hw-more__title span {
   flex-direction: column;
   gap: var(--spacing-space-2);
 }
-.hw-about__photo img,
-.hw-about__photo > .hw-placeholder {
-  width: 100%;
-  height: auto;
+/* Collages (7.5): each card is a 4:5 frame; the layout decides how its pictures share it. */
+.hw-collage {
+  display: grid;
+  gap: 6px;
   aspect-ratio: 4 / 5;
-  object-fit: cover;
   border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.hw-collage__tile {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.hw-collage__tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* First picture across the top, the other four in a 2×2 grid under it. */
+.hw-collage--mosaic {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1.3fr 1fr 1fr;
+}
+.hw-collage--mosaic .hw-collage__tile:first-child {
+  grid-column: 1 / -1;
+}
+/* Screenshots as cards on sunk paper, fanned slightly, the article card overlapping the badges. */
+.hw-collage--stack {
+  grid-template-rows: 1.15fr 1fr auto;
+  gap: 12px;
+  padding: 18px;
+  background: var(--color-paper-sunk);
+}
+.hw-collage--stack .hw-collage__tile {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper-raised);
+  box-shadow: var(--shadow-lift);
+}
+.hw-collage--stack .hw-collage__tile:nth-child(1) {
+  transform: rotate(-1.5deg);
+}
+.hw-collage--stack .hw-collage__tile:nth-child(2) img {
+  object-fit: contain;
+}
+.hw-collage--stack .hw-collage__tile:nth-child(3) {
+  margin: -16px -6px 0 18px;
+  transform: rotate(1.5deg);
+}
+.hw-collage--stack .hw-collage__tile:nth-child(3) img {
+  height: auto;
+}
+/* A wide picture over a tall one, cropped to the crowd. */
+.hw-collage--pair {
+  grid-template-rows: 1fr 1.25fr;
+}
+.hw-collage--pair .hw-collage__tile:nth-child(2) img {
+  object-position: center 65%;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hw-collage--mosaic .hw-collage__tile img,
+  .hw-collage--pair .hw-collage__tile img {
+    transition: transform 400ms ease;
+  }
+  .hw-collage--mosaic .hw-collage__tile:hover img,
+  .hw-collage--pair .hw-collage__tile:hover img {
+    transform: scale(1.04);
+  }
+  .hw-collage--stack .hw-collage__tile {
+    transition: transform 250ms ease;
+  }
+  .hw-collage--stack .hw-collage__tile:hover {
+    transform: rotate(0) translateY(-3px);
+  }
 }
 .hw-about__photo figcaption {
   font-size: var(--text-small);
@@ -988,10 +1068,6 @@ a.hw-more__title span {
 @media (max-width: 767.98px) {
   .hw-about__photos {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .hw-about__photo img,
-  .hw-about__photo > .hw-placeholder {
-    aspect-ratio: 3 / 2;
   }
 }
 
@@ -1197,6 +1273,22 @@ textarea.hw-input {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--spacing-space-4);
+}
+/* Desktop screenshots: two per row, so the screens stay readable. */
+.hw-cs-screens:has(.hw-frame__box img):not(:has(.hw-frame--phone)) {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+/* Phone screenshots (Ridly): narrow columns, each frame the shape of the screen. */
+.hw-cs-screens:has(.hw-frame--phone) {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.hw-frame--phone .hw-frame__box {
+  aspect-ratio: 360 / 870;
+}
+/* The frame's tag sits in the top band, above the screen instead of over its header. */
+.hw-frame--phone .hw-frame__box > img {
+  top: 44px !important;
+  height: calc(100% - 44px) !important;
 }
 .hw-cs-impact {
   display: flex;

@@ -39,14 +39,14 @@ export function Hero() {
             View case studies
           </Button>
           <ActionButton href={site.cv} download>
-            Download CV
+            View CV
           </ActionButton>
         </div>
       </div>
       <div className="hw-hero__art" data-physics="off">
         <div className="hw-hero__portrait">
           <ContentSlot value={site.hero.portrait}>
-            {(portrait) => <Image src={portrait.src} alt={portrait.alt} fill sizes="(min-width: 1024px) 400px, 340px" />}
+            {(portrait) => <Image src={portrait.src} alt={portrait.alt} fill preload unoptimized />}
           </ContentSlot>
         </div>
         <LetterTiles />
