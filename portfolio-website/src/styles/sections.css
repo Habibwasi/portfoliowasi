@@ -1,0 +1,1371 @@
+/*
+ * Page sections (Phase 1): hero, featured work, proof, contact and the case study
+ * template, laid out after the Portfolio Mockups (Home, Case study, Home · phone).
+ */
+
+/* Missing link target (CV, Calendly): a button-sized placeholder, not a dead link */
+.hw-btn--missing {
+  cursor: default;
+  border-style: dashed;
+  background: var(--color-paper-sunk);
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+}
+.hw-btn--missing:hover {
+  border-color: var(--color-line-strong);
+  transform: none;
+}
+.hw-btn:disabled {
+  cursor: progress;
+  opacity: 0.75;
+  transform: none;
+}
+
+/* Building blocks */
+.hw-h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.hw-h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-heading);
+  line-height: var(--text-heading--line-height);
+  font-weight: 500;
+  letter-spacing: var(--text-heading--letter-spacing);
+}
+.hw-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.hw-actions > .hw-btn:not(.hw-btn--text) {
+  height: 48px;
+  padding: 0 24px;
+}
+.hw-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-5);
+  padding-top: var(--spacing-space-7);
+}
+.hw-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--spacing-space-4);
+}
+.hw-section-head__title {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hw-section-head__sub {
+  margin: 0;
+  max-width: 400px;
+  font-size: 15px;
+  color: var(--color-ink-muted);
+}
+@media (max-width: 639.98px) {
+  .hw-h2 {
+    font-size: 36px;
+    line-height: 1.05;
+  }
+  .hw-section {
+    gap: var(--spacing-space-4);
+    padding-top: var(--spacing-space-6);
+  }
+  /* Full-width, stacked buttons on phones (1.12). */
+  .hw-actions > .hw-btn:not(.hw-btn--text) {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+/* Landing: hero and object nav own the first screen (below the 64px header); Selected work starts under it. */
+.hw-landing {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100svh - 64px);
+}
+.hw-landing > .hw-hero {
+  flex: 1;
+  align-content: center;
+}
+
+/* Hero (1.1) */
+.hw-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 48px;
+  padding-top: 72px;
+  padding-bottom: var(--spacing-space-5);
+}
+.hw-hero__text {
+  flex: 1 1 640px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.hw-hero__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-display-xl);
+  line-height: var(--text-display-xl--line-height);
+  font-weight: var(--text-display-xl--font-weight);
+  letter-spacing: var(--text-display-xl--letter-spacing);
+  font-variation-settings: "opsz" 144;
+}
+.hw-hero__intro {
+  margin: 0;
+  max-width: 560px;
+  font-size: 22px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+.hw-hero__availability {
+  margin: 0;
+  max-width: 560px;
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+  color: var(--color-ink-muted);
+}
+.hw-hero__art {
+  flex: 1 1 340px;
+  min-width: 0;
+  position: relative;
+  padding-bottom: var(--spacing-space-4);
+}
+.hw-hero__portrait {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-width: 400px;
+  margin-left: auto;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.hw-hero__portrait > .hw-placeholder {
+  height: 100%;
+}
+.hw-hero__portrait img {
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+/* The name (5.1): one span per letter, so it can lift and scramble without the text changing. */
+/*
+ * Words lift as blocks; letters stay inline so Fraunces keeps its kerning. Words are inline-block
+ * only while lifting, after the fonts have loaded: with the fallback font an inline-block line is
+ * taller, which would shift the page when Fraunces swaps in.
+ */
+.hw-name__word {
+  white-space: nowrap;
+}
+.hw-name.is-lifting .hw-name__word {
+  display: inline-block;
+  animation: hw-name-lift 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--w) * 90ms);
+}
+/*
+ * Only a scrambling letter is positioned (for its overlay). A positioned span would take its text
+ * away from the h1 for Largest Contentful Paint, and the name must stay the LCP element (P1).
+ */
+.hw-name__ch.is-scrambling {
+  position: relative;
+  color: transparent;
+}
+/* The scramble glyph is an overlay, so letter widths never change (no layout shift). */
+.hw-name__ch.is-scrambling::after,
+.hw-letter__face[data-glyph]::after {
+  content: attr(data-glyph);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  font-weight: 500;
+  color: var(--color-signal-ink);
+}
+@keyframes hw-name-lift {
+  0%, 100% { transform: none; }
+  40% { transform: translateY(-0.12em); }
+}
+
+/*
+ * Physics letters (5.2): a still pile at the foot of the portrait. When the engine runs, each
+ * tile keeps that layout position and is moved by an inline transform from its body (never by
+ * left/top, which would count as layout shift), and its lift shadow fades in while it is up.
+ */
+.hw-letters {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hw-letter {
+  position: absolute;
+  width: 72px;
+  height: 84px;
+  border-radius: var(--radius-md);
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-line);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: var(--shadow-letter);
+  user-select: none;
+}
+/* The shadow grows while a tile is in the air: a softer second shadow that only fades (opacity). */
+.hw-letter__lift {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: 0 24px 32px rgba(28, 26, 22, 0.2);
+  opacity: 0;
+  pointer-events: none;
+}
+.hw-letter--signal {
+  background: var(--color-signal);
+  border-color: var(--color-signal);
+  color: var(--color-on-signal);
+}
+.hw-letter--signal .hw-letter__face[data-glyph]::after {
+  color: var(--color-on-signal);
+}
+.hw-letter__face {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 100%;
+}
+.hw-letter__face[data-glyph] {
+  color: transparent;
+}
+.hw-letter__face.is-squashed {
+  animation: hw-letter-squash 120ms ease-out;
+}
+.hw-letter__face.is-poked {
+  animation: hw-guide-jelly 0.65s ease both;
+}
+@keyframes hw-letter-squash {
+  50% { transform: scale(1.12, 0.88); }
+}
+/* One row that reads H W A S I, spread over the column: the same slots the falling tiles land in. */
+.hw-letter {
+  --slot: 0;
+  bottom: 0;
+  left: min(var(--slot) * 78px, (100% - 72px) * var(--slot) / 4);
+}
+.hw-letter--1 { --slot: 0; transform: rotate(-3deg); }
+.hw-letter--2 { --slot: 1; transform: rotate(2deg); }
+.hw-letter--3 { --slot: 2; transform: rotate(-1deg); }
+.hw-letter--4 { --slot: 3; transform: rotate(3deg); }
+.hw-letter--5 { --slot: 4; transform: rotate(-2deg); }
+/* While the engine runs, each tile and its shadow are their own layers, so moving them never repaints. */
+.hw-hero__art:not([data-physics="off"]) .hw-letter {
+  will-change: transform;
+  pointer-events: auto;
+  cursor: grab;
+}
+.hw-hero__art:not([data-physics="off"]) .hw-letter__lift {
+  will-change: opacity;
+}
+.hw-hero__art:not([data-physics="off"]) .hw-letter:active {
+  cursor: grabbing;
+}
+
+/* Object navigation (5.4): drawings that lead to the sections, under the hero on Home. */
+.hw-objects {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-5);
+  padding: var(--spacing-space-4) var(--spacing-space-4) var(--spacing-space-3);
+  border-bottom: 1px solid var(--color-line-strong);
+}
+.hw-object {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+.hw-object__drawing {
+  display: block;
+  transition: transform 200ms ease-out, filter 200ms ease-out;
+}
+.hw-object__drawing svg {
+  display: block;
+}
+.hw-object:hover .hw-object__drawing {
+  transform: translateY(-4px) rotate(-3deg);
+  filter: drop-shadow(0 10px 12px rgba(28, 26, 22, 0.14));
+}
+.hw-object:hover .hw-label {
+  color: var(--color-signal-ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hw-object__drawing {
+    transition: none;
+  }
+  .hw-object:hover .hw-object__drawing {
+    transform: none;
+  }
+  .hw-name.is-lifting .hw-name__word {
+    animation: none;
+  }
+}
+@media (max-width: 639.98px) {
+  .hw-objects {
+    flex-wrap: nowrap;
+    gap: var(--spacing-space-2);
+    padding: var(--spacing-space-3) 0;
+  }
+  .hw-object__drawing svg {
+    width: auto;
+    height: 48px;
+  }
+}
+@media (max-width: 639.98px) {
+  .hw-hero {
+    padding-top: var(--spacing-space-5);
+    padding-bottom: 0;
+  }
+  .hw-hero__text {
+    gap: 20px;
+  }
+  .hw-hero__intro {
+    font-size: 18px;
+  }
+  /* Name, intro and actions own the first view on phones. */
+  .hw-hero__art {
+    display: none;
+  }
+}
+
+/* Featured work (1.2) and More projects (1.3) */
+.hw-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-5);
+}
+.hw-more {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2);
+  margin-top: var(--spacing-space-4);
+}
+.hw-more__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: var(--spacing-space-2);
+}
+.hw-more__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--color-line);
+}
+.hw-more__item {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) minmax(0, 260px);
+  gap: 8px 24px;
+  align-items: baseline;
+  padding: var(--spacing-space-3) 0;
+  border-top: 1px solid var(--color-line);
+}
+.hw-more__title {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+a.hw-more__title {
+  text-decoration: none;
+}
+a.hw-more__title:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+a.hw-more__title span {
+  color: var(--color-cobalt);
+}
+.hw-more__summary {
+  font-size: 15px;
+  color: var(--color-ink-muted);
+}
+.hw-more__tags {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+@media (max-width: 899.98px) {
+  .hw-more__item {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 12px 0;
+  }
+}
+
+/* Proof (1.7) */
+.hw-proof {
+  margin-top: var(--spacing-space-7);
+  background: var(--color-paper-sunk);
+}
+.hw-proof__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 48px;
+  padding-block: 88px;
+}
+.hw-proof__heading {
+  flex: 1 1 100%;
+  margin: 0;
+}
+.hw-proof .hw-quote {
+  flex: 1 1 560px;
+  min-width: 0;
+}
+.hw-proof__qa {
+  flex: 1 1 320px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-3);
+}
+.hw-proof__qa .hw-label {
+  margin: 0;
+}
+.hw-proof__line {
+  margin: 0;
+  font-size: var(--text-title);
+  line-height: 1.45;
+  font-weight: 500;
+}
+@media (max-width: 639.98px) {
+  .hw-proof {
+    margin-top: var(--spacing-space-6);
+  }
+  .hw-proof__inner {
+    gap: var(--spacing-space-4);
+    padding-block: 48px;
+  }
+  .hw-proof__line {
+    font-size: var(--text-body);
+  }
+}
+
+.hw-proof__more {
+  align-self: flex-start;
+}
+
+/* How I build with AI (4.1): five steps in a row with arrows, and the review loop under them. */
+.hw-flow {
+  --flow-gap: 48px;
+  margin: 0;
+  padding: var(--spacing-space-5) var(--spacing-space-6) var(--spacing-space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-paper-raised);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-5);
+}
+.hw-flow__label {
+  align-self: flex-start;
+}
+.hw-flow__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--flow-gap);
+}
+.hw-flow__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 96px;
+  padding: 8px 10px;
+  text-align: center;
+  background: var(--color-paper);
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-md);
+}
+.hw-flow__step--review {
+  border: 2px solid var(--color-signal);
+}
+/* Arrow to the next step, drawn in the gap: a shaft (::after) and a head (::before). */
+.hw-flow__step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 6px);
+  width: calc(var(--flow-gap) - 14px);
+  height: 2px;
+  background: var(--color-ink-muted);
+}
+.hw-flow__step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 4px);
+  left: calc(100% + var(--flow-gap) - 10px);
+  border: 5px solid transparent;
+  border-left: 7px solid var(--color-ink-muted);
+  border-right: 0;
+}
+.hw-flow__name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.hw-flow__text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+}
+/* The loop runs from the middle of Human review back up to the middle of Plan. */
+.hw-flow__loop {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: var(--flow-gap);
+  margin-top: calc(-1 * var(--spacing-space-5));
+}
+.hw-flow__loop span {
+  position: relative;
+  grid-column: 1 / 3;
+  margin-inline: calc((100% - var(--flow-gap)) / 4);
+  padding-top: 40px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 16px;
+  color: var(--color-ink-muted);
+}
+.hw-flow__loop span::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: 26px;
+  border: 2px solid var(--color-ink-muted);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+.hw-flow__loop span::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -4px;
+  border: 5px solid transparent;
+  border-bottom: 7px solid var(--color-ink-muted);
+  border-top: 0;
+}
+.hw-toolkit {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 760px;
+}
+.hw-toolkit .hw-label {
+  margin: 0;
+}
+.hw-toolkit__closing {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-ink-muted);
+}
+@media (max-width: 1023.98px) {
+  .hw-flow {
+    --flow-gap: 32px;
+    padding: var(--spacing-space-4) var(--spacing-space-3);
+    gap: var(--spacing-space-4);
+  }
+  .hw-flow__steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hw-flow__step {
+    min-height: 0;
+  }
+  /* Arrows point down between stacked steps. */
+  .hw-flow__step:not(:last-child)::after {
+    top: calc(100% + 6px);
+    left: calc(50% - 1px);
+    width: 2px;
+    height: calc(var(--flow-gap) - 14px);
+  }
+  .hw-flow__step:not(:last-child)::before {
+    top: calc(100% + var(--flow-gap) - 10px);
+    left: calc(50% - 5px);
+    border: 5px solid transparent;
+    border-top: 7px solid var(--color-ink-muted);
+    border-bottom: 0;
+  }
+  /* No room to draw the loop: it becomes a note under the steps. */
+  .hw-flow__loop {
+    display: block;
+    margin-top: 0;
+  }
+  .hw-flow__loop span {
+    display: block;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+  }
+  .hw-flow__loop span::after {
+    display: none;
+  }
+  .hw-flow__loop span::before {
+    content: "↺ Human review → Plan: ";
+    position: static;
+    border: 0;
+  }
+}
+
+/* Stack (4.3): skill toggles, and where the selected one was used. */
+.hw-stack {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--spacing-space-5);
+  align-items: start;
+}
+.hw-stack__groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+.hw-stack__group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hw-stack__proofs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: var(--spacing-space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-paper-raised);
+}
+.hw-stack__proofs ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hw-stack__proofs li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hw-stack__proofs a {
+  font-weight: 600;
+  color: var(--color-cobalt);
+}
+.hw-stack__proofs li span {
+  font-size: 15px;
+  color: var(--color-ink-muted);
+}
+@media (max-width: 767.98px) {
+  .hw-stack {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-space-4);
+  }
+}
+
+/*
+ * Skills orbit (5.3): from 1200 px the three groups become rings around a dark core, AI tools
+ * outermost. Each item sits at angle --a on its ring's radius --r; the ring turns and the tag
+ * turns back, so it stays upright. Below 1200 px everything here is a plain row of tags.
+ */
+.hw-stack__orbit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-3);
+}
+.hw-orbit__item,
+.hw-orbit__upright {
+  display: contents;
+}
+.hw-orbit__core,
+.hw-orbit__pause {
+  display: none;
+}
+@media (min-width: 1200px) {
+  .hw-stack {
+    grid-template-columns: 680px minmax(0, 1fr);
+    align-items: center;
+  }
+  .hw-stack__orbit {
+    align-items: center;
+  }
+  .hw-orbit {
+    position: relative;
+    width: 640px;
+    height: 640px;
+    margin: 0 20px;
+    display: block;
+  }
+  .hw-orbit__ring {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .hw-orbit__ring--ai {
+    --r: 260px;
+    --turn: 90s;
+  }
+  .hw-orbit__ring--language {
+    --r: 175px;
+    --turn: 60s;
+  }
+  .hw-orbit__ring--framework {
+    --r: 100px;
+    --turn: 40s;
+    --direction: reverse;
+  }
+  /* The ring line. */
+  .hw-orbit__ring::before {
+    content: "";
+    position: absolute;
+    left: calc(50% - var(--r));
+    top: calc(50% - var(--r));
+    width: calc(var(--r) * 2);
+    height: calc(var(--r) * 2);
+    border: 1px dashed var(--color-line-strong);
+    border-radius: 50%;
+    box-sizing: border-box;
+  }
+  .hw-orbit__ring--ai::before {
+    border: 1px solid var(--color-ink);
+  }
+  .hw-orbit__ring > .hw-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .hw-orbit__items {
+    position: absolute;
+    inset: 0;
+    display: block;
+    animation: hw-orbit-turn var(--turn) linear infinite var(--direction, normal);
+  }
+  .hw-orbit__item {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: block;
+    width: 0;
+    height: 0;
+    transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a)));
+  }
+  .hw-orbit__upright {
+    display: block;
+    width: 0;
+    height: 0;
+    animation: hw-orbit-unturn var(--turn) linear infinite var(--direction, normal);
+  }
+  .hw-orbit__upright .hw-tag {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: auto;
+  }
+  .hw-orbit__upright .hw-tag:is(:hover, :focus-visible, [aria-pressed="true"]) {
+    z-index: 1;
+  }
+  .hw-orbit:is(:hover, :focus-within, [data-paused]) :is(.hw-orbit__items, .hw-orbit__upright) {
+    animation-play-state: paused;
+  }
+  .hw-orbit__core {
+    position: absolute;
+    left: calc(50% - 36px);
+    top: calc(50% - 36px);
+    width: 72px;
+    height: 72px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hw-orbit__pause {
+    display: inline-flex;
+  }
+  .hw-orbit__pause[aria-pressed="true"] {
+    text-decoration-thickness: 2px;
+  }
+}
+@media (min-width: 1200px) and (prefers-reduced-motion: reduce) {
+  .hw-orbit__items,
+  .hw-orbit__upright {
+    animation: none;
+  }
+  .hw-orbit__pause {
+    display: none;
+  }
+}
+@keyframes hw-orbit-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes hw-orbit-unturn {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* About (4.4) */
+.hw-about {
+  padding-bottom: var(--spacing-space-6);
+}
+.hw-about .hw-cs-header__lede {
+  max-width: 720px;
+}
+.hw-about__photos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-space-4);
+}
+.hw-about__photo {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2);
+}
+/* Collages (7.5): each card is a 4:5 frame; the layout decides how its pictures share it. */
+.hw-collage {
+  display: grid;
+  gap: 6px;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.hw-collage__tile {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.hw-collage__tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* First picture across the top, the other four in a 2×2 grid under it. */
+.hw-collage--mosaic {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1.3fr 1fr 1fr;
+}
+.hw-collage--mosaic .hw-collage__tile:first-child {
+  grid-column: 1 / -1;
+}
+/* Screenshots as cards on sunk paper, fanned slightly, the article card overlapping the badges. */
+.hw-collage--stack {
+  grid-template-rows: 1.15fr 1fr auto;
+  gap: 12px;
+  padding: 18px;
+  background: var(--color-paper-sunk);
+}
+.hw-collage--stack .hw-collage__tile {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper-raised);
+  box-shadow: var(--shadow-lift);
+}
+.hw-collage--stack .hw-collage__tile:nth-child(1) {
+  transform: rotate(-1.5deg);
+}
+.hw-collage--stack .hw-collage__tile:nth-child(2) img {
+  object-fit: contain;
+}
+.hw-collage--stack .hw-collage__tile:nth-child(3) {
+  margin: -16px -6px 0 18px;
+  transform: rotate(1.5deg);
+}
+.hw-collage--stack .hw-collage__tile:nth-child(3) img {
+  height: auto;
+}
+/* A wide picture over a tall one, cropped to the crowd. */
+.hw-collage--pair {
+  grid-template-rows: 1fr 1.25fr;
+}
+.hw-collage--pair .hw-collage__tile:nth-child(2) img {
+  object-position: center 65%;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hw-collage--mosaic .hw-collage__tile img,
+  .hw-collage--pair .hw-collage__tile img {
+    transition: transform 400ms ease;
+  }
+  .hw-collage--mosaic .hw-collage__tile:hover img,
+  .hw-collage--pair .hw-collage__tile:hover img {
+    transform: scale(1.04);
+  }
+  .hw-collage--stack .hw-collage__tile {
+    transition: transform 250ms ease;
+  }
+  .hw-collage--stack .hw-collage__tile:hover {
+    transform: rotate(0) translateY(-3px);
+  }
+}
+.hw-about__photo figcaption {
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+.hw-about__qa {
+  gap: var(--spacing-space-4);
+}
+.hw-about__qa-text {
+  margin: 0;
+  max-width: 560px;
+  color: var(--color-ink-muted);
+}
+.hw-about__closing {
+  align-items: flex-start;
+  gap: var(--spacing-space-4);
+}
+
+/* Journey line (4.4, V7): vertical on phones and tablets, horizontal on desktop. */
+.hw-journey {
+  --dot: 20px;
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+.hw-journey::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 9px;
+  width: 2px;
+  background: var(--color-cobalt);
+}
+.hw-journey__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hw-journey__item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -40px;
+  width: var(--dot);
+  height: var(--dot);
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--color-cobalt);
+  box-shadow: 0 0 0 5px var(--color-paper);
+}
+.hw-journey__item--upcoming::before {
+  background: var(--color-paper);
+  border: 2px solid var(--color-cobalt);
+}
+.hw-journey__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.hw-journey__title a {
+  color: var(--color-cobalt);
+}
+.hw-journey__line {
+  margin: 0;
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+@media (min-width: 1024px) {
+  /* Seven entries over eight tracks: each spans two, alternating above and below the line. */
+  .hw-journey {
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-rows: auto 60px auto;
+    gap: 0;
+  }
+  .hw-journey::before {
+    position: static;
+    grid-row: 2;
+    grid-column: 1 / -1;
+    align-self: center;
+    width: auto;
+    height: 2px;
+  }
+  .hw-journey__item {
+    grid-row: 1;
+    align-self: end;
+    padding-inline: 12px;
+    text-align: center;
+  }
+  .hw-journey__item:nth-child(even) {
+    grid-row: 3;
+    align-self: start;
+  }
+  .hw-journey__item::before {
+    top: auto;
+    bottom: calc(-30px - var(--dot) / 2);
+    left: calc(50% - var(--dot) / 2);
+  }
+  .hw-journey__item:nth-child(even)::before {
+    top: calc(-30px - var(--dot) / 2);
+    bottom: auto;
+  }
+  .hw-journey__item:nth-child(1) { grid-column: 1 / 3; }
+  .hw-journey__item:nth-child(2) { grid-column: 2 / 4; }
+  .hw-journey__item:nth-child(3) { grid-column: 3 / 5; }
+  .hw-journey__item:nth-child(4) { grid-column: 4 / 6; }
+  .hw-journey__item:nth-child(5) { grid-column: 5 / 7; }
+  .hw-journey__item:nth-child(6) { grid-column: 6 / 8; }
+  .hw-journey__item:nth-child(7) { grid-column: 7 / 9; }
+}
+@media (max-width: 767.98px) {
+  .hw-about__photos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Contact (1.8, 1.9) */
+.hw-contact {
+  gap: 28px;
+}
+.hw-contact__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 88px;
+  line-height: 0.95;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+}
+.hw-contact__lede {
+  margin: 0;
+  max-width: 520px;
+  font-size: var(--text-title);
+  line-height: 1.45;
+}
+.hw-contact__address {
+  margin-left: 12px;
+}
+.hw-contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+  max-width: 760px;
+  margin-top: var(--spacing-space-4);
+  padding: var(--spacing-space-5);
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+@media (max-width: 639.98px) {
+  .hw-contact__heading {
+    font-size: 48px;
+  }
+  .hw-contact__lede {
+    font-size: var(--text-body);
+  }
+  .hw-contact__address {
+    margin-left: 0;
+  }
+  .hw-contact__form {
+    padding: var(--spacing-space-4) var(--spacing-space-3);
+  }
+}
+
+.hw-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+}
+.hw-form__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-space-4);
+}
+.hw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hw-field__label {
+  font-size: 15px;
+  font-weight: 600;
+}
+.hw-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+}
+textarea.hw-input {
+  resize: vertical;
+  min-height: 140px;
+}
+.hw-input[aria-invalid="true"] {
+  border: 2px solid var(--color-signal-ink);
+}
+.hw-field__error {
+  margin: 0;
+  font-size: var(--text-small);
+  color: var(--color-signal-ink);
+}
+.hw-form__trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.hw-form__status {
+  margin: 0;
+  padding: var(--spacing-space-3);
+  background: var(--color-paper);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+}
+.hw-form__status--success {
+  font-weight: 600;
+}
+.hw-form__status--error {
+  border-color: var(--color-signal-ink);
+}
+.hw-form__status a {
+  color: var(--color-cobalt);
+}
+
+/* Case study (1.4) */
+.hw-cs-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-space-4);
+  padding-top: 72px;
+  padding-bottom: var(--spacing-space-5);
+}
+.hw-cs-header__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 80px;
+  line-height: 0.98;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+}
+.hw-cs-header__lede {
+  margin: 0;
+  max-width: 680px;
+  font-size: 22px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+.hw-cs-facts {
+  align-self: stretch;
+  margin-top: var(--spacing-space-3);
+  border-top: 1px solid var(--color-line-strong);
+}
+.hw-cs-facts__list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+}
+.hw-cs-facts__item {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-1);
+  padding: var(--spacing-space-3) var(--spacing-space-3) 0 0;
+}
+.hw-cs-facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+.hw-cs-hero .hw-frame__box {
+  aspect-ratio: 16 / 9;
+}
+.hw-cs-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-5);
+  padding-top: var(--spacing-space-6);
+}
+.hw-cs-section__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-4) 48px;
+}
+.hw-cs-section__head {
+  flex: 0 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2);
+}
+.hw-prose {
+  flex: 1 1 560px;
+  min-width: 0;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-3);
+}
+.hw-prose p {
+  margin: 0;
+}
+.hw-prose ul {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hw-cs-screens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-space-4);
+}
+/* Desktop screenshots: two per row, so the screens stay readable. */
+.hw-cs-screens:has(.hw-frame__box img):not(:has(.hw-frame--phone)) {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+/* Phone screenshots (Ridly): narrow columns, each frame the shape of the screen. */
+.hw-cs-screens:has(.hw-frame--phone) {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.hw-frame--phone .hw-frame__box {
+  aspect-ratio: 360 / 870;
+}
+/* The frame's tag sits in the top band, above the screen instead of over its header. */
+.hw-frame--phone .hw-frame__box > img {
+  top: 44px !important;
+  height: calc(100% - 44px) !important;
+}
+.hw-cs-impact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-5);
+}
+.hw-cs-impact .hw-metrics {
+  gap: 56px;
+  padding: 32px 0;
+  border-top: 1px solid var(--color-line-strong);
+  border-bottom: 1px solid var(--color-line-strong);
+}
+.hw-cs-impact .hw-metric__value {
+  font-size: 64px;
+}
+.hw-cs-impact__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-4);
+}
+.hw-cs-impact__note {
+  margin: 0;
+  color: var(--color-ink-muted);
+}
+.hw-cs-next {
+  margin-top: 120px;
+  background: var(--color-paper-sunk);
+}
+/* The band sits directly on the footer, as in the mockup. */
+main:has(.hw-cs-next) + .hw-footer {
+  margin-top: 0;
+}
+.hw-cs-next__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 32px;
+  padding-block: 72px;
+}
+.hw-cs-next__title {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.hw-cs-next__name {
+  font-family: var(--font-display);
+  font-size: var(--text-display-l);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+@media (max-width: 639.98px) {
+  .hw-cs-header {
+    padding-top: var(--spacing-space-5);
+  }
+  .hw-cs-header__title {
+    font-size: 44px;
+    line-height: 1.02;
+  }
+  .hw-cs-header__lede {
+    font-size: 18px;
+  }
+  .hw-cs-section {
+    gap: var(--spacing-space-4);
+    padding-top: 48px;
+  }
+  .hw-cs-impact .hw-metrics {
+    gap: 32px;
+  }
+  .hw-cs-impact .hw-metric__value {
+    font-size: 44px;
+  }
+  .hw-cs-next {
+    margin-top: var(--spacing-space-6);
+  }
+  .hw-cs-next__inner {
+    padding-block: 48px;
+  }
+}

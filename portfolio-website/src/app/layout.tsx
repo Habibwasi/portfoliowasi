@@ -1,29 +1,54 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
+import { CvViewer } from "@/components/cv-viewer";
+import { GuideLauncher } from "@/components/guide/guide-launcher";
+import { SiteAnalytics } from "@/components/site-analytics";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { anchors } from "@/content/anchors";
+import { siteTitle, siteUrl } from "@/content/metadata";
+import { site } from "@/content/site";
 import "./globals.css";
-import { Providers } from "@/components/providers";
-import { Analytics } from "@vercel/analytics/next"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Fraunces is the display face and the LCP font, so it is the only one preloaded.
+// opsz is used by the name and the Metric numbers (font-variation-settings).
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
+  axes: ["opsz"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument-sans",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
-  title: "Habib Ahmed Wasi - Full-Stack Developer Portfolio",
-  description: "Software Engineering student and full-stack developer specializing in Python, C#, JavaScript, and cloud computing. Check out my projects and get in touch!",
-  keywords: ["portfolio", "developer", "software engineering", "full-stack", "python", "react", "next.js"],
-  authors: [{ name: "Habib Ahmed Wasi" }],
+  metadataBase: new URL(siteUrl),
+  title: { default: siteTitle, template: `%s · ${site.name}` },
+  description: site.intro,
+  authors: [{ name: site.name, url: siteUrl }],
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Habib Ahmed Wasi - Full-Stack Developer",
-    description: "Discover my projects, skills, and experience as a Software Engineering student",
+    title: siteTitle,
+    description: site.intro,
     type: "website",
+    siteName: site.name,
+    locale: "en_GB",
+    url: "/",
   },
+  twitter: { card: "summary_large_image", title: siteTitle, description: site.intro },
 };
 
 export default function RootLayout({
@@ -32,14 +57,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
-      >
-        <Providers>
-          {children}
-        </Providers>
-        <Analytics />
+    <html lang="en" className={`${fraunces.variable} ${instrumentSans.variable} ${plexMono.variable}`}>
+      <body>
+        <SiteHeader />
+        <main id={anchors.main}>{children}</main>
+        <SiteFooter />
+        <CvViewer />
+        <GuideLauncher />
+        <SiteAnalytics />
       </body>
     </html>
   );

@@ -1,0 +1,53 @@
+name: Guide evaluation
+
+# The AI guide's evaluation (roadmap 3.4): retrieval every night; answers through the real
+# route too once the GROQ_EVAL_API_KEY secret exists (a separate Groq organisation, so the
+# evaluation doesn't use the production quota).
+# GitHub runs schedules and manual runs only from the default branch (main, after Phase 7),
+# so until then it also runs when a push to redesign touches the guide or the content.
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+  push:
+    branches: [redesign]
+    paths:
+      - "portfolio-website/src/content/**"
+      - "portfolio-website/src/lib/guide/**"
+      - "portfolio-website/src/generated/**"
+      - "portfolio-website/src/app/api/guide/**"
+      - "portfolio-website/evals/**"
+
+permissions:
+  contents: read
+
+# onnxruntime-node's install script downloads CUDA/TensorRT providers on Linux x64. The guide runs on
+# the CPU binary bundled in the package, and that download timed out in npm ci (Phase 5, PR #5).
+env:
+  ONNXRUNTIME_NODE_INSTALL: skip
+
+defaults:
+  run:
+    working-directory: portfolio-website
+
+jobs:
+  eval:
+    name: Retrieval and answers
+    runs-on: ubuntu-latest
+    env:
+      GROQ_EVAL_API_KEY: ${{ secrets.GROQ_EVAL_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Nightly runs check redesign until it is merged into main.
+          ref: ${{ github.event_name == 'push' && github.sha || 'redesign' }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: portfolio-website/package-lock.json
+      - run: npm ci
+      - name: Answers are skipped without the secret
+        if: ${{ env.GROQ_EVAL_API_KEY == '' }}
+        run: echo "::notice::GROQ_EVAL_API_KEY is not set; only retrieval is evaluated."
+      - run: npm run eval:guide

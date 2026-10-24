@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    # redesign collects every phase; it reaches main only after Phase 7.
+    branches: [main, redesign]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# onnxruntime-node's install script downloads CUDA/TensorRT providers on Linux x64. The guide runs on
+# the CPU binary bundled in the package, and that download timed out in npm ci (Phase 5, PR #5).
+env:
+  ONNXRUNTIME_NODE_INSTALL: skip
+
+defaults:
+  run:
+    working-directory: portfolio-website
+
+jobs:
+  check:
+    name: Lint, typecheck, unit tests, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: portfolio-website/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: next-build
+          path: portfolio-website/.next
+          include-hidden-files: true
+          retention-days: 1
+
+  e2e:
+    name: E2E and accessibility
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: portfolio-website/package-lock.json
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: portfolio-website/.next
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: portfolio-website/playwright-report
+          retention-days: 7
+
+  lighthouse:
+    name: Lighthouse (phone)
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: portfolio-website/package-lock.json
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: portfolio-website/.next
+      - run: npm run lhci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-report
+          path: portfolio-website/.lighthouseci
+          retention-days: 7

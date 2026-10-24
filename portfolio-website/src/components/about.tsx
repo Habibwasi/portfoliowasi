@@ -1,107 +1,117 @@
-'use client';
+import Image from "next/image";
+import { about, journeyDate } from "@/content/about";
+import { site } from "@/content/site";
+import { ActionButton, Button, Metric } from "./hw";
 
-import { motion } from 'framer-motion';
-import { Card } from './ui/card';
-import { Code2, Zap, Users } from 'lucide-react';
+/** Rendered width of each tile, so next/image picks a sensible size; the cards are ~380px wide. */
+const tileSizes = {
+  mosaic: ["(min-width: 1024px) 380px, 100vw", "(min-width: 1024px) 190px, 50vw"],
+  stack: ["(min-width: 1024px) 340px, 90vw", "(min-width: 1024px) 340px, 90vw"],
+  pair: ["(min-width: 1024px) 380px, 100vw", "(min-width: 1024px) 380px, 100vw"],
+} as const;
 
-export function About() {
-  const features = [
-    {
-      icon: Code2,
-      title: 'Full-Stack Development',
-      description: 'Experienced building scalable applications with Python, C#, JavaScript, and modern frameworks like Django, .NET, and React.'
-    },
-    {
-      icon: Zap,
-      title: 'Algorithmic Efficiency',
-      description: 'Passionate about data structures and algorithms, implementing optimized solutions like BSTs, Merge Sort, and graph traversal.'
-    },
-    {
-      icon: Users,
-      title: 'Collaborative Learner',
-      description: 'Thrive in team environments through pair programming, code reviews, and collective problem-solving in agile settings.'
-    }
-  ];
-
+/** Three photo cards with captions (V3, 7.5), each a small collage. */
+function Photos() {
   return (
-    <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
-        >
-          {/* Text Content */}
-          <div className="space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-bold">About Me</h2>
-            
-            <p className="text-foreground/70 leading-relaxed">
-              I'm a motivated BSc Software Engineering student at the University of Southern Denmark, 
-              expected to graduate in January 2027. With a strong foundation in full-stack development, 
-              I'm passionate about building scalable applications and solving real-world technical problems.
-            </p>
+    <ul className="hw-about__photos" aria-label="Photos">
+      {about.photos.map((photo, card) => (
+        <li key={photo.caption}>
+          <figure className="hw-about__photo">
+            <div className={`hw-collage hw-collage--${photo.layout}`}>
+              {photo.images.map((image, i) => (
+                <div key={image.src} className="hw-collage__tile">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    sizes={tileSizes[photo.layout][i === 0 ? 0 : 1]}
+                    // The first card's top picture is in the first view and is the page's LCP: load it at once.
+                    preload={card === 0 && i === 0}
+                  />
+                </div>
+              ))}
+            </div>
+            <figcaption>{photo.caption}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
-            <p className="text-foreground/70 leading-relaxed">
-              My academic journey has equipped me with expertise in multiple programming paradigms, 
-              cloud computing, cybersecurity, and software architecture. I've applied this knowledge 
-              to create three major projects showcasing different technology stacks and problem-solving approaches.
-            </p>
+/** The journey line (C18, V7): an ordered list; the line and dots are drawn in CSS. */
+function Journey() {
+  const { journey, anchors } = about;
+  return (
+    <section id={anchors.journey} className="hw-section hw-about__section" aria-labelledby="journey-heading">
+      <div className="hw-section-head__title">
+        <span className="hw-label">{journey.eyebrow}</span>
+        <h2 id="journey-heading" className="hw-h2">
+          {journey.heading}
+        </h2>
+      </div>
+      <ol className="hw-journey" aria-label={journey.eyebrow}>
+        {journey.entries.map((entry, i) => {
+          const upcoming = i === journey.entries.length - 1;
+          return (
+            <li key={entry.month} className={upcoming ? "hw-journey__item hw-journey__item--upcoming" : "hw-journey__item"}>
+              <time className="hw-label" dateTime={entry.month}>
+                {journeyDate(entry.month)}
+              </time>
+              <h3 className="hw-journey__title">{entry.href ? <a href={entry.href}>{entry.title}</a> : entry.title}</h3>
+              <p className="hw-journey__line">{entry.line}</p>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
 
-            <p className="text-foreground/70 leading-relaxed">
-              Beyond coding, I'm interested in open-source contributions, AI applications. 
-              I value clean code, efficient algorithms, and collaborative development practices.
-            </p>
-
-            {/* Education Card */}
-            <Card className="p-6 bg-blue-500/5 border-blue-500/20">
-              <h3 className="font-bold mb-2">Education</h3>
-              <p className="text-foreground/80">
-                <strong>BSc in Software Engineering</strong>
-              </p>
-              <p className="text-foreground/60 text-sm">
-                University of Southern Denmark
-              </p>
-              <p className="text-foreground/60 text-sm">
-                Expected Graduation: January 2027
-              </p>
-            </Card>
-          </div>
-
-          {/* Features Grid */}
-          <div className="grid gap-6">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Card className="p-6 hover:shadow-lg transition-shadow">
-                    <div className="flex gap-4">
-                      <div className="flex-shrink-0">
-                        <div className="flex items-center justify-center h-10 w-10 rounded-md bg-blue-500/10">
-                          <Icon className="h-6 w-6 text-blue-500" />
-                        </div>
-                      </div>
-                      <div>
-                        <h3 className="font-bold">{feature.title}</h3>
-                        <p className="text-sm text-foreground/60 mt-2">
-                          {feature.description}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
+function QaRecord() {
+  const { qa, qaMetrics, anchors } = about;
+  return (
+    <section id={anchors.qaRecord} className="hw-section hw-about__section hw-about__qa" aria-labelledby="qa-heading">
+      <div className="hw-section-head__title">
+        <span className="hw-label">{qa.subline}</span>
+        <h2 id="qa-heading" className="hw-h2">
+          {qa.heading}
+        </h2>
+        <p className="hw-about__qa-text">{qa.description}</p>
+      </div>
+      <div className="hw-metrics hw-about__metrics">
+        {qaMetrics.map((metric) => (
+          <Metric key={metric.label} metric={metric} />
+        ))}
       </div>
     </section>
+  );
+}
+
+/** About (4.4, C18, C19): at the end of the flow, after the work. */
+export function About() {
+  return (
+    <article className="hw-container hw-about">
+      <header className="hw-cs-header">
+        <span className="hw-label">{about.eyebrow}</span>
+        <h1 className="hw-cs-header__title">{about.title}</h1>
+        <p className="hw-cs-header__lede">{about.intro}</p>
+      </header>
+      <Photos />
+      <Journey />
+      <QaRecord />
+      <section className="hw-section hw-about__closing" aria-labelledby="closing-heading">
+        <h2 id="closing-heading" className="hw-h2">
+          {about.closing}
+        </h2>
+        <div className="hw-actions">
+          <ActionButton href={site.cv} variant="primary" download>
+            View CV
+          </ActionButton>
+          <Button href={`mailto:${site.email}`}>Email me</Button>
+        </div>
+      </section>
+    </article>
   );
 }

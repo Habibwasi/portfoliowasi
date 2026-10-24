@@ -1,0 +1,618 @@
+/*
+ * Component styles from the design system bundle (components/bundle.css),
+ * rewritten against the Tailwind token variables. Class names keep the hw- prefix
+ * so markup matches the design system READMEs.
+ */
+
+/* Shared */
+.hw-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 500;
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.hw-mark {
+  background: linear-gradient(transparent 12%, var(--color-marker) 12%, var(--color-marker) 88%, transparent 88%);
+  padding: 0 0.12em;
+}
+
+.hw-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-space-4);
+}
+
+@media (max-width: 639.98px) {
+  .hw-container {
+    padding-inline: var(--spacing-space-3);
+  }
+}
+
+/* Placeholder: missing content stays visible and labelled */
+.hw-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 48px;
+  padding: var(--spacing-space-3);
+  border: 1px dashed var(--color-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-paper-sunk);
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.hw-placeholder--inline {
+  display: inline;
+  min-height: 0;
+  padding: 0 0.3em;
+  border-radius: var(--radius-sm);
+  font-size: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* Button */
+.hw-btn {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  height: 44px;
+  padding: 0 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-line-strong);
+  background: transparent;
+  color: var(--color-ink);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 160ms, border-color 160ms, transform 160ms;
+}
+.hw-btn:hover {
+  border-color: var(--color-ink);
+  transform: translateY(-1px);
+}
+.hw-btn--primary {
+  background: var(--color-signal);
+  border-color: var(--color-signal);
+  color: var(--color-on-signal);
+}
+.hw-btn--primary:hover {
+  background: var(--color-signal-ink);
+  border-color: var(--color-signal-ink);
+}
+.hw-btn--text {
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: var(--color-cobalt);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.hw-btn--text:hover {
+  transform: none;
+  text-decoration-thickness: 2px;
+}
+
+/* Tag */
+.hw-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  padding: 3px 8px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper-raised);
+}
+.hw-tag--ai {
+  color: var(--color-paper);
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+}
+.hw-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-2);
+}
+ul.hw-tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* A tag that links to its proof (4.1) or selects a skill (4.3). */
+.hw-tag--link {
+  text-decoration: none;
+}
+.hw-tag--link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.hw-tag--button {
+  cursor: pointer;
+  background: var(--color-paper-raised);
+}
+.hw-tag--button.hw-tag--ai {
+  background: var(--color-ink);
+}
+.hw-tag--button:hover {
+  border-color: var(--color-ink);
+}
+.hw-tag--button[aria-pressed="true"] {
+  color: var(--color-on-signal);
+  background: var(--color-signal);
+  border-color: var(--color-signal);
+}
+/* A tag with a logo before its name (Stack, 5.3); light tags show the brand colour on hover. */
+.hw-tag--logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.hw-tag__logo {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.hw-tag--logo:not(.hw-tag--ai, [aria-pressed="true"]):hover .hw-tag__logo {
+  color: var(--brand, currentColor);
+}
+
+/* Metric */
+.hw-metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-1);
+  min-width: 120px;
+}
+.hw-metric__value {
+  font-family: var(--font-display);
+  font-size: 44px;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--color-signal-ink);
+  font-variation-settings: "opsz" 96;
+}
+.hw-metric__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.hw-metric__note {
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+.hw-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-space-5);
+}
+
+/* Project card */
+.hw-card {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: var(--spacing-space-5);
+  padding: var(--spacing-space-4);
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 160ms, transform 160ms;
+}
+a.hw-card:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
+}
+.hw-card__media {
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  background: var(--color-paper-sunk);
+  border: 1px solid var(--color-line);
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.hw-card__media > .hw-placeholder {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+.hw-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-3);
+  justify-content: center;
+}
+.hw-card__status {
+  align-self: flex-start;
+}
+.hw-card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-heading);
+  line-height: var(--text-heading--line-height);
+  font-weight: 500;
+  letter-spacing: var(--text-heading--letter-spacing);
+  margin: 0;
+}
+.hw-card__text {
+  margin: 0;
+  color: var(--color-ink-muted);
+}
+.hw-card .hw-metrics {
+  gap: 32px;
+}
+@media (max-width: 639.98px) {
+  .hw-card {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-space-4);
+    padding: var(--spacing-space-3);
+  }
+}
+
+/* Media frame */
+.hw-frame {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2);
+}
+.hw-frame__box {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-line);
+  background: var(--color-paper-raised);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.hw-frame__box--terminal {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+.hw-frame__box > .hw-placeholder {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+.hw-frame__tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+}
+.hw-frame__caption {
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+  color: var(--color-ink-muted);
+}
+
+/* Testimonial */
+.hw-quote {
+  margin: 0;
+  padding: var(--spacing-space-5) var(--spacing-space-5) var(--spacing-space-4);
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  max-width: 720px;
+}
+/* The original recommendation as a screenshot: shown at its own size, never stretched. */
+.hw-quote--screenshot {
+  max-width: 813px;
+}
+.hw-quote--screenshot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: var(--spacing-space-4);
+  border-radius: var(--radius-sm);
+}
+.hw-quote__text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 28px;
+  line-height: 1.3;
+  font-weight: 400;
+  margin: 0 0 var(--spacing-space-4);
+}
+.hw-quote__text::before {
+  content: "\201C";
+  color: var(--color-signal);
+  margin-right: 2px;
+}
+.hw-quote__text::after {
+  content: "\201D";
+  color: var(--color-signal);
+}
+.hw-quote__by {
+  display: flex;
+  gap: var(--spacing-space-2);
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.hw-quote__name {
+  font-weight: 600;
+}
+@media (max-width: 639.98px) {
+  .hw-quote {
+    padding: var(--spacing-space-4) var(--spacing-space-3);
+  }
+  .hw-quote__text {
+    font-size: 22px;
+  }
+}
+
+/* Site shell */
+.hw-skip {
+  position: absolute;
+  left: var(--spacing-space-3);
+  top: -100px;
+  z-index: 100;
+  padding: var(--spacing-space-2) var(--spacing-space-3);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+.hw-skip:focus {
+  top: var(--spacing-space-3);
+}
+
+.hw-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--color-paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-line);
+}
+.hw-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-4);
+  height: 64px;
+}
+.hw-wordmark {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  font-weight: 600;
+  color: var(--color-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.hw-textnav {
+  display: flex;
+  gap: var(--spacing-space-4);
+}
+.hw-textnav a {
+  color: var(--color-ink);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+}
+.hw-textnav a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.hw-textnav a[aria-current] {
+  color: var(--color-signal-ink);
+}
+@media (max-width: 639.98px) {
+  /* The full name next to four links: smaller, and free to take two lines. */
+  .hw-wordmark {
+    font-size: 18px;
+    line-height: 1.1;
+    white-space: normal;
+  }
+  .hw-textnav {
+    gap: var(--spacing-space-3);
+  }
+  .hw-textnav a {
+    font-size: 14px;
+  }
+}
+/* With the CV item (7.1) the header needs more room than 320 px gives; tighten it, keeping 24 px targets (2.5.8). */
+@media (max-width: 379.98px) {
+  .hw-header__inner {
+    gap: var(--spacing-space-2);
+  }
+  .hw-wordmark {
+    font-size: 18px;
+  }
+  .hw-textnav {
+    gap: var(--spacing-space-2);
+  }
+  .hw-textnav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+  }
+}
+
+.hw-footer {
+  margin-top: var(--spacing-space-7);
+  padding-block: var(--spacing-space-5);
+  background: var(--color-paper-sunk);
+  border-top: 1px solid var(--color-line);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+.hw-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-4);
+  /* Keeps the links out of the guide tile's corner (right 96px), so it never covers one (2.4.11). */
+  padding-inline-end: calc(var(--spacing-space-4) + 96px);
+}
+.hw-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-space-4);
+}
+.hw-footer a {
+  color: var(--color-ink);
+}
+.hw-footer__badge {
+  display: block;
+  height: 20px;
+}
+
+/* Video facade (2.3): a poster and a play mark; the YouTube iframe only exists after the click. */
+.hw-video {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+.hw-video:focus-visible {
+  outline-offset: -4px;
+}
+.hw-video__play {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  padding-left: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--color-signal);
+  color: var(--color-on-signal);
+  box-shadow: var(--shadow-lift);
+  transition: transform 150ms ease-out;
+}
+.hw-video:hover .hw-video__play {
+  transform: scale(1.06);
+}
+.hw-video__hint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-paper);
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+/* Once playing, the frame's tag would cover YouTube's own title bar. */
+.hw-frame__box:has(.hw-video__player) .hw-frame__tag {
+  display: none;
+}
+.hw-video__player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* CV viewer: the CV's pages in a modal, the download at the top (cv-viewer.tsx). */
+.hw-cv {
+  width: min(880px, 100vw - 32px);
+  max-width: none;
+  height: calc(100dvh - 32px);
+  max-height: none;
+  margin: 16px auto;
+  padding: 0;
+  display: none;
+  flex-direction: column;
+  background: var(--color-paper-sunk);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lift);
+  color: var(--color-ink);
+  overflow: hidden;
+}
+.hw-cv[open] {
+  display: flex;
+}
+.hw-cv::backdrop {
+  background: rgba(28, 26, 22, 0.6);
+}
+html:has(.hw-cv[open]) {
+  overflow: hidden;
+}
+.hw-cv__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  padding: var(--spacing-space-2) var(--spacing-space-3);
+  background: var(--color-paper-raised);
+  border-bottom: 1px solid var(--color-line);
+}
+.hw-cv__bar .hw-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.hw-cv__title {
+  min-width: 0;
+  margin: 0 auto 0 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hw-cv__pages {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-3);
+  padding: var(--spacing-space-3);
+}
+.hw-cv__page {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fff;
+  box-shadow: var(--shadow-letter);
+}
+@media (max-width: 480px) {
+  .hw-cv {
+    width: 100vw;
+    height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+  }
+  .hw-cv__pages {
+    padding: var(--spacing-space-2);
+  }
+}

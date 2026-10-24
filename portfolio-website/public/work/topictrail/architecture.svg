@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -60 1600 1060" role="img" aria-labelledby="t d">
+  <title id="t">TopicTrail planned architecture</title>
+  <desc id="d">Planned design, October 2026. A Chrome extension asks for opt-in consent, captures what the user watches or reads, keeps only items whose watch ratio reaches the 0.1 engagement threshold, and queues them offline until they sync. A server receives the items, applies privacy settings, computes embeddings and summaries in background jobs with self-hosted models, and searches by keyword and meaning. Content is stored in PostgreSQL encrypted with a per-user key; deleting the account destroys the key. A web dashboard shows topics, search, summaries and privacy controls.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1c1a16"/></marker>
+    <style>
+      text { font-family: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace; fill: #1c1a16; }
+      .h { font-size: 25px; font-weight: 600; }
+      .s { font-size: 18px; fill: #5c564c; }
+      .l { font-size: 16px; letter-spacing: .08em; fill: #5c564c; }
+      .box { fill: #fcfaf5; stroke: #1c1a16; stroke-width: 1.5; }
+      .grp { fill: none; stroke: #8a8173; stroke-width: 1.5; stroke-dasharray: 6 5; }
+      .ln { stroke: #1c1a16; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+  <rect y="-60" width="1600" height="1060" fill="#fcfaf5"/>
+  <text class="l" x="1560" y="-16" text-anchor="end">PLANNED · OCTOBER 2026</text>
+
+  <text class="l" x="40" y="20">CHROME EXTENSION</text>
+  <rect class="grp" x="40" y="36" width="560" height="834" rx="14"/>
+  <rect class="box" x="70" y="66" width="500" height="150" rx="10"/>
+  <text class="h" x="94" y="110">Consent</text>
+  <text class="s" x="94" y="146">explicit opt-in per content type;</text>
+  <text class="s" x="94" y="174">pause, excluded sites, sensitive</text>
+  <text class="s" x="94" y="202">sites off by default</text>
+  <path class="ln" d="M320 216v44" marker-end="url(#a)"/>
+  <rect class="box" x="70" y="260" width="500" height="150" rx="10"/>
+  <text class="h" x="94" y="304">Capture</text>
+  <text class="s" x="94" y="340">title, URL, type and playback</text>
+  <text class="s" x="94" y="368">of what the user watches or reads;</text>
+  <text class="s" x="94" y="396">no comments, no downloads</text>
+  <path class="ln" d="M320 410v44" marker-end="url(#a)"/>
+  <rect x="70" y="454" width="500" height="190" rx="10" fill="#fcfaf5" stroke="#c24018" stroke-width="2.5"/>
+  <text class="h" x="94" y="498">Engagement filter</text>
+  <text class="s" x="94" y="534">watch ratio = seconds watched</text>
+  <text class="s" x="94" y="562">÷ length</text>
+  <text class="s" x="94" y="600">kept at 0.1 or more,</text>
+  <text class="s" x="94" y="628">dropped below it</text>
+  <path class="ln" d="M320 644v44" marker-end="url(#a)"/>
+  <rect class="box" x="70" y="688" width="500" height="150" rx="10"/>
+  <text class="h" x="94" y="732">Offline queue + sync</text>
+  <text class="s" x="94" y="768">engaged items wait locally</text>
+  <text class="s" x="94" y="798">until they upload</text>
+
+  <path class="ln" d="M570 763h160" marker-end="url(#a)"/>
+  <text class="s" x="626" y="748">HTTPS</text>
+
+  <text class="l" x="730" y="420">SERVER</text>
+  <rect class="box" x="730" y="436" width="830" height="402" rx="10"/>
+  <text class="h" x="754" y="482">Sync · privacy · search API</text>
+  <text class="s" x="754" y="518">upload, export, delete an item, a date</text>
+  <text class="s" x="754" y="546">range or the account</text>
+  <text class="h" x="754" y="604">Search</text>
+  <text class="s" x="754" y="640">keyword baseline + semantic search</text>
+  <text class="s" x="754" y="668">(embeddings, cosine similarity)</text>
+  <text class="h" x="754" y="726">Background jobs</text>
+  <text class="s" x="754" y="762">embeddings and short summaries with</text>
+  <text class="s" x="754" y="790">self-hosted models, never sent out</text>
+
+  <text class="l" x="730" y="20">WEB APP</text>
+  <rect class="box" x="730" y="36" width="830" height="216" rx="10"/>
+  <text class="h" x="754" y="82">Dashboard</text>
+  <text class="s" x="754" y="120">browse by topic, search by words</text>
+  <text class="s" x="754" y="148">or meaning, short summaries that</text>
+  <text class="s" x="754" y="176">link back to the source</text>
+  <text class="s" x="754" y="220">privacy settings, export, delete</text>
+  <path class="ln" d="M1145 252v184" marker-end="url(#a)" marker-start="url(#a)"/>
+  <text class="s" x="1161" y="352">HTTPS, signed in</text>
+
+  <path class="ln" d="M1145 838v42" marker-end="url(#a)"/>
+  <rect class="box" x="730" y="880" width="830" height="80" rx="10"/>
+  <text class="h" x="754" y="916">PostgreSQL</text>
+  <text class="s" x="754" y="944">content encrypted with a per-user key; deleting the account destroys it</text>
+</svg>

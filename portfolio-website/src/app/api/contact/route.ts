@@ -1,52 +1,55 @@
-import { Resend } from 'resend';
-import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from "resend";
+import { site } from "@/content/site";
+import { buildEmail, isHoneypotFilled, parseContact } from "@/lib/contact";
+import { allowContact } from "@/lib/rate-limit";
 
-export async function POST(request: NextRequest) {
+/** The first address in x-forwarded-for is the client; Vercel sets this header itself. */
+function clientIp(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  return forwarded?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+}
+
+export async function POST(request: Request) {
+  let body: unknown;
   try {
-    const { name, email, message } = await request.json();
-
-    // Validate input
-    if (!name || !email || !message) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
-
-    // Check if API key exists
-    if (!process.env.RESEND_API_KEY) {
-      console.error('RESEND_API_KEY is not set');
-      return NextResponse.json(
-        { error: 'Email service not configured' },
-        { status: 500 }
-      );
-    }
-
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
-    // Send email to yourself
-    await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: 'habibwasi9@gmail.com',
-      subject: `New Portfolio Contact from ${name}`,
-      html: `
-        <h2>New Contact Message</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br>')}</p>
-      `,
-    });
-
-    return NextResponse.json(
-      { message: 'Email sent successfully' },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error('Error sending email:', error);
-    return NextResponse.json(
-      { error: 'Failed to send email' },
-      { status: 500 }
-    );
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "The request couldn't be read." }, { status: 400 });
   }
+
+  // Bots fill the hidden field. Answer as if it worked so they don't retry.
+  if (isHoneypotFilled(body)) return Response.json({ ok: true });
+
+  const parsed = parseContact(body);
+  if (!parsed.ok) {
+    return Response.json({ error: "Please check the highlighted fields.", fieldErrors: parsed.fieldErrors }, { status: 400 });
+  }
+
+  if (!(await allowContact(clientIp(request)))) {
+    return Response.json({ error: "Too many messages. Please try again in a few minutes." }, { status: 429 });
+  }
+
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("RESEND_API_KEY is not set");
+    return Response.json({ error: "The form is offline right now." }, { status: 503 });
+  }
+
+  const { subject, html, text } = buildEmail(parsed.data);
+  const { error } = await new Resend(apiKey).emails.send({
+    // While the sender is onboarding@resend.dev, Resend only delivers to the account owner, which is Habib.
+    from: "Portfolio contact <onboarding@resend.dev>",
+    to: site.email,
+    replyTo: parsed.data.email,
+    subject,
+    html,
+    text,
+  });
+
+  if (error) {
+    console.error("Resend failed:", error);
+    return Response.json({ error: "The message couldn't be sent." }, { status: 502 });
+  }
+
+  return Response.json({ ok: true });
 }
