@@ -21,6 +21,11 @@ on:
 permissions:
   contents: read
 
+# onnxruntime-node's install script downloads CUDA/TensorRT providers on Linux x64. The guide runs on
+# the CPU binary bundled in the package, and that download timed out in npm ci (Phase 5, PR #5).
+env:
+  ONNXRUNTIME_NODE_INSTALL: skip
+
 defaults:
   run:
     working-directory: portfolio-website

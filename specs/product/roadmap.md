@@ -235,6 +235,7 @@ The CV PDF is live as supplied. These lines differ from what the site says, so i
 | 2026-10-23 | No space is reserved under the footer for the guide tile; the footer keeps its links out of the tile's corner and the tour offer hides while the footer is on screen | Phase 7.3 "room for the offer" |
 | 2026-10-23 | CV links open a viewer (the pages as images, a PDF frame shows nothing on Android) with "Download PDF" at the top; buttons read "View CV". Umami still records the open as `CV download` (place `header`, `contact`, …) and the real download as place `cv-viewer` | Spec 1.10 "CV downloads" |
 | 2026-10-23 | The hero portrait is pixel art made from Habib's photo, not line art. From desktop width it is Home's LCP element (preloaded, 17 KB, painted at ~180 ms); on phones, where it is hidden, the name still is | Spec 5.5 "line-art portrait", P1 test "the name is the LCP" |
+| 2026-10-24 | The guide's off-topic cut-off goes from 0.74 to 0.76, and the index embeds one chunk at a time (stable when one chunk changes) | Spec 3 "I don't know" gate (0.74) |
 | 2026-10-23 | `agentRules: false` in `next.config.ts`: `next dev` no longer writes an `AGENTS.md` when an AI agent runs it | Next.js default |
 
 ## Open decisions

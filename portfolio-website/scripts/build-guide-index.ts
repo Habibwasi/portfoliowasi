@@ -14,7 +14,10 @@ const round = (x: number) => Math.round(x * 1e5) / 1e5;
 
 async function main() {
   const chunks = buildChunks();
-  const vectors = await embed(chunks.map((c) => `${c.title}. ${c.text}`));
+  // One chunk at a time, as queries are embedded: in a batch every chunk is padded to the longest,
+  // so editing one chunk shifted all the others' vectors (and the off-topic cut-off with them).
+  const vectors: number[][] = [];
+  for (const c of chunks) vectors.push(...(await embed([`${c.title}. ${c.text}`])));
   const index: GuideIndex = {
     model: EMBEDDING_MODEL,
     dimensions: EMBEDDING_DIMENSIONS,
