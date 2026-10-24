@@ -1,4 +1,3 @@
-import { placeholder } from "../placeholder";
 import type { CaseStudy } from "../types";
 
 /**
@@ -45,7 +44,7 @@ export const validationPortal: CaseStudy = {
     body: [
       "I built it with GitHub Copilot and Claude Code, reviewing what they wrote before it went in.",
       "I also used the project to try out models for the product’s own AI. It started on OpenAI, moved to Google Gemini, then to Groq, where it now runs GPT-OSS 20B. Because every call goes through the serverless functions, each switch stayed on the server side.",
-      placeholder("One concrete example of reviewing or correcting Copilot or Claude Code on Validation Portal"),
+      "One example: while I chased a failing translation call, an AI-suggested debugging change put the first characters of the server’s API key into the error message the browser received. It found the bug, but it handed part of a secret to anyone who could trigger an error. I took it out within the hour, along with the rest of the debug output, and the key now never leaves the server, not even in part.",
     ],
   },
   solution: {
