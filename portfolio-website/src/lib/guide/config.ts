@@ -11,8 +11,11 @@ export const EMBEDDING_DIMENSIONS = 384;
 export const TOP_K = 4;
 /** Below this cosine, and with no keyword hit, a question counts as off-topic. */
 export const MIN_COSINE = 0.76;
-/** If no chunk reaches this cosine, the question is off-topic even with a stray keyword hit ("write a poem"). */
-export const MIN_TOPIC_COSINE = 0.74;
+/**
+ * If no chunk reaches this cosine, the question is off-topic even with a stray keyword hit ("write a poem").
+ * 0.76 since 2026-10-24: off-topic questions reach 0.75, the eval's lowest real question 0.79.
+ */
+export const MIN_TOPIC_COSINE = 0.76;
 /** Reciprocal rank fusion constant. */
 export const RRF_K = 60;
 
