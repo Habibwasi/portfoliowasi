@@ -3,14 +3,13 @@ name: Guide evaluation
 # The AI guide's evaluation (roadmap 3.4): retrieval every night; answers through the real
 # route too once the GROQ_EVAL_API_KEY secret exists (a separate Groq organisation, so the
 # evaluation doesn't use the production quota).
-# GitHub runs schedules and manual runs only from the default branch (main, after Phase 7),
-# so until then it also runs when a push to redesign touches the guide or the content.
+# It also runs when a push to main touches the guide or the content.
 on:
   schedule:
     - cron: "0 3 * * *"
   workflow_dispatch:
   push:
-    branches: [redesign]
+    branches: [main]
     paths:
       - "portfolio-website/src/content/**"
       - "portfolio-website/src/lib/guide/**"
@@ -38,9 +37,6 @@ jobs:
       GROQ_EVAL_API_KEY: ${{ secrets.GROQ_EVAL_API_KEY }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          # Nightly runs check redesign until it is merged into main.
-          ref: ${{ github.event_name == 'push' && github.sha || 'redesign' }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
