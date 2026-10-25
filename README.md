@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Habibwasi/portfoliowasi/actions/workflows/ci.yml/badge.svg)](https://github.com/Habibwasi/portfoliowasi/actions/workflows/ci.yml)
 
-The portfolio of Habib Ahmed Wasi, a software engineer graduating from SDU in January 2027. The site should prove within 10 seconds that he can build and ship software, and let a tech lead check that in depth: one case study per project, with real architecture, demos, tests and numbers.
+The portfolio of Habib Ahmed Wasi, a software engineer graduating from SDU in January 2027. The site should prove within 10 seconds that I can build and ship software, and let a tech lead check that in depth: one case study per project, with real architecture, demos, tests and numbers.
 
 The site is being rebuilt in phases, spec-first and test-first. The live version is at [portfolio-habib-wasi.vercel.app](https://portfolio-habib-wasi.vercel.app/).
 
