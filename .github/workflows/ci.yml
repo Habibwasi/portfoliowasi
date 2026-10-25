@@ -2,8 +2,7 @@ name: CI
 
 on:
   push:
-    # redesign collects every phase; it reaches main only after Phase 7.
-    branches: [main, redesign]
+    branches: [main]
   pull_request:
 
 permissions:
