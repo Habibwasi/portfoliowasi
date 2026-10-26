@@ -13,7 +13,7 @@ The site is being rebuilt in phases, spec-first and test-first. The live version
 | 0 | Foundation: design tokens, content layer, base components, tests, CI | Done |
 | 1 | Launch: new Home, case study template, TopicTrail and Validation Portal case studies, working contact | Done |
 | 2 | Ridly case study, per-page social previews, click-to-load video player | Done |
-| 3 | AI guide: corner tile, panel with jumps and a 30-second tour, RAG chat with sources, nightly evaluation, "How this guide works" page | Done; live answers need the Groq keys (roadmap 7.8) |
+| 3 | AI guide: corner tile, panel with jumps and a 30-second tour, RAG chat with sources, nightly evaluation, "How this guide works" page | Done; the guide answers on production since 2026-10-26 (roadmap 7.8) |
 | 4–6 | AI story and About page, delight, polish | Planned |
 | 7 | Content handover: CV, Calendly, screens, videos, testimonial, photos | Last |
 
