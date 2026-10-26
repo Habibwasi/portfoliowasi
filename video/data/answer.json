@@ -1,0 +1,27 @@
+{
+  "question": "How fast is Ridly's trip search?",
+  "text": "Ridly’s trip‑search latency has a p95 of 96 ms under load testing [3].",
+  "sources": [
+    {
+      "n": 1,
+      "title": "Ridly: Solution",
+      "url": "/work/ridly#cs-solution"
+    },
+    {
+      "n": 2,
+      "title": "Ridly: Test evidence",
+      "url": "/work/ridly#cs-test-evidence"
+    },
+    {
+      "n": 3,
+      "title": "Ridly, carpooling for Android and iOS",
+      "url": "/work/ridly"
+    },
+    {
+      "n": 4,
+      "title": "Ridly: Problem",
+      "url": "/work/ridly#cs-problem"
+    }
+  ],
+  "busy": false
+}

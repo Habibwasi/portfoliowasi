@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { answerFromStream, checkBudget, concatList } from "./lib";
+import { answerFromStream, checkBudget, concatList, fromWindows1252 } from "./lib";
 
 const stream = (events: unknown[]) => events.map((event) => `data: ${JSON.stringify(event)}\n\n`).join("") + "data: [DONE]\n\n";
 
@@ -23,6 +23,17 @@ describe("answerFromStream", () => {
   it("marks a busy answer", () => {
     const body = stream([{ type: "start", messageMetadata: { sources: [], busy: true } }, { type: "text-delta", id: "t", delta: "Busy." }]);
     expect(answerFromStream(body).busy).toBe(true);
+  });
+});
+
+describe("fromWindows1252", () => {
+  it("undoes DevTools decoding a UTF-8 stream as Windows-1252", () => {
+    expect(fromWindows1252("Ridlyâ€™s tripâ€‘search: 96â€¯ms")).toBe("Ridly’s trip‑search: 96 ms");
+  });
+
+  it("leaves text that is already right alone", () => {
+    expect(fromWindows1252("plain ASCII [1]")).toBe("plain ASCII [1]");
+    expect(fromWindows1252("Ridly’s 【1†L1】")).toBe("Ridly’s 【1†L1】");
   });
 });
 

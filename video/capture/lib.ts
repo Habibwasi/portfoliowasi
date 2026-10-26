@@ -61,6 +61,25 @@ export function answerFromStream(body: string): GuideAnswer {
   return { text, sources, busy };
 }
 
+// Windows-1252's characters for bytes 0x80–0x9F; the rest of its range is Latin-1.
+const CP1252 = "€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ";
+
+/**
+ * UTF-8 text that was decoded as Windows-1252, decoded again properly. Text with a character
+ * Windows-1252 can't hold was decoded right in the first place and comes back unchanged.
+ */
+export function fromWindows1252(text: string): string {
+  const bytes: number[] = [];
+  for (const char of text) {
+    const high = CP1252.indexOf(char);
+    const code = char.charCodeAt(0);
+    if (high >= 0) bytes.push(0x80 + high);
+    else if (code < 0x80 || (code >= 0xa0 && code <= 0xff)) bytes.push(code);
+    else return text;
+  }
+  return Buffer.from(bytes).toString("utf8");
+}
+
 /** Starts `next start` on the production build with the shot's environment, and waits until it answers. */
 export async function startServer(env: Record<string, string> = {}): Promise<ChildProcess> {
   if (!existsSync(join(siteDir, ".next", "BUILD_ID"))) throw new Error("No production build: run `npm run build` in portfolio-website first");

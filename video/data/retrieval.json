@@ -110,8 +110,10 @@
       "score": 0.031754
     }
   ],
-  "answer": null,
-  "cited": [],
+  "answer": "Ridly’s trip‑search latency has a p95 of 96 ms under load testing [3].",
+  "cited": [
+    3
+  ],
   "date": "2026-10-26",
-  "source": "createSearcher (portfolio-website/src/lib/guide/search.ts) over src/generated/guide-index.json, query embedded with Xenova/gte-small; no recorded answer yet"
+  "source": "createSearcher (portfolio-website/src/lib/guide/search.ts) over src/generated/guide-index.json, query embedded with Xenova/gte-small; answer recorded from the guide (video/data/answer.json)"
 }
