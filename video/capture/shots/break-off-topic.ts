@@ -7,6 +7,8 @@ export const shot: Shot = {
   shows: 'An off-topic question and the fixed "I don\'t know" (no model call)',
   context: desktop,
   guideQuestions: 1,
+  // Without it, the first question waits for the embedding model to load and "I don't know" isn't instant.
+  warmUp: true,
   async run(page) {
     await openHome(page);
     await page.waitForTimeout(800);
