@@ -85,7 +85,7 @@ CI (`.github/workflows/ci.yml`) runs on pull requests and pushes to `main` that 
 1. Lint, typecheck, unit tests and build, once.
 2. Then, in parallel, against that build: the Playwright suite, and Lighthouse with one job per page (each page in `lighthouserc.json` needs a matching entry in the workflow's matrix; the job fails otherwise).
 
-`.github/workflows/guide-eval.yml` runs the guide's evaluation nightly and on demand (from `main`), and on pushes to `redesign` that touch the content or the guide.
+`.github/workflows/guide-eval.yml` runs the guide's evaluation nightly and on demand (from `main`), retrieval and answers. A push to `main` that touches the content or the guide runs retrieval only, to save the evaluation's daily Groq quota.
 
 ## Project structure
 
