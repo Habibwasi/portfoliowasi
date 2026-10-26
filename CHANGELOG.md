@@ -2,6 +2,14 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Fix: the guide fails closed when Upstash doesn't answer (2026-10-26)
+
+Branch `fix-guide-limiter-timeout`. Found while filming the motion video's "limiter down" shot.
+
+- **The bug:** with Upstash unreachable, the guide let every question through after 6 seconds, so an Upstash outage would have left the Groq quota unprotected. The limiters have `timeout: 3000`, and on a timeout Upstash Ratelimit doesn't throw: it resolves with `success: true` and `reason: "timeout"`. The fail-closed `catch` never ran. The unit test passed because its mock threw an error, which a real outage doesn't do.
+- **The fix:** `allowGuide` treats a timed-out check as a refusal and logs it, so the guide says it is busy after 3 seconds. The contact form still fails open on a timeout, as designed. Checked against a real unreachable host: guide refused after 3.0 s, contact form allowed after 3.0 s.
+- **Tests:** three new unit tests imitate a real outage (a timeout, not an error): the guide's visitor limit, its daily cap, and the contact form.
+
 ## Faster CI (2026-10-26)
 
 Branch `ci-speed` (PR #15).
