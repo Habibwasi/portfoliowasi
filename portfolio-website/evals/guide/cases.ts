@@ -21,7 +21,7 @@ export const cases: EvalCase[] = [
   { kind: "answer", question: "Where is he based?", sources: ["/#intro"], mustInclude: [/Kolding/] },
   { kind: "answer", question: "When does he graduate?", sources: ["/#intro"], mustInclude: [/January 2027/] },
   { kind: "answer", question: "Which languages does he speak?", sources: ["/#intro"], mustInclude: [/English/, /Danish/] },
-  { kind: "answer", question: "How fast is Ridly's trip search?", sources: ["/work/ridly"], mustInclude: [/96/, /p95|95th percentile/i], judge: true },
+  { kind: "answer", question: "How fast is Ridly's trip search?", sources: ["/work/ridly"], mustInclude: [/96/, /p95|95th[\s-]percentile/i], judge: true },
   { kind: "answer", question: "Did he build Ridly alone or with a team?", sources: ["/work/ridly"], mustInclude: [/solo|alone|himself/i] },
   { kind: "answer", question: "How was Ridly load tested?", sources: ["/work/ridly#cs-test-evidence", "/work/ridly#cs-impact"], mustInclude: [/k6/] },
   { kind: "answer", question: "What is Ridly built with?", sources: ["/work/ridly"], mustInclude: [/Kotlin/] },
