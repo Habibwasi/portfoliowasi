@@ -1,0 +1,117 @@
+{
+  "question": "How fast is Ridly's trip search?",
+  "terms": [
+    "fast",
+    "ridly",
+    "trip",
+    "search"
+  ],
+  "model": "openai/gpt-oss-120b",
+  "embeddingModel": "Xenova/gte-small",
+  "bm25": [
+    {
+      "id": "case-study:ridly:cs-solution",
+      "title": "Ridly: Solution",
+      "value": 5.4089
+    },
+    {
+      "id": "case-study:ridly:cs-problem",
+      "title": "Ridly: Problem",
+      "value": 4.9148
+    },
+    {
+      "id": "case-study:ridly:cs-test-evidence",
+      "title": "Ridly: Test evidence",
+      "value": 4.5495
+    },
+    {
+      "id": "project:ridly",
+      "title": "Ridly, carpooling for Android and iOS",
+      "value": 4.4906
+    },
+    {
+      "id": "case-study:ridly:cs-architecture",
+      "title": "Ridly: Architecture",
+      "value": 4.4869
+    },
+    {
+      "id": "case-study:ridly:cs-impact",
+      "title": "Ridly: Impact and stack",
+      "value": 4.4696
+    }
+  ],
+  "cosine": [
+    {
+      "id": "case-study:ridly:cs-test-evidence",
+      "title": "Ridly: Test evidence",
+      "value": 0.88
+    },
+    {
+      "id": "project:ridly",
+      "title": "Ridly, carpooling for Android and iOS",
+      "value": 0.8785
+    },
+    {
+      "id": "case-study:ridly:cs-solution",
+      "title": "Ridly: Solution",
+      "value": 0.874
+    },
+    {
+      "id": "case-study:ridly:cs-problem",
+      "title": "Ridly: Problem",
+      "value": 0.8698
+    },
+    {
+      "id": "case-study:ridly:cs-my-role",
+      "title": "Ridly: My role",
+      "value": 0.8694
+    },
+    {
+      "id": "case-study:ridly:cs-impact",
+      "title": "Ridly: Impact and stack",
+      "value": 0.8686
+    }
+  ],
+  "hits": [
+    {
+      "n": 1,
+      "id": "case-study:ridly:cs-solution",
+      "title": "Ridly: Solution",
+      "url": "/work/ridly#cs-solution",
+      "bm25": 5.4089,
+      "cosine": 0.874,
+      "score": 0.032266
+    },
+    {
+      "n": 2,
+      "id": "case-study:ridly:cs-test-evidence",
+      "title": "Ridly: Test evidence",
+      "url": "/work/ridly#cs-test-evidence",
+      "bm25": 4.5495,
+      "cosine": 0.88,
+      "score": 0.032266
+    },
+    {
+      "n": 3,
+      "id": "project:ridly",
+      "title": "Ridly, carpooling for Android and iOS",
+      "url": "/work/ridly",
+      "bm25": 4.4906,
+      "cosine": 0.8785,
+      "score": 0.031754
+    },
+    {
+      "n": 4,
+      "id": "case-study:ridly:cs-problem",
+      "title": "Ridly: Problem",
+      "url": "/work/ridly#cs-problem",
+      "bm25": 4.9148,
+      "cosine": 0.8698,
+      "score": 0.031754
+    }
+  ],
+  "answer": null,
+  "cited": [],
+  "date": "2026-10-26",
+  "source": "createSearcher (portfolio-website/src/lib/guide/search.ts) over src/generated/guide-index.json, query embedded with Xenova/gte-small; no recorded answer yet"
+}

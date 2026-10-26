@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-26 (Phases 0–6 done; launched on 2026-10-24; Phase 7 in progress; motion video specced)
+Last updated: 2026-10-26 (Phases 0–6 done; launched on 2026-10-24; Phase 7 in progress; motion video M.1–M.2 built)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -180,14 +180,14 @@ The CV PDF is live as supplied. These lines differ from what the site says, so i
 | LinkedIn `linkedin.com/in/habib-ahmed-wasi` | `linkedin.com/in/habib-ahmed-wasi-4985091b8` | `site.links.linkedin` (7.6) |
 | "Available part-time now" | "Open to roles now, full-time from February 2027" | `site.availability` |
 
-## Motion video · specced
+## Motion video · in progress
 
 A short video of the site for LinkedIn and the README, built as code (Remotion) with real footage captured by Playwright. Spec: [motion-video.md](../features/motion-video.md)
 
 | # | Feature | Refs | Status |
 | --- | --- | --- | --- |
-| M.1 | `video/` Remotion project: two cuts (README 1920×1080, LinkedIn 1080×1350), tokens and fonts from the site; check whether Remotion runs locally | — | specced |
-| M.2 | Data scripts: real retrieval scores, eval and Lighthouse numbers, and test names, exported to JSON | — | specced |
+| M.1 | `video/` Remotion project: two cuts (README 1920×1080, LinkedIn 1080×1350), tokens and fonts from the site; check whether Remotion runs locally | — | done (renders locally) |
+| M.2 | Data scripts: real retrieval scores, eval and Lighthouse numbers, and test names, exported to JSON | — | done (`numbers.json` after the CI fix reaches `main`) |
 | M.3 | Playwright capture scripts for every footage shot, against a local production build | — | specced (final takes after 7.3, 7.5, 7.11) |
 | M.4 | The eight scenes: hook, tour, how the guide answers, breaking it, Groq down and fail open/closed, phones and reduced motion, the proof, end card | — | specced |
 | M.5 | Render both cuts (README cut at most 10 MB); a manual `video.yml` workflow if the local render is blocked | — | specced |

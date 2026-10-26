@@ -1,6 +1,6 @@
 # Spec: Motion video
 
-Roadmap items M.1–M.6 · Status: specced (2026-10-26) · Branch `motion-video`
+Roadmap items M.1–M.6 · Status: M.1 and M.2 built, numbers.json waits for the CI fix on `main` (2026-10-26) · Branch `motion-video`
 
 ## Goal
 
@@ -28,7 +28,7 @@ Every number and every answer in the video is real: taken from the site, the ind
 | Fonts | Fraunces, Instrument Sans, IBM Plex Mono (the site's `next/font` set) |
 | Retrieval scores | `createSearcher` in `src/lib/guide/search.ts` (`SearchHit`: `bm25`, `cosine`, fused `score`) over `src/generated/guide-index.json` |
 | Model name | `GUIDE_MODEL` in `src/lib/guide/config.ts` (7.11 may change it) |
-| Evaluation | `evals/guide/cases.ts` (32 cases on 2026-10-26), the nightly `guide-eval.yml` |
+| Evaluation | `evals/guide/cases.ts` (29 cases on 2026-10-26: 18 answers, 5 tools, 6 refusals), the nightly `guide-eval.yml` |
 | Lighthouse | `lighthouserc.json` (phone profile, five URLs) and the latest `lighthouse-report` artifact from CI on `main` |
 | Earlier coded video | The Validation Portal demo reel (`src/components/demo` in that repo), 1920×1080 with captions burned in |
 
@@ -128,4 +128,14 @@ Unit tests run in `video/`'s own Vitest. If Smart App Control blocks Vitest ther
 
 ## Build notes
 
-(Filled in while building.)
+### M.1 and M.2 (2026-10-26)
+
+- **Remotion runs on this machine.** Studio, a one-second test render (`out/test-1s.mp4`: H.264, AAC, 1920×1080) and the render smoke test all work with Smart App Control on, so both cuts render locally and `video.yml` isn't needed. Vitest runs in `video/` too (unlike `portfolio-website/`), so its unit tests run locally. Remotion 4.0.539, pinned; the free licence covers individuals and companies of up to three people (remotion.pro/license, checked on 2026-10-26).
+- **Project:** `video/src/cuts.ts` is the Scenes table in code: each scene's question, captions and spans in both cuts, plus the two text boxes per cut (question at the top, captions near the bottom). `Cut.tsx` assembles a cut from that table alone. Scenes are labelled placeholders until M.4. `remotion.config.ts` sets H.264 in yuv420p/BT.709 and forces an AAC track, so the MP4 has audio even while the music is silent.
+- **Text size:** "44 px tall at 1080 px wide" is read as a font size scaled to the cut's width: 44 px on the LinkedIn cut, 78 px on the README cut (shown about 1080 px wide in GitHub). Questions use 80 px and 64 px; captions 80 px and 52 px. Line wrapping is estimated at 0.55 em per glyph, wider than the real fonts, so the safe-area test errs towards more lines. The README cut keeps the same 64 px margin as the 4:5 cut.
+- **Hand-written colours:** `theme.test.ts` fails on a hex colour or a numeric `rgb()`/`hsl()` in `video/src/`. Translucent colours come from `withAlpha(token, alpha)`.
+- **Retrieval:** `export-retrieval` imports the site's `createSearcher`, `tokenize` and config, embeds the question with the site's own `embed()` (gte-small, as the route does), and writes every candidate's BM25 and cosine plus the fused top 4. Question: "How fast is Ridly's trip search?" (an answer case in the evaluation). Hits 1 and 2 tie on the fused score: Solution ranks 1st on BM25 and 3rd on cosine, Test evidence the other way round. The recorded answer goes in `video/data/answer.md` after M.3; the script then checks that its citations (`[n]` or `【n†…】`) are among the hits.
+- **Tests montage:** `export-tests` holds 17 edge-case tests, by scene, and reads their titles from the test files at the commit of the latest successful CI run on `main` (`git show`). A title that isn't there stops the script, so the montage can't show a renamed or deleted test.
+- **Eval case count:** the spec said 32 cases. `cases.ts` holds 29 (18 answers, 5 tools, 6 refusals): the 32 counted the three `kind` lines of the type. `numbers.json` reads the count from the file, so the video shows 29.
+- **Lighthouse report was never uploaded:** CI's `lighthouse-report` artifact has never existed. `.lighthouseci` is a hidden folder and `upload-artifact@v4` skips hidden files by default ("No files were found… No artifacts will be uploaded"). `ci.yml` now sets `include-hidden-files: true` on that step; nothing else in CI changes. `export-numbers` needs a CI run on `main` with this fix, so `numbers.json` is exported after the merge.
+- **Last nightly evaluation:** the scheduled run on 2026-10-26 passed. The three push-triggered runs after it failed on Groq "busy" errors (the eval key's rate limit), not on answers; `numbers.json` takes the latest scheduled run only.

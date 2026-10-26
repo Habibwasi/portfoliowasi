@@ -2,6 +2,16 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Motion video M.1–M.2: the Remotion project and its data (2026-10-26)
+
+Branch `motion-video`.
+
+- **`video/`:** a Remotion 4 project with its own `package.json`, outside the site's build. Two compositions, `Readme` (1920×1080, 90 s) and `LinkedIn` (1080×1350, 40 s, no scene 6), assembled from one timing table (`src/cuts.ts`). Colours, radii, shadows and font families come from the site's `tokens.json`; fonts load through `@remotion/google-fonts`. The scenes are labelled placeholders until M.4.
+- **Runs locally:** Remotion renders on this machine with Smart App Control on, and Vitest runs in `video/` too. No CI render workflow is needed.
+- **Data scripts:** `export-retrieval` runs the site's own search with the question's real embedding and writes the real BM25, cosine and fused scores; `export-tests` takes 17 edge-case test titles from the commit that last passed CI on `main`; `export-numbers` reads the eval case count, the last nightly evaluation and the Lighthouse medians. 24 unit tests cover the timing, caption and safe-area rules, the token check and the three scripts.
+- **CI fix:** the Lighthouse job's report was never uploaded (a hidden folder, skipped by `upload-artifact@v4`). It is now (`include-hidden-files: true`), and `numbers.json` is exported once that reaches `main`.
+- **Correction:** the spec said the evaluation has 32 cases; it has 29.
+- **Open:** footage (M.3, final takes after 7.3, 7.5 and 7.11), the scenes (M.4), render and publish (M.5–M.6), music (7.12).
 ## Security: Next.js 16.4.3 (2026-10-26)
 
 Branch `upgrade-next-16.4.3`. Found when a local build stopped on Next's security check while filming the motion video.
