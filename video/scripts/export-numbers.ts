@@ -5,8 +5,8 @@
  *   npm run export:numbers
  *
  * Needs the GitHub CLI, signed in: the last nightly evaluation comes from the "Guide evaluation"
- * workflow's scheduled runs on main, and the Lighthouse medians from the lighthouse-report
- * artifact of the latest successful CI run on main (kept 7 days).
+ * workflow's scheduled runs on main, and the Lighthouse medians from the lighthouse-report-<page>
+ * artifacts (one per page) of the latest successful CI run on main (kept 7 days).
  */
 import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -73,12 +73,13 @@ function lighthouse(): Sourced<ReturnType<typeof lighthouseMedians>> {
   if (!run) throw new Error("No successful CI run on main");
   const dir = mkdtempSync(join(tmpdir(), "lighthouse-"));
   try {
-    gh(["run", "download", String(run.databaseId), "--name", "lighthouse-report", "--dir", dir]);
-    const lhrs = readdirSync(dir)
-      .filter((file) => /^lhr-.*\.json$/.test(file))
+    // One artifact per page; gh puts each in a folder named after it.
+    gh(["run", "download", String(run.databaseId), "--pattern", "lighthouse-report-*", "--dir", dir]);
+    const lhrs = (readdirSync(dir, { recursive: true }) as string[])
+      .filter((file) => /(^|[\\/])lhr-[^\\/]*\.json$/.test(file))
       .map((file) => JSON.parse(readFileSync(join(dir, file), "utf8")) as Lhr);
     if (!lhrs.length) throw new Error(`No Lighthouse results in run ${run.databaseId}`);
-    return { value: lighthouseMedians(lhrs), date: run.createdAt.slice(0, 10), source: `${run.url} (lighthouse-report, commit ${run.headSha.slice(0, 7)})` };
+    return { value: lighthouseMedians(lhrs), date: run.createdAt.slice(0, 10), source: `${run.url} (lighthouse-report-* artifacts, commit ${run.headSha.slice(0, 7)})` };
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
