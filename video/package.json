@@ -13,7 +13,8 @@
     "export:retrieval": "tsx scripts/export-retrieval.ts",
     "export:numbers": "tsx scripts/export-numbers.ts",
     "export:tests": "tsx scripts/export-tests.ts",
-    "capture": "tsx capture/run.ts"
+    "capture": "tsx capture/run.ts",
+    "export:site": "tsx scripts/export-site.ts"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.539",

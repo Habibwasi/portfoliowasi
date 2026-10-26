@@ -35,7 +35,8 @@ const table: SceneSpec[] = [
     n: 2,
     id: "tour",
     question: "What does it do?",
-    captions: [{ text: "Real answer, unedited", readme: [8, 15], linkedin: [3.5, 7] }],
+    // From when the answer starts streaming in the footage (footage.ts) to the end of the scene.
+    captions: [{ text: "Real answer, unedited", readme: [11, 15], linkedin: [5, 7] }],
     readme: [5, 20],
     linkedin: [3, 10],
   },
@@ -44,7 +45,8 @@ const table: SceneSpec[] = [
     n: 4,
     id: "break",
     question: "What if you try to break it?",
-    captions: [{ text: "No model call", readme: [2, 6], linkedin: [1.5, 3.5] }],
+    // From the moment "I don't know" appears until the injection clip starts (footage.ts).
+    captions: [{ text: "No model call", readme: [2.5, 4.9], linkedin: [1.4, 2.95] }],
     readme: [40, 50],
     linkedin: [18, 24],
   },

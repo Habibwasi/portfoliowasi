@@ -1,6 +1,6 @@
 # Spec: Motion video
 
-Roadmap items M.1–M.6 · Status: M.1 and M.2 built (numbers.json waits for the CI fix on `main`); M.3 done, all ten shots recorded (2026-10-26) · Branch `motion-video`
+Roadmap items M.1–M.6 · Status: M.1 and M.2 built (numbers.json waits for the CI fix on `main`); M.3 done, all ten shots recorded; M.4 scenes built, first full renders (2026-10-26) · Branch `motion-video`
 
 ## Goal
 
@@ -153,3 +153,15 @@ Unit tests run in `video/`'s own Vitest. If Smart App Control blocks Vitest ther
 - **Refusal with sources (site, not video):** the injection gets "I don't know. That isn't covered on this site…", but the panel lists four unrelated sources under it, because an answer that cites nothing shows every retrieved source (`citedSources`). It looks odd on camera; whether the site should hide sources under "I don't know" is open.
 - **Phone footage** is 412×839: under phone emulation the screencast sends CSS pixels, not device pixels. Scene 6 is in the README cut only, where the phone shows at about that height.
 - **Takes are final (2026-10-26):** what's left of 7.3 and 7.5 (Ridly subtitles, the smaller projects' placeholders, the optional object drawings) doesn't appear in any shot, and Habib chose to keep `openai/gpt-oss-120b` (7.11), so the tour and injection takes stand.
+
+### M.4 (2026-10-26)
+
+- **Footage plan:** `src/footage.ts` says which part of which take each footage scene plays in each cut: segments with a start, an optional end and speed, and a crop; the last segment of a pane fills whatever time is left. Takes' timings were read off contact sheets of every take (a frame every half second). Tests check that the shots fill each scene exactly, that no segment runs past the end of its take, that crops stay inside the take, and that the real answer in scene 2 plays at 1×.
+- **Scenes:** hook, tour, break, outage and phones are footage, cropped and fitted into the cut's boxes (`src/layout.ts`), in a media frame with the site's radius and shadow. Scene 3 draws the retrieval from `retrieval.json`: the question's words fade out except the four terms, the top five BM25 and cosine scores grow as bars, fusion lists the four sources with their scores, then `GUIDE_MODEL` and the recorded answer type in and its citation [3] lights the source it points to. Scene 7 scrolls the 17 test titles from `tests.json`, each ticking from RUN to PASS, then four number cards from `numbers.json`. Scene 8 reads the name and links from `site.json` (new `export-site` script, from `site.ts` and `metadata.ts`).
+- **Off-topic take re-recorded:** the first take showed "Thinking…" for about 4 s before "I don't know", because that shot skipped the warm-up and the server was loading the embedding model. With the warm-up, "I don't know" appears about a second after sending.
+- **Limiter-down guide take re-recorded** after the fix in PR #17 (the guide used to fail open on an Upstash timeout): it now says busy about 3.5 s after sending.
+- **Captions timed to the footage:** "Real answer, unedited" starts when the answer starts streaming, and "No model call" ends before the injection clip begins, so it never sits over a model call.
+- **PASS, not green:** the spec says the tests "turn green", but `tokens.json` has no green and cobalt is for links only; a passed test turns into an ink chip.
+- **Close-ups are soft:** the answer close-up is the 1920-wide footage enlarged about 2× (README) and 2.3× (LinkedIn); legible, a little soft. Recording desktop shots at a device scale of 2 would fix it, if the screencast gives device pixels on desktop (it gave CSS pixels for the phone).
+- **numbers.json** is still the placeholder, so the proof cards say "Pending" until `export:numbers` runs on a CI run of `main` with the Lighthouse reports (this branch's `ci.yml` change).
+- **First full renders:** LinkedIn cut 40 s, 6.2 MB, in about 2 minutes; README cut 90 s, 14.3 MB, over GitHub's 10 MB. 3.5 MB of that was a silent AAC track at 317 kb/s, now capped at 128 kb/s; fitting the video is M.5.

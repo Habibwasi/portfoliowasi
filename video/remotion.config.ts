@@ -7,3 +7,5 @@ Config.setEnforceAudioTrack(true);
 Config.setVideoImageFormat("jpeg");
 Config.setPixelFormat("yuv420p");
 Config.setColorSpace("bt709");
+// 128 kb/s is plenty for the music, and keeps the README cut nearer GitHub's 10 MB limit.
+Config.setAudioBitrate("128k");

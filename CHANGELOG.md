@@ -2,6 +2,14 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Motion video M.4: the scenes (2026-10-26)
+
+Branch `motion-video`.
+
+- **All eight scenes built** from the footage and the exported data; both cuts render (LinkedIn 40 s in about 2 minutes). Scene 3 draws the guide's real retrieval for "How fast is Ridly's trip search?" and types in the recorded answer; scene 7 scrolls the 17 edge-case tests and shows the evaluation and Lighthouse numbers; scene 8 reads the name and links from the site's content.
+- **Re-recorded:** the off-topic take (it waited 4 s for the embedding model; now warmed up) and the limiter-down guide take (after the fix in PR #17).
+- **Open:** the proof cards say "Pending" until `numbers.json` is exported after this branch's CI change reaches `main`; the README cut is 14.3 MB against GitHub's 10 MB (M.5); the music (7.12).
+
 ## Motion video M.3: footage capture (2026-10-26)
 
 Branch `motion-video`.
