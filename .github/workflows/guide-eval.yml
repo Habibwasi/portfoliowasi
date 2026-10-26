@@ -3,7 +3,8 @@ name: Guide evaluation
 # The AI guide's evaluation (roadmap 3.4): retrieval every night; answers through the real
 # route too once the GROQ_EVAL_API_KEY secret exists (a separate Groq organisation, so the
 # evaluation doesn't use the production quota).
-# It also runs when a push to main touches the guide or the content.
+# A push to main that touches the guide or the content runs retrieval only: a full run takes about
+# 45K of the evaluation organisation's 200K tokens a day, and four merges on 2026-10-26 used it up.
 on:
   schedule:
     - cron: "0 3 * * *"
@@ -34,7 +35,8 @@ jobs:
     name: Retrieval and answers
     runs-on: ubuntu-latest
     env:
-      GROQ_EVAL_API_KEY: ${{ secrets.GROQ_EVAL_API_KEY }}
+      # Answers only nightly and on manual runs; without the key the evaluation checks retrieval alone.
+      GROQ_EVAL_API_KEY: ${{ github.event_name != 'push' && secrets.GROQ_EVAL_API_KEY || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,7 +45,7 @@ jobs:
           cache: npm
           cache-dependency-path: portfolio-website/package-lock.json
       - run: npm ci
-      - name: Answers are skipped without the secret
+      - name: Answers are skipped on a push, or without the secret
         if: ${{ env.GROQ_EVAL_API_KEY == '' }}
-        run: echo "::notice::GROQ_EVAL_API_KEY is not set; only retrieval is evaluated."
+        run: echo "::notice::Only retrieval is evaluated (a push to main, or GROQ_EVAL_API_KEY is not set). Answers run nightly and on manual runs."
       - run: npm run eval:guide
