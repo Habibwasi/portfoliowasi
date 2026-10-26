@@ -1,6 +1,6 @@
 # Spec: Phase 3 — AI guide (useful first, animated later)
 
-Roadmap items 3.1–3.6 · Status: 3.1–3.5 done (closed 2026-10-22; CI passes on `redesign`; live answers wait for the Groq keys, roadmap 7.8). 3.6 done 2026-10-22 (branch `phase-3-search-fallback`, CI and Vercel pass on `redesign`, commit `d28f48e`) · Branch `phase-3-guide`, merged into `redesign`
+Roadmap items 3.1–3.6 · Status: 3.1–3.5 done (closed 2026-10-22; CI passes on `redesign`; live answers since 2026-10-26, when the Groq keys were set, roadmap 7.8). 3.6 done 2026-10-22 (branch `phase-3-search-fallback`, CI and Vercel pass on `redesign`, commit `d28f48e`) · Branch `phase-3-guide`, merged into `redesign`
 
 ## Goal
 
@@ -114,5 +114,5 @@ The tile costs almost nothing on first load. The panel, the chat code and the mo
 ## Done when
 
 - All of the above pass locally and in CI on `redesign`.
-- The roadmap marks 3.1–3.5 done. 3.3 and 3.4 are marked done with live answers waiting for the Groq keys (7.8).
+- The roadmap marks 3.1–3.5 done. 3.3 and 3.4 are marked done; their live answers waited for the Groq keys (7.8), set on 2026-10-26.
 - The changelog has a Phase 3 entry.
