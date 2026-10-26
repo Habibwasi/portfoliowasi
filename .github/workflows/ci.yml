@@ -1,9 +1,18 @@
 name: CI
 
+# Only changes to the site (or this workflow) can change what these jobs check. Specs, the README
+# and video/ don't. If main ever requires these checks, swap the filter for a skip job: a required
+# check that never runs leaves the PR waiting.
 on:
   push:
     branches: [main]
+    paths:
+      - "portfolio-website/**"
+      - ".github/workflows/ci.yml"
   pull_request:
+    paths:
+      - "portfolio-website/**"
+      - ".github/workflows/ci.yml"
 
 permissions:
   contents: read
@@ -69,10 +78,21 @@ jobs:
           path: portfolio-website/playwright-report
           retention-days: 7
 
+  # One job per page: 5 pages x 3 runs in a row took about 6.5 minutes, the longest part of CI.
+  # Same pages, runs and budgets as lighthouserc.json; each job just keeps its own page.
   lighthouse:
-    name: Lighthouse (phone)
+    name: Lighthouse (phone, ${{ matrix.page.name }})
     needs: check
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        page:
+          - { name: home, path: / }
+          - { name: validation-portal, path: /work/validation-portal }
+          - { name: ridly, path: /work/ridly }
+          - { name: guide, path: /guide }
+          - { name: about, path: /about }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -85,10 +105,17 @@ jobs:
         with:
           name: next-build
           path: portfolio-website/.next
-      - run: npm run lhci
+      - name: Keep only this page in the Lighthouse config
+        run: |
+          jq --arg url "http://localhost:3200${{ matrix.page.path }}" '.ci.collect.url = [$url]' \
+            lighthouserc.json > lighthouserc.page.json
+          # Fail here, not later, if a page is added to one list but not the other.
+          jq -e --arg url "http://localhost:3200${{ matrix.page.path }}" \
+            'any(.ci.collect.url[]; . == $url)' lighthouserc.json
+      - run: npm run lhci -- --config=lighthouserc.page.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: lighthouse-report
+          name: lighthouse-report-${{ matrix.page.name }}
           path: portfolio-website/.lighthouseci
           retention-days: 7
