@@ -1,6 +1,6 @@
 # Spec: Motion video
 
-Roadmap items M.1–M.6 · Status: M.1 and M.2 built (numbers.json waits for the CI fix on `main`); M.3 scripts built, draft takes of all ten shots (2026-10-26) · Branch `motion-video`
+Roadmap items M.1–M.6 · Status: M.1 and M.2 built (numbers.json waits for the CI fix on `main`); M.3 done, all ten shots recorded (2026-10-26) · Branch `motion-video`
 
 ## Goal
 
@@ -152,3 +152,4 @@ Unit tests run in `video/`'s own Vitest. If Smart App Control blocks Vitest ther
 - **Garbled text from DevTools:** the guide's stream declares no charset, so Chrome DevTools hands its body over decoded as Windows-1252 ("Ridlyâ€™s"). The page itself decodes UTF-8 and shows it right. `fromWindows1252` turns the text back into its bytes and decodes them as UTF-8, and leaves text that was already right alone.
 - **Refusal with sources (site, not video):** the injection gets "I don't know. That isn't covered on this site…", but the panel lists four unrelated sources under it, because an answer that cites nothing shows every retrieved source (`citedSources`). It looks odd on camera; whether the site should hide sources under "I don't know" is open.
 - **Phone footage** is 412×839: under phone emulation the screencast sends CSS pixels, not device pixels. Scene 6 is in the README cut only, where the phone shows at about that height.
+- **Takes are final (2026-10-26):** what's left of 7.3 and 7.5 (Ridly subtitles, the smaller projects' placeholders, the optional object drawings) doesn't appear in any shot, and Habib chose to keep `openai/gpt-oss-120b` (7.11), so the tour and injection takes stand.
