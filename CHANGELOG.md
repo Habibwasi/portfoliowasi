@@ -2,6 +2,15 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Security: Next.js 16.4.3 (2026-10-26)
+
+Branch `upgrade-next-16.4.3`. Found when a local build stopped on Next's security check while filming the motion video.
+
+- **Why:** Next.js 16.4.0 is affected by two critical advisories, both remote code execution without a login ([GHSA-2464-fhr4-w9xw](https://github.com/advisories/GHSA-2464-fhr4-w9xw), image optimisation with SVG files; [GHSA-673q-mjm6-r5xr](https://github.com/advisories/GHSA-673q-mjm6-r5xr), `use cache` returning typed arrays), and a high one ([GHSA-p3m5-59mp-jv5r](https://github.com/advisories/GHSA-p3m5-59mp-jv5r), denial of service through Server Actions). All three are fixed in 16.4.3, a patch release.
+- **Change:** `next` and `eslint-config-next` 16.4.0 → 16.4.3, pinned exactly.
+- **Checked locally:** typecheck, lint and the production build pass; 162 end-to-end tests pass (16 skipped by design, as before).
+- **Open:** npm audit still lists advisories outside Next.js: `zod` below 4.6.6 (high; the site pins 4.6.5), the `@vercel/functions` chain (high, its fix is a major downgrade), and `resend`, `svix` and `uuid` (moderate). They need their own look.
+
 ## Fix: the guide fails closed when Upstash doesn't answer (2026-10-26)
 
 Branch `fix-guide-limiter-timeout`. Found while filming the motion video's "limiter down" shot.
