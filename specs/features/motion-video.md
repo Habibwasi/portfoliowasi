@@ -1,6 +1,6 @@
 # Spec: Motion video
 
-Roadmap items M.1–M.6 · Status: M.1 and M.2 built (numbers.json waits for the CI fix on `main`); M.3 scripts built, draft takes recorded (2026-10-26) · Branch `motion-video`
+Roadmap items M.1–M.6 · Status: M.1 and M.2 built (numbers.json waits for the CI fix on `main`); M.3 scripts built, draft takes of all ten shots (2026-10-26) · Branch `motion-video`
 
 ## Goal
 
@@ -147,7 +147,7 @@ Unit tests run in `video/`'s own Vitest. If Smart App Control blocks Vitest ther
 - **Runner:** `npm run capture -- <shot>` starts `next start` on port 3300 with the shot's variables. Next's env loader keeps variables already set in the process environment, even empty ones, so `GROQ_API_KEY=""` really switches the key off over `.env.local`. The runner refuses more than 10 guide questions per run (the per-visitor limit; every take is the same localhost visitor) and needs `--send` for the contact shot, which emails Habib. Shots that need the embedding model first send an off-topic warm-up question, which makes no model call.
 - **Drawn pointer:** headless recordings show no mouse, so desktop shots draw one (`cursorScript`) that follows mouse events and dips on press. Mouse paths are eased glides; typing runs at a readable, slightly uneven pace.
 - **Draft takes recorded:** `hook`, `break-off-topic`, `outage-busy`, `outage-limiter-guide`, `phones-motion`, `phones-reduced` and `phones-phone`, each passing its own check (the "I don't know", the busy message with matches). The busy take lists the same four Ridly sources as `retrieval.json`.
-- **Groq key:** `GROQ_API_KEY` was empty in the local `.env.local` (set in Vercel only), so the first tour take got "busy" and was deleted. With the key added, `tour` and `break-injection` are recorded too. `outage-limiter-contact` sends a real email, so it waits for Habib's go-ahead.
+- **Groq key:** `GROQ_API_KEY` was empty in the local `.env.local` (set in Vercel only), so the first tour take got "busy" and was deleted. With the key added, `tour` and `break-injection` are recorded too. `RESEND_API_KEY` was empty locally as well: the first contact take passed the limiter (fail open) and then showed "The form is offline right now", so it was deleted. With the key added, the contact take sends and shows "Thanks, your message is on its way." All ten shots have a draft take.
 - **The recorded answer:** "Ridly’s trip‑search latency has a p95 of 96 ms under load testing [3]." Its sources are exactly the exported hits, in order, and it cites hit 3 (the Ridly project chunk); `data/answer.json` holds it and `retrieval.json` now has `cited: [3]`.
 - **Garbled text from DevTools:** the guide's stream declares no charset, so Chrome DevTools hands its body over decoded as Windows-1252 ("Ridlyâ€™s"). The page itself decodes UTF-8 and shows it right. `fromWindows1252` turns the text back into its bytes and decodes them as UTF-8, and leaves text that was already right alone.
 - **Refusal with sources (site, not video):** the injection gets "I don't know. That isn't covered on this site…", but the panel lists four unrelated sources under it, because an answer that cites nothing shows every retrieved source (`citedSources`). It looks odd on camera; whether the site should hide sources under "I don't know" is open.
