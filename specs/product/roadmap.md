@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-23 (Phases 0–6 done; Phase 7 in progress)
+Last updated: 2026-10-26 (Phases 0–6 done; launched on 2026-10-24; Phase 7 in progress)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -75,7 +75,7 @@ Spec: [phase-3-guide.md](../features/phase-3-guide.md)
 | 3.1 | Collapsed "H" tile on every page, with CSS idle and blink only. The panel loads on first interaction. | GD1, GD3 | done |
 | 3.2 | Panel without the model: header labelled "AI assistant"; "Jump to" row (tour, best project, AI workflow, proof, contact); 30-second tour; one-time tour offer after the first scroll; 400 px side panel on desktop, bottom sheet on phones; closable, keyboard-operable, a plain chat for screen readers | GD3, GD4, GD7, GD8 | done |
 | 3.3 | RAG chat: build-time JSON index, `gte-small` embeddings, hybrid search, `gpt-oss-120b` on Groq, sources on every answer, "I don't know" fallback, third-person voice, per-IP and daily limits, "busy" state | GD5, GD9, AI3 | done (live answers need the Groq keys, 7.8) |
-| 3.4 | Guide evaluation: about 20 recruiter questions, citation and refusal checks (tool checks arrive with 5.6), run nightly on a separate key | GD9 | done (answers run once `GROQ_EVAL_API_KEY` is set, 7.8) |
+| 3.4 | Guide evaluation: about 20 recruiter questions, citation and refusal checks (tool checks arrive with 5.6), run nightly on a separate key | GD9 | done (answers run since 2026-10-26, when `GROQ_EVAL_API_KEY` was set, 7.8) |
 | 3.5 | "How this guide works" link to its architecture | AI6 | done |
 | 3.6 | Search-only fallback: when the guide is busy (limit, no key, Groq error) it still says so, and lists the parts of the site that match the question, with links and excerpts | GD5 | done |
 
@@ -128,9 +128,9 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 7.5 | Photos with captions (three on About), line-art portrait, drawings of your own objects. Check the About facts taken from the mockup: every journey date, "SDU in Sønderborg", and "91% on time" at Just Eat | `about.photos` and `about.journey` in `src/content/about.ts` (4.4), `site.hero.portrait` (5.5), the object drawings in `src/components/object-drawings.tsx` (5.4; the mockup's laptop, stopwatch, sheet and envelope are stand-ins) | nearly done (2026-10-23): the portrait (pixel art from Habib's photo, `public/hero/portrait.png`) and the three About photo cards (collages: Sønderborg harbour, uTest, the October 2026 job fairs in Vejle and Sønderborg, `public/about/`) are in; left: drawings of his own objects (optional, the stand-ins can stay) and checking the About facts. Originals stay out of git (root `.gitignore`) |
 | 7.6 | Profiles to match (outside the codebase): same headline on CV, LinkedIn and GitHub; pinned repos match the featured three; GitHub profile README; fix or remove the dead Deskinct link | — | open |
 | 7.7 | Role text for the More projects (Undershelf, Deskinct, Medication Adherence App) | `src/content/projects.ts` | open |
-| 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY`. When adding to Production, check `VERCEL_SUPPORT_LARGE_FUNCTION=1` is there too (set for Preview on 2026-10-22) | open |
+| 7.8 | Groq API keys: `GROQ_API_KEY` for the guide, and `GROQ_EVAL_API_KEY` from a separate Groq organisation (limits are per organisation) for the nightly evaluation | Vercel env and `.env.local`; GitHub Actions secret `GROQ_EVAL_API_KEY`. When adding to Production, check `VERCEL_SUPPORT_LARGE_FUNCTION=1` is there too (set for Preview on 2026-10-22) | done (2026-10-26): `GROQ_API_KEY` in Vercel, the guide answers on production; `GROQ_EVAL_API_KEY` is a GitHub secret, so the nightly evaluation checks answers too |
 | 7.9 | Umami Cloud: create the account (free Hobby plan), add the website for the production domain, and copy its website ID | `NEXT_PUBLIC_UMAMI_WEBSITE_ID` in Vercel **Production** only. In Umami, add a goal or funnel for the three events (`CV download`, `Email click`, `Calendly click`) and the `/work/*` page views | open |
-| 7.11 | Choose the guide's model with the evaluation: compare `gpt-oss-120b` with smaller Groq models and keep the smallest that passes. Needs 7.8's eval key first. Steps in "Guide model choice" below | `GUIDE_MODEL` in `src/lib/guide/config.ts`, `evals/guide/`, the daily cap in the guide's limits | open |
+| 7.11 | Choose the guide's model with the evaluation: compare `gpt-oss-120b` with smaller Groq models and keep the smallest that passes. 7.8's eval key exists since 2026-10-26. Steps in "Guide model choice" below | `GUIDE_MODEL` in `src/lib/guide/config.ts`, `evals/guide/`, the daily cap in the guide's limits | open |
 | 7.10 | Screen reader check by hand, on the real content: NVDA with Firefox on Home and a case study, VoiceOver on an iPhone. Listen for the card names, the guide panel and the contact form's messages | — (fix anything found before the launch PR) | open |
 
 ### Guide model choice (7.8, 7.11, decided 2026-10-23)
@@ -237,6 +237,9 @@ The CV PDF is live as supplied. These lines differ from what the site says, so i
 | 2026-10-23 | The hero portrait is pixel art made from Habib's photo, not line art. From desktop width it is Home's LCP element (preloaded, 17 KB, painted at ~180 ms); on phones, where it is hidden, the name still is | Spec 5.5 "line-art portrait", P1 test "the name is the LCP" |
 | 2026-10-24 | The guide's off-topic cut-off goes from 0.74 to 0.76, and the index embeds one chunk at a time (stable when one chunk changes) | Spec 3 "I don't know" gate (0.74) |
 | 2026-10-23 | `agentRules: false` in `next.config.ts`: `next dev` no longer writes an `AGENTS.md` when an AI agent runs it | Next.js default |
+| 2026-10-25 | After the launch, CI and the nightly guide evaluation run on `main`; `redesign` is deleted | Workflows on `redesign` |
+| 2026-10-26 | The guide's answers accept gpt-oss's own citation format: `【n†…】` is rendered and evaluated as `[n]` | Prompt-only `[n]` citations |
+| 2026-10-26 | "Best project" means Ridly for the model too: the `open_case_study` tool description says so | Model's own pick |
 
 ## Open decisions
 

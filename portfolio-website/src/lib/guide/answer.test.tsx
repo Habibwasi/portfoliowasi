@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Answer, citedSources, type GuideSource } from "./answer";
+import { Answer, citedSources, normalizeCitations, type GuideSource } from "./answer";
 
 const sources: GuideSource[] = [
   { n: 1, title: "Ridly: Test evidence", url: "/work/ridly#cs-test-evidence" },
@@ -28,13 +28,30 @@ describe("Answer", () => {
     expect(screen.getByText(/Not \[9\]/)).toBeInTheDocument();
   });
 
+  it("links gpt-oss's own citation format like [n]", () => {
+    const { container } = render(<Answer text="Load-tested with k6【1†L1-L3】. From February 2027【2†source】." sources={sources} />);
+    expect(screen.getByRole("link", { name: "Source 1: Ridly: Test evidence" })).toHaveTextContent("[1]");
+    expect(screen.getByRole("link", { name: "Source 2: Availability" })).toBeInTheDocument();
+    expect(container).not.toHaveTextContent("†");
+  });
+
   it("never links URLs the model writes", () => {
     render(<Answer text="See https://evil.example/phish" sources={[]} />);
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 });
 
+describe("normalizeCitations", () => {
+  it("turns 【n†…】 and 【n】 into [n] and leaves other text alone", () => {
+    expect(normalizeCitations("A【4†L1-L3】 B【2】 C [3] 【x】")).toBe("A[4] B[2] C [3] 【x】");
+  });
+});
+
 describe("citedSources", () => {
+  it("counts gpt-oss citations", () => {
+    expect(citedSources("Tested with k6【1†L1-L3】.", sources)).toEqual([sources[0]]);
+  });
+
   it("returns the sources the text cites", () => {
     expect(citedSources("From February 2027 [2].", sources)).toEqual([sources[1]]);
   });
