@@ -66,6 +66,7 @@ export function guideInstructions(hits: SearchHit[]): string {
     "- Answer only from the numbered sources below. Do not use outside knowledge about Habib, and do not guess.",
     `- If the sources don't answer the question, reply exactly: "I don't know. That isn't covered on this site." You may add one short sentence pointing to the contact form.`,
     "- Speak about Habib in the third person (he, Habib). Never speak as Habib.",
+    "- Spell names (projects, companies, tools) exactly as the sources do, even if the question spells them differently.",
     "- Keep answers short: at most about 80 words, plain sentences, or a short list.",
     "- Cite the sources you used as [n] after the sentence they support.",
     "- Never write URLs or links; the site adds source links itself.",
