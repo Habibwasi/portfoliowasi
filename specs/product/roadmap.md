@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-26 (Phases 0–6 done; launched on 2026-10-24; Phase 7 in progress)
+Last updated: 2026-10-26 (Phases 0–6 done; launched on 2026-10-24; Phase 7 in progress; motion video specced)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -132,6 +132,7 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 7.9 | Umami Cloud: create the account (free Hobby plan), add the website for the production domain, and copy its website ID | `NEXT_PUBLIC_UMAMI_WEBSITE_ID` in Vercel **Production** only. In Umami, add a goal or funnel for the three events (`CV download`, `Email click`, `Calendly click`) and the `/work/*` page views | open |
 | 7.11 | Choose the guide's model with the evaluation: compare `gpt-oss-120b` with smaller Groq models and keep the smallest that passes. 7.8's eval key exists since 2026-10-26. Steps in "Guide model choice" below | `GUIDE_MODEL` in `src/lib/guide/config.ts`, `evals/guide/`, the daily cap in the guide's limits | open |
 | 7.10 | Screen reader check by hand, on the real content: NVDA with Firefox on Home and a case study, VoiceOver on an iPhone. Listen for the card names, the guide panel and the contact form's messages | — (fix anything found before the launch PR) | open |
+| 7.12 | Music for the motion video: a royalty-free track that allows LinkedIn and GitHub use, chosen by Habib | `video/music/`, its licence in `video/music/LICENSE.md` | open |
 
 ### Guide model choice (7.8, 7.11, decided 2026-10-23)
 
@@ -178,6 +179,19 @@ The CV PDF is live as supplied. These lines differ from what the site says, so i
 | Ridly "trip search ran in 96 ms" | p95 96 ms at the 300-VU stage | Facts to check |
 | LinkedIn `linkedin.com/in/habib-ahmed-wasi` | `linkedin.com/in/habib-ahmed-wasi-4985091b8` | `site.links.linkedin` (7.6) |
 | "Available part-time now" | "Open to roles now, full-time from February 2027" | `site.availability` |
+
+## Motion video · specced
+
+A short video of the site for LinkedIn and the README, built as code (Remotion) with real footage captured by Playwright. Spec: [motion-video.md](../features/motion-video.md)
+
+| # | Feature | Refs | Status |
+| --- | --- | --- | --- |
+| M.1 | `video/` Remotion project: two cuts (README 1920×1080, LinkedIn 1080×1350), tokens and fonts from the site; check whether Remotion runs locally | — | specced |
+| M.2 | Data scripts: real retrieval scores, eval and Lighthouse numbers, and test names, exported to JSON | — | specced |
+| M.3 | Playwright capture scripts for every footage shot, against a local production build | — | specced (final takes after 7.3, 7.5, 7.11) |
+| M.4 | The eight scenes: hook, tour, how the guide answers, breaking it, Groq down and fail open/closed, phones and reduced motion, the proof, end card | — | specced |
+| M.5 | Render both cuts (README cut at most 10 MB); a manual `video.yml` workflow if the local render is blocked | — | specced |
+| M.6 | Publish: the README cut in `README.md`, the LinkedIn cut for Habib to post | — | specced (music in 7.12) |
 
 ## Later (not scheduled)
 
@@ -240,6 +254,8 @@ The CV PDF is live as supplied. These lines differ from what the site says, so i
 | 2026-10-25 | After the launch, CI and the nightly guide evaluation run on `main`; `redesign` is deleted | Workflows on `redesign` |
 | 2026-10-26 | The guide's answers accept gpt-oss's own citation format: `【n†…】` is rendered and evaluated as `[n]` | Prompt-only `[n]` citations |
 | 2026-10-26 | "Best project" means Ridly for the model too: the `open_case_study` tool description says so | Model's own pick |
+| 2026-10-26 | Motion video built as code: Remotion in its own `video/` folder, real footage captured by Playwright from a local production build, music and on-screen text, no voiceover; story 1 as the backbone, the edge cases in the middle, story 2's proof at the end | — |
+| 2026-10-26 | The video's chat is a real recording ("Real answer, unedited"), and every number in it is read from the index, tests or CI, never typed in | — |
 
 ## Open decisions
 
