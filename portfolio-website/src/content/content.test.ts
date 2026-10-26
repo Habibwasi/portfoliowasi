@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { about } from "./about";
 import { anchors } from "./anchors";
 import { caseStudies } from "./case-studies";
 import { isPlaceholder, listPlaceholders, placeholder } from "./placeholder";
@@ -54,6 +55,9 @@ describe("projects", () => {
     expect(topictrail.status).toBe("in-progress");
     expect(topictrail.statusNote).toMatch(/in progress/i);
     expect(topictrail.statusNote).toMatch(/Jan 2027/);
+    // The journey lists it beside finished projects; without the status the guide called it built.
+    const step = about.journey.entries.find((e) => e.title === "TopicTrail")!;
+    expect(step.line).toMatch(/in progress/i);
   });
 
   it("states Ridly's k6 number with its conditions", () => {
