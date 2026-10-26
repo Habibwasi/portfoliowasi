@@ -81,11 +81,11 @@ Run these from `portfolio-website/`.
 | `npm run guide:index` | Rebuilds the AI guide's index (`src/generated/guide-index.json`) after a content change; a unit test fails until you do |
 | `npm run eval:guide` | The guide's evaluation: retrieval always, answers through the real route when `GROQ_EVAL_API_KEY` is set |
 
-CI (`.github/workflows/ci.yml`) runs on every push and pull request:
-1. Lint, typecheck, unit tests and build.
-2. Then, in parallel: the Playwright suite, and Lighthouse.
+CI (`.github/workflows/ci.yml`) runs on pull requests and pushes to `main` that change `portfolio-website/` or the workflow itself. Changes to the specs, this README or `video/` skip it.
+1. Lint, typecheck, unit tests and build, once.
+2. Then, in parallel, against that build: the Playwright suite, and Lighthouse with one job per page (each page in `lighthouserc.json` needs a matching entry in the workflow's matrix; the job fails otherwise).
 
-`.github/workflows/guide-eval.yml` runs the guide's evaluation nightly and on demand (from `main`), and on pushes to `redesign` that touch the content or the guide.
+`.github/workflows/guide-eval.yml` runs the guide's evaluation nightly and on demand (from `main`), retrieval and answers. A push to `main` that touches the content or the guide runs retrieval only, to save the evaluation's daily Groq quota.
 
 ## Project structure
 
