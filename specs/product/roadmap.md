@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-10-26 (Phases 0–6 done; launched on 2026-10-24; Phase 7 in progress; motion video M.1–M.2 built)
+Last updated: 2026-10-26 (Phases 0–6 done; launched on 2026-10-24; Phase 7 in progress; motion video M.1–M.3 in progress)
 
 The rebuild ships in phases. Each phase leaves the site deployable. Phase 1 replaces the live site with something better on every count; later phases add depth and delight. Every feature gets its own spec under `specs/features/` before it's built, with tests written first. IDs in brackets point back to the [requirements](../../Portfolio%20Redesign%20—%20Requirements.md).
 
@@ -188,7 +188,7 @@ A short video of the site for LinkedIn and the README, built as code (Remotion) 
 | --- | --- | --- | --- |
 | M.1 | `video/` Remotion project: two cuts (README 1920×1080, LinkedIn 1080×1350), tokens and fonts from the site; check whether Remotion runs locally | — | done (renders locally) |
 | M.2 | Data scripts: real retrieval scores, eval and Lighthouse numbers, and test names, exported to JSON | — | done (`numbers.json` after the CI fix reaches `main`) |
-| M.3 | Playwright capture scripts for every footage shot, against a local production build | — | specced (final takes after 7.3, 7.5, 7.11) |
+| M.3 | Playwright capture scripts for every footage shot, against a local production build | — | scripts done, draft takes recorded; `tour` and `break-injection` need `GROQ_API_KEY` in `.env.local` (final takes after 7.3, 7.5, 7.11) |
 | M.4 | The eight scenes: hook, tour, how the guide answers, breaking it, Groq down and fail open/closed, phones and reduced motion, the proof, end card | — | specced |
 | M.5 | Render both cuts (README cut at most 10 MB); a manual `video.yml` workflow if the local render is blocked | — | specced |
 | M.6 | Publish: the README cut in `README.md`, the LinkedIn cut for Habib to post | — | specced (music in 7.12) |

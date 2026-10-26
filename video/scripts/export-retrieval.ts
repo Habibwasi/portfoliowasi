@@ -6,8 +6,8 @@
  *   npm run export:retrieval [-- "<question>"]
  *
  * The question must be one the evaluation answers (evals/guide/cases.ts). Once the chat is
- * recorded (M.3), its answer text goes in video/data/answer.md and its citations are checked
- * against the hits.
+ * recorded (M.3), the chosen take's answer is copied to video/data/answer.json: its sources must
+ * be the exported hits, in order, and its citations must point at them.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -76,20 +76,34 @@ export function buildRetrieval({ chunks, question, queryVector, answer }: Input)
   };
 }
 
+type Source = { n: number; title: string; url: string };
+
+/** The sources the guide sent with the recorded answer must be the hits exported here, in order. */
+export function checkRecordedSources(recorded: Source[], hits: Source[]) {
+  const key = (sources: Source[]) => sources.map((s) => `${s.n} ${s.url}`).join(", ");
+  if (key(recorded) !== key(hits)) {
+    throw new Error(`The recorded answer's sources differ from the exported hits:
+  recorded: ${key(recorded)}
+  exported: ${key(hits)}`);
+  }
+}
+
 async function main() {
   const question = chooseQuestion(process.argv[2]);
   const index = JSON.parse(readFileSync(join(siteDir, "src/generated/guide-index.json"), "utf8"));
   const { embed } = await import("../../portfolio-website/src/lib/guide/embed");
   const [queryVector] = await embed([question]);
-  const answerPath = join(videoDir, "data", "answer.md");
-  const answer = existsSync(answerPath) ? readFileSync(answerPath, "utf8").trim() : null;
-  const data = buildRetrieval({ chunks: index.chunks, question, queryVector, answer });
+  const answerPath = join(videoDir, "data", "answer.json");
+  const recorded = existsSync(answerPath) ? (JSON.parse(readFileSync(answerPath, "utf8")) as { question: string; text: string; sources: Source[] }) : null;
+  if (recorded && recorded.question !== question) throw new Error(`answer.json answers "${recorded.question}", not "${question}"`);
+  const data = buildRetrieval({ chunks: index.chunks, question, queryVector, answer: recorded?.text ?? null });
+  if (recorded) checkRecordedSources(recorded.sources, data.hits);
   writeData("retrieval", {
     ...data,
     date: today(),
     source:
       `createSearcher (portfolio-website/src/lib/guide/search.ts) over src/generated/guide-index.json, query embedded with ${index.model}; ` +
-      (answer ? "answer from video/data/answer.md" : "no recorded answer yet"),
+      (recorded ? "answer recorded from the guide (video/data/answer.json)" : "no recorded answer yet"),
   });
 }
 

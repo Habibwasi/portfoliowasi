@@ -2,6 +2,15 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Motion video M.3: footage capture (2026-10-26)
+
+Branch `motion-video`.
+
+- **Capture scripts:** `video/capture/` holds one Playwright script per shot (10 shots for scenes 1, 2 and 4–6) and a runner, `npm run capture -- <shot>`. The runner films the local production build with each shot's environment (no Groq key, or the limiter unreachable) in a fresh browser context per take.
+- **Sharper footage:** Playwright's own video was too soft (VP8, 25 fps). Takes are recorded from Chrome's screencast frames instead and encoded to 30 fps H.264, with a drawn mouse pointer and eased mouse paths.
+- **Real answer for scene 3:** the tour shot saves the raw answer and its sources; `export-retrieval` now reads it from `video/data/answer.json` and checks its sources against the exported hits.
+- **Draft takes** of seven shots are recorded (git-ignored). **Open:** `tour` and `break-injection` need `GROQ_API_KEY` in `portfolio-website/.env.local` (it's set in Vercel only); `outage-limiter-contact` sends you a real email, so it runs on your go-ahead with `--send`.
+
 ## Motion video M.1–M.2: the Remotion project and its data (2026-10-26)
 
 Branch `motion-video`.

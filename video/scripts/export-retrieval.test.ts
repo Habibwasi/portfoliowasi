@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import index from "../../portfolio-website/src/generated/guide-index.json";
 import { TOP_K } from "../../portfolio-website/src/lib/guide/config";
-import { buildRetrieval, chooseQuestion, citationsIn, DEFAULT_QUESTION } from "./export-retrieval";
+import { buildRetrieval, checkRecordedSources, chooseQuestion, citationsIn, DEFAULT_QUESTION } from "./export-retrieval";
 
 // A stand-in for the question's embedding, so the test needs no model: the vector of the chunk
 // that holds Ridly's search latency.
@@ -38,6 +38,12 @@ describe("export-retrieval", () => {
     const cited = buildRetrieval({ chunks: index.chunks, question: DEFAULT_QUESTION, queryVector: vector, answer });
     expect(cited.cited).toEqual([1, 2]);
     for (const n of cited.cited) expect(cited.hits.map((hit) => hit.n)).toContain(n);
+  });
+
+  it("checks a recorded answer's sources against the hits, in order", () => {
+    const sources = data.hits.map(({ n, title, url }) => ({ n, title, url }));
+    expect(() => checkRecordedSources(sources, data.hits)).not.toThrow();
+    expect(() => checkRecordedSources([...sources].reverse(), data.hits)).toThrow(/differ/);
   });
 
   it("refuses an answer that cites a source outside the hits", () => {

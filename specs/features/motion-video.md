@@ -1,6 +1,6 @@
 # Spec: Motion video
 
-Roadmap items M.1–M.6 · Status: M.1 and M.2 built, numbers.json waits for the CI fix on `main` (2026-10-26) · Branch `motion-video`
+Roadmap items M.1–M.6 · Status: M.1 and M.2 built (numbers.json waits for the CI fix on `main`); M.3 scripts built, draft takes recorded (2026-10-26) · Branch `motion-video`
 
 ## Goal
 
@@ -83,11 +83,12 @@ The case study "Next project" link wraps from the last project to the first; it 
 - No scene contains a number, score, test name or answer that isn't read from these files or from footage.
 
 ### M.3 Footage capture
-- `video/capture/` holds one Playwright script per shot. Each starts a fresh browser context, sets the viewport (1920×1080, or a phone device for the phone shot) and writes to `video/public/footage/<shot>.webm` (git-ignored).
+- `video/capture/` holds one Playwright script per shot. Each take starts a fresh browser context, sets the viewport (1920×1080, or a phone device for the phone shot) and writes to `video/public/footage/<shot>-<take>.mp4` (git-ignored).
 - Tile shots wait for `data-physics="running"` before any drag; throws and pokes are scripted mouse paths. Each script can record several takes; the best one is chosen by eye.
 - Reduced-motion takes use the context's `reducedMotion: "reduce"`.
 - The busy shot runs the build without `GROQ_API_KEY`. The limiter-down shot points `KV_REST_API_URL` at an unreachable host: the contact form still sends (a real email to Habib through Resend), and the guide shows the busy message.
 - `video/capture/README.md` lists each shot, its environment variables and the command that records it.
+- The tour shot saves the raw streamed answer and its sources; the chosen take's copy in `video/data/answer.json` is what scene 3 shows, and `export-retrieval` checks it against the hits.
 
 ### M.4 Scenes
 - Each scene in the table is a component; each cut assembles them with its own timings. The LinkedIn cut drops scene 6.
@@ -139,3 +140,12 @@ Unit tests run in `video/`'s own Vitest. If Smart App Control blocks Vitest ther
 - **Eval case count:** the spec said 32 cases. `cases.ts` holds 29 (18 answers, 5 tools, 6 refusals): the 32 counted the three `kind` lines of the type. `numbers.json` reads the count from the file, so the video shows 29.
 - **Lighthouse report was never uploaded:** CI's `lighthouse-report` artifact has never existed. `.lighthouseci` is a hidden folder and `upload-artifact@v4` skips hidden files by default ("No files were found… No artifacts will be uploaded"). `ci.yml` now sets `include-hidden-files: true` on that step; nothing else in CI changes. `export-numbers` needs a CI run on `main` with this fix, so `numbers.json` is exported after the merge.
 - **Last nightly evaluation:** the scheduled run on 2026-10-26 passed. The three push-triggered runs after it failed on Groq "busy" errors (the eval key's rate limit), not on answers; `numbers.json` takes the latest scheduled run only.
+
+### M.3 (2026-10-26)
+
+- **Screencast, not Playwright's video.** A 1080p test take with `recordVideo` came out as VP8 at about 0.8 Mbit/s and 25 fps, with soft small text, banding on the paper colour and motion that would judder in a 30 fps cut. So, as the spec allowed, takes record Chrome DevTools screencast frames instead: JPEG at quality 95, about 40–45 frames a second while the page moves, each with its paint time. `encodeTake` holds each frame until the next one and encodes 30 fps H.264 (CRF 12, TV range) with Remotion's own ffmpeg. That build has no `fps` filter, so the rate is set with `-fps_mode cfr -r 30`. Footage is `.mp4`, not `.webm`.
+- **Runner:** `npm run capture -- <shot>` starts `next start` on port 3300 with the shot's variables. Next's env loader keeps variables already set in the process environment, even empty ones, so `GROQ_API_KEY=""` really switches the key off over `.env.local`. The runner refuses more than 10 guide questions per run (the per-visitor limit; every take is the same localhost visitor) and needs `--send` for the contact shot, which emails Habib. Shots that need the embedding model first send an off-topic warm-up question, which makes no model call.
+- **Drawn pointer:** headless recordings show no mouse, so desktop shots draw one (`cursorScript`) that follows mouse events and dips on press. Mouse paths are eased glides; typing runs at a readable, slightly uneven pace.
+- **Draft takes recorded:** `hook`, `break-off-topic`, `outage-busy`, `outage-limiter-guide`, `phones-motion`, `phones-reduced` and `phones-phone`, each passing its own check (the "I don't know", the busy message with matches). The busy take lists the same four Ridly sources as `retrieval.json`.
+- **Not recorded yet:** `tour` and `break-injection` need a Groq key, and `GROQ_API_KEY` is empty in the local `.env.local` (the key is set in Vercel only), so the guide answered "busy". That take was deleted. `outage-limiter-contact` sends a real email, so it waits for Habib's go-ahead.
+- **Phone footage** is 412×839: under phone emulation the screencast sends CSS pixels, not device pixels. Scene 6 is in the README cut only, where the phone shows at about that height.
