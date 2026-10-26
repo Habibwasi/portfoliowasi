@@ -4,7 +4,7 @@ Each entry lists what changed, the key decisions and why, and what's left open. 
 
 ## After the launch: the guide on production and its evaluation (2026-10-26)
 
-Branches `fix-guide-eval-main` (PR #8), `guide-citations` (PR #9), `guide-eval-wording` (PR #10) and `journey-topictrail`.
+Branches `fix-guide-eval-main` (PR #8), `guide-citations` (PR #9), `guide-eval-wording` (PR #10), `journey-topictrail` (PR #11), `guide-eval-percentile` (PR #12) and `guide-eval-retrieval-on-push`.
 
 - **Nightly evaluation:** the 2026-10-25 run failed at checkout because it still checked out `redesign`, deleted after the launch. The guide evaluation and CI now run on `main`.
 - **Groq keys (7.8):** `GROQ_API_KEY` is in Vercel, so the guide answers on production; `GROQ_EVAL_API_KEY` is a GitHub secret, so the evaluation now checks the answers, not only retrieval.
@@ -12,6 +12,7 @@ Branches `fix-guide-eval-main` (PR #8), `guide-citations` (PR #9), `guide-eval-w
 - **Other failures from the first full run:** "February 2027" came back with a non-breaking space (the check now reads it as a plain one); "Give me the tour" hit Groq's 8K tokens a minute (questions are now 15 s apart); "Show me his best project" opened Validation Portal (the tool description now says his best project is Ridly); "Which language model does Validation Portal use?" got "I don't know" because no retrieved chunk named the model (the Solution text now says "GPT-OSS 20B on Groq", and the index is rebuilt).
 - **Second run, after PR #9 (54 of 56):** both failures were wording. The trip search answer said "96 ms at the 95th percentile", and the check now accepts that as well as "p95" (and, after the run on PR #11 passed 57 of 58, "95th-percentile" with a hyphen). The prompt-injection question got "I'm sorry, but I can't comply with that"; injection cases now pass on a plain refusal too, as long as the answer doesn't quote the instructions. The same answer called the project "Ridley", so the instructions now say to spell names exactly as the sources do.
 - **TopicTrail in the journey:** asked about Habib's journey, the guide said he "built" Validation Portal, Ridly and TopicTrail. The About journey listed TopicTrail like the finished projects, with no status. Its line now reads "Bachelor project, in progress until January 2027", a content test keeps it there, and the evaluation asks "Is TopicTrail finished?".
+- **Evaluation quota:** the run after PR #12 failed 11 questions with "busy": the evaluation's Groq organisation had used its 200K tokens for the day (five full runs at about 45K each). The 47 questions before that all passed. A push to `main` now runs retrieval only; answers run nightly and on manual runs.
 - **Open:** the footer's CI badge, "Source of this site", the guide page's code links and the "This site" skill proofs point at the repo, which is private, so they 404 for visitors until it is made public (Habib's plan; the phone number in old commits stays, Habib's choice).
 
 ## Phase 7.5 and fixes: photos, portrait, CV viewer, the landing (2026-10-23)
