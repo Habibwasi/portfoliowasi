@@ -38,6 +38,18 @@ export async function allowContact(ip: string): Promise<boolean> {
 
 type GuideLimiters = { visitor: Ratelimit; site: Ratelimit };
 
+/**
+ * An unreachable Upstash doesn't throw: after `timeout` the limiter resolves with success and
+ * reason "timeout". For the guide that counts as down, so it fails closed.
+ */
+function allowed({ success, reason }: Awaited<ReturnType<Ratelimit["limit"]>>): boolean {
+  if (reason === "timeout") {
+    console.error("Guide rate limit unavailable: Upstash timed out");
+    return false;
+  }
+  return success;
+}
+
 let guideLimiters: GuideLimiters | null | undefined;
 
 /**
@@ -67,8 +79,8 @@ export async function allowGuide(ip: string): Promise<boolean> {
     const limiters = getGuideLimiters();
     if (!limiters) return process.env.NODE_ENV !== "production";
     // The visitor's limit first, so a limited visitor doesn't spend the site's daily cap.
-    if (!(await limiters.visitor.limit(ip)).success) return false;
-    return (await limiters.site.limit("site")).success;
+    if (!allowed(await limiters.visitor.limit(ip))) return false;
+    return allowed(await limiters.site.limit("site"));
   } catch (error) {
     console.error("Guide rate limit unavailable:", error);
     return false;

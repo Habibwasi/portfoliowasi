@@ -50,6 +50,14 @@ describe("allowContact", () => {
     const { allowContact } = await load();
     expect(await allowContact("1.2.3.4")).toBe(true);
   });
+
+  it("fails open when Upstash doesn't answer in time", async () => {
+    vi.stubEnv("KV_REST_API_URL", "https://example.upstash.io");
+    vi.stubEnv("KV_REST_API_TOKEN", "token");
+    limit.mockResolvedValue({ success: true, reason: "timeout" });
+    const { allowContact } = await load();
+    expect(await allowContact("1.2.3.4")).toBe(true);
+  });
 });
 
 describe("allowGuide", () => {
@@ -110,6 +118,27 @@ describe("allowGuide", () => {
     vi.stubEnv("KV_REST_API_TOKEN", "token");
     limit.mockRejectedValue(new Error("down"));
     vi.spyOn(console, "error").mockImplementation(() => {});
+    const { allowGuide } = await load();
+    expect(await allowGuide("1.2.3.4")).toBe(false);
+  });
+
+  // An unreachable Upstash doesn't throw: after `timeout` the limiter resolves with success and
+  // reason "timeout" (checked against a real unreachable host, 2026-10-26).
+  it("fails closed when Upstash doesn't answer in time, though the limiter then reports success", async () => {
+    vi.stubEnv("KV_REST_API_URL", "https://example.upstash.io");
+    vi.stubEnv("KV_REST_API_TOKEN", "token");
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    limit.mockResolvedValue({ success: true, reason: "timeout" });
+    const { allowGuide } = await load();
+    expect(await allowGuide("1.2.3.4")).toBe(false);
+    expect(limit).toHaveBeenCalledTimes(1);
+  });
+
+  it("fails closed when only the daily cap times out", async () => {
+    vi.stubEnv("KV_REST_API_URL", "https://example.upstash.io");
+    vi.stubEnv("KV_REST_API_TOKEN", "token");
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    limit.mockResolvedValueOnce({ success: true }).mockResolvedValueOnce({ success: true, reason: "timeout" });
     const { allowGuide } = await load();
     expect(await allowGuide("1.2.3.4")).toBe(false);
   });
