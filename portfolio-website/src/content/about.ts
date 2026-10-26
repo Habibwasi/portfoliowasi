@@ -85,7 +85,7 @@ export const about = {
       { month: "2025-02", title: "Courier, Just Eat", line: "Vejle. 91% on time, the face of the company on the ground." },
       { month: "2026-03", title: "Validation Portal", line: "LLM-powered founder research tool, live on Vercel.", href: "/work/validation-portal" },
       { month: "2026-04", title: "Ridly", line: "Kotlin Multiplatform, built with my LangGraph HITL workflow.", href: "/work/ridly" },
-      { month: "2026-09", title: "TopicTrail", line: "Bachelor project: passive capture and RAG semantic search.", href: "/work/topictrail" },
+      { month: "2026-09", title: "TopicTrail", line: "Bachelor project, in progress until January 2027: passive capture and RAG semantic search.", href: "/work/topictrail" },
       { month: "2027-01", title: "Graduation, then the next role", line: "BSc in Software Engineering, SDU." },
     ] satisfies JourneyEntry[],
   },
