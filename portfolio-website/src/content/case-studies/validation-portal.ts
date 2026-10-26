@@ -51,7 +51,7 @@ export const validationPortal: CaseStudy = {
     heading: "From hunch to verdict",
     body: [
       'Founders write their assumptions as hypotheses ("I believe [customer] has [problem] and will pay [price] for [solution]"), share a public survey, and log customer interviews with pain scores, quotes and tags.',
-      "An LLM reads the aggregated numbers and up to 15 quotes, then returns a verdict with themes, key quotes, next steps and a call on each hypothesis. The verdict follows fixed rules: a strong signal needs at least five interviews, 70% pain and 60% concept interest. Founders can share the result as a read-only report link.",
+      "An LLM (GPT-OSS 20B on Groq) reads the aggregated numbers and up to 15 quotes, then returns a verdict with themes, key quotes, next steps and a call on each hypothesis. The verdict follows fixed rules: a strong signal needs at least five interviews, 70% pain and 60% concept interest. Founders can share the result as a read-only report link.",
       "In the Survey Builder, AI drafts questions from the idea’s description and checks each one for bias. One click translates the survey into eight languages (Arabic, Bengali, Danish, French, German, Hindi, Spanish and Turkish), so respondents answer one question at a time in their own language, without logging in.",
     ],
   },

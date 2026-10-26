@@ -7,6 +7,7 @@ import { createGroq } from "@ai-sdk/groq";
 import { generateText } from "ai";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import index from "@/generated/guide-index.json";
+import { normalizeCitations } from "@/lib/guide/answer";
 import { GUIDE_MODEL } from "@/lib/guide/config";
 import { embedQuery } from "@/lib/guide/embed";
 import { createSearcher, type GuideIndex } from "@/lib/guide/search";
@@ -16,8 +17,9 @@ const chunks = (index as GuideIndex).chunks;
 const search = createSearcher(chunks);
 const evalKey = process.env.GROQ_EVAL_API_KEY;
 const DONT_KNOW = /I don['’]t know/i;
-// Groq's free tier allows about 8K tokens a minute, so questions go one at a time with a pause.
-const PAUSE_MS = 8000;
+// Groq's free tier allows 8K tokens a minute and an answer takes about 1.6K, so questions go one
+// at a time with a pause (8 s ran into the limit on 2026-10-26).
+const PAUSE_MS = 15_000;
 
 const fromAny = (url: string, expected: string[]) => expected.some((e) => url === e || url.startsWith(e));
 const pause = () => new Promise((resolve) => setTimeout(resolve, PAUSE_MS));
@@ -102,7 +104,11 @@ describe.skipIf(!evalKey)("answers through the real route", () => {
         }),
       );
       expect(response.status).toBe(200);
-      const { text, sources, errors, tools } = await readAnswer(response);
+      const answer = await readAnswer(response);
+      const { sources, errors, tools } = answer;
+      // What the visitor sees: the panel renders gpt-oss's 【n†…】 citations as [n]. gpt-oss also writes
+      // non-breaking spaces and hyphens ("February 2027", "full‑time"), which the checks read as plain ones.
+      const text = normalizeCitations(answer.text).replace(/[\u00a0\u202f]/g, " ").replace(/\u2011/g, "-");
       expect(errors, "provider errors").toEqual([]);
 
       if (c.kind === "tool") {

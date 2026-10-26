@@ -59,7 +59,7 @@ export type ToolName = keyof typeof toolInputs;
 
 const descriptions: Record<ToolName, string> = {
   scroll_to: "Scroll the visitor to a section of the home page.",
-  open_case_study: "Open a project's case study page.",
+  open_case_study: "Open a project's case study page. His best project is Ridly.",
   highlight: "Show the visitor one specific part of a page: a project card, a case study section, the journey or the QA record.",
   play_demo: "Open a case study and show (and start, if it exists) its demo video.",
   start_tour: "Start the 30-second guided tour of the site.",

@@ -5,9 +5,17 @@ export type GuideSource = { n: number; title: string; url: string; excerpt?: str
 
 const CITATION = /\[(\d+)\]/g;
 
+/**
+ * gpt-oss cites in its own format, 【4†L1-L3】 or 【4†source】, even when asked for [n]; both
+ * become [n] so they link like any other citation.
+ */
+export function normalizeCitations(text: string): string {
+  return text.replace(/【(\d+)(?:†[^】]*)?】/g, "[$1]");
+}
+
 /** The sources an answer cites as [n]; all of them when it cites none. */
 export function citedSources(text: string, sources: GuideSource[]): GuideSource[] {
-  const cited = new Set([...text.matchAll(CITATION)].map((m) => Number(m[1])));
+  const cited = new Set([...normalizeCitations(text).matchAll(CITATION)].map((m) => Number(m[1])));
   const matched = sources.filter((s) => cited.has(s.n));
   return matched.length ? matched : sources;
 }
@@ -36,7 +44,7 @@ function inline(text: string, sources: GuideSource[], key: string): ReactNode[] 
  * No HTML is ever parsed, so markup in an answer renders as text, and URLs it writes stay text.
  */
 export function Answer({ text, sources }: { text: string; sources: GuideSource[] }) {
-  const blocks = text.trim().split(/\n{2,}/);
+  const blocks = normalizeCitations(text).trim().split(/\n{2,}/);
   return (
     <>
       {blocks.map((block, b) => {
