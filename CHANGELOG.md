@@ -2,6 +2,17 @@
 
 Each entry lists what changed, the key decisions and why, and what's left open. Decisions marked **Revisit?** are the ones you may want to change.
 
+## Faster CI (2026-10-26)
+
+Branch `ci-speed` (PR #15).
+
+- **Where the time went:** a CI run took about 8 minutes. The build wasn't the cause: `next build` takes about 12 s, runs once, and the E2E and Lighthouse jobs reuse it; npm's cache was already on. Lighthouse took about 6.5 minutes because it measured 5 pages × 3 runs one after another.
+- **Lighthouse per page:** each page now has its own job, and the jobs run in parallel. Same pages, 3 runs each and the same budgets: every job copies `lighthouserc.json` and keeps only its page. If one page fails, the others still finish, and each page uploads its own report (`lighthouse-report-<page>`). A new page goes both in `lighthouserc.json` and in the workflow's matrix; a page in the matrix but not the config fails the job.
+- **Result:** the first run on PR #15 took 4.5 minutes instead of about 8; the Lighthouse jobs took 2–2.5 minutes each. E2E (about 3 minutes) is now the longest job.
+- **CI only for site changes:** CI runs only when `portfolio-website/` or `.github/workflows/ci.yml` changes, so PRs for the specs, the README or `video/` no longer run it. This is safe because `main` has no required checks. **Revisit?** If checks become required, replace the path filter with a job that skips the work, or such PRs wait forever on a check that never runs.
+- **Kept:** CI still runs again on `main` after a merge. It catches the case where `main` moved after the PR was tested, and it now costs about half as much.
+- **Open:** Vercel builds separately (a preview per PR, production on merge) with its own cache; its build times weren't measured here. An Ignored Build Step could skip deploys for changes outside `portfolio-website/`.
+
 ## After the launch: the guide on production and its evaluation (2026-10-26)
 
 Branches `fix-guide-eval-main` (PR #8), `guide-citations` (PR #9), `guide-eval-wording` (PR #10), `journey-topictrail` (PR #11), `guide-eval-percentile` (PR #12) and `guide-eval-retrieval-on-push`.
