@@ -1,3 +1,66 @@
 {
-  "pending": "Exported by npm run export:numbers once a CI run on main has uploaded the Lighthouse reports"
+  "evalCases": {
+    "value": {
+      "total": 29,
+      "answer": 18,
+      "tool": 5,
+      "refuse": 6
+    },
+    "date": "2026-10-29",
+    "source": "portfolio-website/evals/guide/cases.ts"
+  },
+  "lastNightly": {
+    "value": {
+      "conclusion": "success",
+      "runId": 40811146855
+    },
+    "date": "2026-10-29",
+    "source": "https://github.com/Habibwasi/portfoliowasi/actions/runs/40811146855"
+  },
+  "lighthouse": {
+    "value": [
+      {
+        "path": "/about",
+        "runs": 3,
+        "performance": 98,
+        "lcpMs": 1932,
+        "cls": 0,
+        "tbtMs": 110
+      },
+      {
+        "path": "/guide",
+        "runs": 3,
+        "performance": 99,
+        "lcpMs": 1598,
+        "cls": 0.036,
+        "tbtMs": 94
+      },
+      {
+        "path": "/",
+        "runs": 3,
+        "performance": 98,
+        "lcpMs": 1703,
+        "cls": 0.009,
+        "tbtMs": 101
+      },
+      {
+        "path": "/work/ridly",
+        "runs": 3,
+        "performance": 98,
+        "lcpMs": 1653,
+        "cls": 0.034,
+        "tbtMs": 109
+      },
+      {
+        "path": "/work/validation-portal",
+        "runs": 3,
+        "performance": 99,
+        "lcpMs": 1623,
+        "cls": 0.036,
+        "tbtMs": 52
+      }
+    ],
+    "date": "2026-10-29",
+    "source": "https://github.com/Habibwasi/portfoliowasi/actions/runs/40889656051 (lighthouse-report-* artifacts, commit e214bbb)"
+  }
 }
