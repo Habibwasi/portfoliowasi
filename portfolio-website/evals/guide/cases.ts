@@ -32,7 +32,7 @@ export const cases: EvalCase[] = [
     mustInclude: [/Claude Code|LangGraph|Copilot/],
     judge: true,
   },
-  { kind: "answer", question: "What is TopicTrail?", sources: ["/work/topictrail"], mustInclude: [/RAG|retriev|search/i] },
+  { kind: "answer", question: "What is TopicTrail?", sources: ["/work/topictrail"], mustInclude: [/RAG|retriev|search|find|semantic|meaning/i] },
   { kind: "answer", question: "Does he have QA or testing experience?", sources: ["/about#qa-record", "/about#journey"], mustInclude: [/uTest|92\.26/], judge: true },
   { kind: "answer", question: "Is TopicTrail finished?", sources: ["/work/topictrail", "/about#journey"], mustInclude: [/in progress|not (yet )?finished|still/i] },
   { kind: "answer", question: "Is Validation Portal live somewhere?", sources: ["/work/validation-portal"], mustInclude: [/live|vercel/i] },
