@@ -178,3 +178,8 @@ Unit tests run in `video/`'s own Vitest. If Smart App Control blocks Vitest ther
 - **Ready for a track:** `src/music.ts` holds the track config (`null` until 7.12) and `musicVolume`, which fades in from silence (1.5 s), holds, and fades out (3 s) over each cut's full length; `MusicTrack` plays it under both cuts. Tested with a temporary tone: the level ramps linearly and holds from 1.5 s. Unit tests cover both fades and that a named file exists.
 - **To add the track:** put the file in `video/public/music/` (git-ignored, like the footage; royalty-free licences allow use in a video, not the standalone file in a public repo), set `file`, `volume` and `startFromSeconds` in `music.ts`, and fill in `video/music/LICENSE.md`.
 
+### Music chosen (2026-10-29)
+
+- **Track:** "Minimal" by MondaMusic (Pixabay, 2:24, Pixabay Content License; details in `video/music/LICENSE.md`), chosen by Habib from a shortlist. Volume 0.5 from 0 s, fade-in 1.5 s, fade-out 3 s. Measured on the renders: average about -19 dBFS, peak -4.7 dBFS, silent at the first frame and the last. Sizes unchanged (README 7.8 MB, LinkedIn 3.2 MB), because the AAC track is a constant 128 kb/s.
+- **The track has rests:** about 20% of it is digital silence, in a pattern that repeats every 6 s (rests of about 1.0, 1.1 and 0.9 s). FFmpeg and Chromium's decoder agree, so it is in the file, not the render. Habib listens to confirm it is how the track is meant to sound.
+
