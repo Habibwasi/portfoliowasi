@@ -17,7 +17,7 @@ export function EndScene({ cut }: SceneProps) {
   );
   return (
     <AbsoluteFill style={{ backgroundColor: colors.paper, justifyContent: "center", paddingLeft: 96 * Math.min(u, 1.2), paddingBottom: height * (cut === "linkedin" ? 0.22 : 0.12) }}>
-      <div style={{ opacity: appear(0), fontFamily: fonts.display, fontWeight: 600, fontSize: (cut === "readme" ? 84 : 104) * u, lineHeight: 0.92, letterSpacing: "-0.02em", color: colors.ink }}>
+      <div style={{ opacity: appear(0), fontFamily: fonts.display, fontWeight: 600, fontSize: (cut === "readme" ? 84 : 96) * u, lineHeight: 0.92, letterSpacing: "-0.02em", color: colors.ink }}>
         {site.name}
       </div>
       {line(8, site.url)}
