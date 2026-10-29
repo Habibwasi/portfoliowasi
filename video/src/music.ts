@@ -5,7 +5,7 @@
  */
 export type Music = { file: string; volume: number; fadeInSeconds: number; fadeOutSeconds: number; startFromSeconds: number };
 
-export const music: Music | null = { file: "minimal.mp3", volume: 0.5, fadeInSeconds: 1.5, fadeOutSeconds: 3, startFromSeconds: 0 };
+export const music: Music | null = null;
 
 /** Volume at a frame of a cut: fades in from silence, holds, and fades out to silence at the end. */
 export function musicVolume(frame: number, durationInFrames: number, track: Music, fps: number): number {

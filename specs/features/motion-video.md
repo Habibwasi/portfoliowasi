@@ -48,7 +48,7 @@ Every number and every answer in the video is real: taken from the site, the ind
 | Physics on the 4:5 cut | Tile shots are captured at desktop size and reframed in Remotion | Physics only runs with a fine pointer at ≥ 640 px; a phone capture shows a still pile. |
 | README embed | The README cut is uploaded through GitHub's editor as an attachment and the link goes in `README.md`. The MP4 is not committed | GitHub plays attachments inline. Video files would bloat the repo. Free plans cap video attachments at 10 MB, so the README cut must fit (see acceptance). |
 | Where rendering runs | Locally if Remotion runs on this machine. If Smart App Control blocks its binaries (it already blocks Rolldown's native module), footage goes up as a GitHub Release asset and a `workflow_dispatch` job in `.github/workflows/video.yml` renders both cuts and uploads them as artifacts | Checked first, in M.1. |
-| Music | A royalty-free track that allows use on LinkedIn and GitHub (for example Pixabay Music), chosen by Habib. Its licence goes in `video/music/LICENSE.md`. Until then a silent placeholder | Content is supplied at the end (Phase 7, item 7.12). LinkedIn autoplays muted, so the text carries the story either way. |
+| Music | **None** (decided 2026-10-29). Both cuts carry a silent AAC track. `src/music.ts` can still take a track later | LinkedIn autoplays muted, so the text carries the story either way. A track from Pixabay was tried and dropped. |
 | End card claim | "This video is rendered from code", with the repo path `video/` | True whether it renders locally or in CI. Nothing claims it renders on every release. |
 
 ## Scenes
@@ -94,7 +94,7 @@ The case study "Next project" link wraps from the last project to the first; it 
 - Each scene in the table is a component; each cut assembles them with its own timings. The LinkedIn cut drops scene 6.
 - Every on-screen question and caption stays up for at least 0.5 s plus 1 s for every 3 words, and is at least 44 px tall at 1080 px wide. On the 4:5 cut, text stays out of the bottom 15% and keeps a 64 px margin, clear of LinkedIn's overlays.
 - Nothing flashes more than three times a second over a large area (WCAG 2.3.1); the scramble and the tile flicker stay small.
-- Music fades in and out; the video makes sense with the sound off.
+- The video makes sense with the sound off; it has no music (see Decisions). If a track is added, it fades in and out.
 
 ### M.5 Render
 - Both cuts render to MP4 (H.264, AAC). The README cut is at most 10 MB; if 1080p can't reach that at good quality, it renders at 1280×720.
@@ -183,3 +183,6 @@ Unit tests run in `video/`'s own Vitest. If Smart App Control blocks Vitest ther
 - **Track:** "Minimal" by MondaMusic (Pixabay, 2:24, Pixabay Content License; details in `video/music/LICENSE.md`), chosen by Habib from a shortlist. Volume 0.5 from 0 s, fade-in 1.5 s, fade-out 3 s. Measured on the renders: average about -19 dBFS, peak -4.7 dBFS, silent at the first frame and the last. Sizes unchanged (README 7.8 MB, LinkedIn 3.2 MB), because the AAC track is a constant 128 kb/s.
 - **The track has rests:** about 20% of it is digital silence, in a pattern that repeats every 6 s (rests of about 1.0, 1.1 and 0.9 s). FFmpeg and Chromium's decoder agree, so it is in the file, not the render. Habib listens to confirm it is how the track is meant to sound.
 
+### Music dropped (2026-10-29)
+
+Habib chose no music. The Pixabay track ("Minimal" by MondaMusic) was wired in, measured and rendered, then dropped, partly because about 20% of it is digital silence. `src/music.ts` is `null`; the fade code, `MusicTrack` and their tests stay, so a track can be added later. Both cuts were re-rendered without music: the audio is silent AAC at 128 kb/s, so the sizes are unchanged.

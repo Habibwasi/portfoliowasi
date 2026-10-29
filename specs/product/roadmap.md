@@ -132,7 +132,7 @@ Every phase before this one builds with visible placeholders. Habib supplies the
 | 7.9 | Umami Cloud: create the account (free Hobby plan), add the website for the production domain, and copy its website ID | `NEXT_PUBLIC_UMAMI_WEBSITE_ID` in Vercel **Production** only. In Umami, add a goal or funnel for the three events (`CV download`, `Email click`, `Calendly click`) and the `/work/*` page views | open |
 | 7.11 | Choose the guide's model with the evaluation: compare `gpt-oss-120b` with smaller Groq models and keep the smallest that passes. 7.8's eval key exists since 2026-10-26. Steps in "Guide model choice" below | `GUIDE_MODEL` in `src/lib/guide/config.ts`, `evals/guide/`, the daily cap in the guide's limits | done (2026-10-26): kept `openai/gpt-oss-120b`, which passes the nightly evaluation; the comparison with smaller models moves to Later |
 | 7.10 | Screen reader check by hand, on the real content: NVDA with Firefox on Home and a case study, VoiceOver on an iPhone. Listen for the card names, the guide panel and the contact form's messages | — (fix anything found before the launch PR) | open |
-| 7.12 | Music for the motion video: a royalty-free track that allows LinkedIn and GitHub use, chosen by Habib | `video/music/`, its licence in `video/music/LICENSE.md` | open |
+| 7.12 | Music for the motion video: a royalty-free track that allows LinkedIn and GitHub use, chosen by Habib | `video/music/`, its licence in `video/music/LICENSE.md` | dropped: no music (2026-10-29) |
 
 ### Guide model choice (7.8, 7.11, decided 2026-10-23)
 
@@ -191,7 +191,7 @@ A short video of the site for LinkedIn and the README, built as code (Remotion) 
 | M.3 | Playwright capture scripts for every footage shot, against a local production build | — | done: all ten shots recorded; 7.3 and 7.5 are final for what they show, and 7.11 keeps gpt-oss-120b |
 | M.4 | The eight scenes: hook, tour, how the guide answers, breaking it, Groq down and fail open/closed, phones and reduced motion, the proof, end card | — | built, first full renders; waits for numbers.json and a watch-through |
 | M.5 | Render both cuts (README cut at most 10 MB); a manual `video.yml` workflow if the local render is blocked | — | rendered locally: README cut 7.8 MB, LinkedIn 3.2 MB; waits for a watch-through |
-| M.6 | Publish: the README cut in `README.md`, the LinkedIn cut for Habib to post | — | specced (music in 7.12) |
+| M.6 | Publish: the README cut in `README.md`, the LinkedIn cut for Habib to post | — | rendered without music; waits for a watch-through |
 
 ## Later (not scheduled)
 
