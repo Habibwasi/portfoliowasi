@@ -173,3 +173,8 @@ Unit tests run in `video/`'s own Vitest. If Smart App Control blocks Vitest ther
 - **Still to do:** watch both cuts through by hand, with sound off and on, and check every number against its source file.
 - **Pre-watch check (2026-10-29):** a frame every 3 s of both cuts, and every number on screen against `retrieval.json`, `answer.json` and `numbers.json` (all match; the 96 ms is on the Ridly page of the site). One bug found: on the LinkedIn cut the end card's name came within 56 px of the right edge, inside the 64 px margin, so it is now 96 px instead of 104. Two things left as they are: the "Limiter down" caption sits over the bottom of the two panes, and the answer's "under load testing" drops the site's "at 300 virtual users" because the answer is shown unedited.
 
+### Music wiring (2026-10-29)
+
+- **Ready for a track:** `src/music.ts` holds the track config (`null` until 7.12) and `musicVolume`, which fades in from silence (1.5 s), holds, and fades out (3 s) over each cut's full length; `MusicTrack` plays it under both cuts. Tested with a temporary tone: the level ramps linearly and holds from 1.5 s. Unit tests cover both fades and that a named file exists.
+- **To add the track:** put the file in `video/public/music/` (git-ignored, like the footage; royalty-free licences allow use in a video, not the standalone file in a public repo), set `file`, `volume` and `startFromSeconds` in `music.ts`, and fill in `video/music/LICENSE.md`.
+

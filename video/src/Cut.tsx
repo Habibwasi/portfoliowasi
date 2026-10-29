@@ -1,6 +1,7 @@
 import { AbsoluteFill, Sequence } from "remotion";
 import { Caption } from "./Caption";
 import { captionsOf, scenesOf, type CutId } from "./cuts";
+import { MusicTrack } from "./MusicTrack";
 import { sceneComponents } from "./scenes";
 import { colors } from "./theme";
 
@@ -9,6 +10,7 @@ export function Cut({ cut }: { cut: CutId }) {
   const captions = captionsOf(cut);
   return (
     <AbsoluteFill style={{ backgroundColor: colors.paper }}>
+      <MusicTrack />
       {scenesOf(cut).map((scene) => {
         const SceneComponent = sceneComponents[scene.id];
         return (
