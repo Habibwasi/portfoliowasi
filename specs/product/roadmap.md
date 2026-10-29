@@ -190,7 +190,7 @@ A short video of the site for LinkedIn and the README, built as code (Remotion) 
 | M.2 | Data scripts: real retrieval scores, eval and Lighthouse numbers, and test names, exported to JSON | — | done (`numbers.json` after the CI fix reaches `main`) |
 | M.3 | Playwright capture scripts for every footage shot, against a local production build | — | done: all ten shots recorded; 7.3 and 7.5 are final for what they show, and 7.11 keeps gpt-oss-120b |
 | M.4 | The eight scenes: hook, tour, how the guide answers, breaking it, Groq down and fail open/closed, phones and reduced motion, the proof, end card | — | built, first full renders; waits for numbers.json and a watch-through |
-| M.5 | Render both cuts (README cut at most 10 MB); a manual `video.yml` workflow if the local render is blocked | — | specced |
+| M.5 | Render both cuts (README cut at most 10 MB); a manual `video.yml` workflow if the local render is blocked | — | rendered locally: README cut 7.8 MB, LinkedIn 3.2 MB; waits for a watch-through |
 | M.6 | Publish: the README cut in `README.md`, the LinkedIn cut for Habib to post | — | specced (music in 7.12) |
 
 ## Later (not scheduled)

@@ -41,8 +41,8 @@ export function ProofScene({ cut, scene }: SceneProps) {
         transform: `translateY(${(1 - cardsIn(i)) * 16}px)`,
       }}
     >
-      <div style={{ fontFamily: fonts.display, fontWeight: 500, fontSize: (value.length > 6 ? 40 : 64) * u, lineHeight: 1, color: colors["signal-ink"] }}>{value}</div>
-      <div style={{ marginTop: 10 * u, fontFamily: fonts.mono, fontWeight: 500, fontSize: 18 * u, letterSpacing: "0.08em", textTransform: "uppercase", color: colors["ink-muted"] }}>{caption}</div>
+      <div style={{ fontFamily: fonts.display, fontWeight: 500, fontSize: (value.length > 5 ? 40 : 64) * u, lineHeight: 1, color: colors["signal-ink"] }}>{value}</div>
+      <div style={{ marginTop: 10 * u, fontFamily: fonts.mono, fontWeight: 500, fontSize: 18 * u, letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "pre-line", color: colors["ink-muted"] }}>{caption}</div>
     </div>
   );
   const pending = "Pending";
@@ -72,7 +72,8 @@ export function ProofScene({ cut, scene }: SceneProps) {
 
       <div style={{ position: "absolute", left: stage.x, top: stage.y, width: stage.width, display: "flex", flexDirection: cut === "readme" ? "row" : "column", gap: 24 * u, opacity: frame >= half - 2 ? 1 : 0 }}>
         {card(0, numbers ? String(numbers.evalCases.value.total) : pending, "Questions in the guide's evaluation")}
-        {card(1, numbers ? (numbers.lastNightly.value.conclusion === "success" ? "Passed" : "Failed") : pending, numbers ? `Last nightly run, ${numbers.lastNightly.date}` : "Last nightly run")}
+        {card(1, numbers ? (numbers.lastNightly.value.conclusion === "success" ? "Passed" : "Failed") : pending, numbers ? `Last nightly run
+${numbers.lastNightly.date}` : "Last nightly run")}
         {card(2, minPerformance === null ? pending : String(minPerformance), "Lowest Lighthouse score, phone")}
         {card(3, maxLcp === null ? pending : `${(maxLcp / 1000).toFixed(1)} s`, "Slowest page's LCP, median")}
       </div>

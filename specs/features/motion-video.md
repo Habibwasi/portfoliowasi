@@ -165,3 +165,10 @@ Unit tests run in `video/`'s own Vitest. If Smart App Control blocks Vitest ther
 - **Close-ups are soft:** the answer close-up is the 1920-wide footage enlarged about 2× (README) and 2.3× (LinkedIn); legible, a little soft. Recording desktop shots at a device scale of 2 would fix it, if the screencast gives device pixels on desktop (it gave CSS pixels for the phone).
 - **numbers.json** was a placeholder until PR #19 put `include-hidden-files: true` on `main`. Exported on 2026-10-29 from CI run 40889656051 and the nightly run 40811146855: 29 eval cases, last nightly passed, Lighthouse performance 98 at lowest and LCP 1.9 s at slowest, medians of three runs over five pages.
 - **First full renders:** LinkedIn cut 40 s, 6.2 MB, in about 2 minutes; README cut 90 s, 14.3 MB, over GitHub's 10 MB. 3.5 MB of that was a silent AAC track at 317 kb/s, now capped at 128 kb/s; fitting the video is M.5.
+
+### M.5 (2026-10-29)
+
+- **README cut fits:** the first renders were CRF 12 (14.3 MB, with a 317 kb/s silent AAC track). Audio is capped at 128 kb/s and `remotion.config.ts` now sets CRF 22: the README cut is 7.8 MB (1080p, 90 s) and the LinkedIn cut 3.2 MB. CRF 26 gave 5.1 MB and a little softer footage, so 22 stays: 2.2 MB of headroom for the real music, which keeps the same 128 kb/s cap. No need to drop to 720p.
+- **Scene 7 fixes from the real numbers:** "Passed" overflowed its card (the shrink threshold was 6 characters) and the nightly date broke across lines. Words now use the smaller size and the date has its own line.
+- **Still to do:** watch both cuts through by hand, with sound off and on, and check every number against its source file.
+

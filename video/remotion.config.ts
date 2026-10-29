@@ -9,3 +9,6 @@ Config.setPixelFormat("yuv420p");
 Config.setColorSpace("bt709");
 // 128 kb/s is plenty for the music, and keeps the README cut nearer GitHub's 10 MB limit.
 Config.setAudioBitrate("128k");
+// CRF 22 puts the 90 s README cut at about 7.8 MB with its audio, under GitHub's 10 MB limit for
+// attachments on a free plan (M.5). CRF 26 was 5.1 MB and a little soft; 12 was over 14 MB.
+Config.setCrf(22);
