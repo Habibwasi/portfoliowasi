@@ -118,4 +118,5 @@ jobs:
         with:
           name: lighthouse-report-${{ matrix.page.name }}
           path: portfolio-website/.lighthouseci
+          include-hidden-files: true
           retention-days: 7
