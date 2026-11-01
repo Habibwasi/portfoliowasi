@@ -44,6 +44,7 @@ export const highlightTargets: { target: string; label: string }[] = [
   ),
   { target: `${about.path}#${about.anchors.journey}`, label: "Journey" },
   { target: `${about.path}#${about.anchors.qaRecord}`, label: "QA record" },
+  { target: `${about.path}#${about.anchors.security}`, label: about.security.heading },
 ];
 
 export const toolInputs = {

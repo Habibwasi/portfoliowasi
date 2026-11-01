@@ -448,14 +448,19 @@ a.hw-more__title span {
   flex: 1 1 560px;
   min-width: 0;
 }
-.hw-proof__qa {
+.hw-proof__records {
   flex: 1 1 320px;
   min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-space-5);
+}
+.hw-proof__record {
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-space-3);
 }
-.hw-proof__qa .hw-label {
+.hw-proof__record .hw-label {
   margin: 0;
 }
 .hw-proof__line {
@@ -463,6 +468,12 @@ a.hw-more__title span {
   font-size: var(--text-title);
   line-height: 1.45;
   font-weight: 500;
+}
+/* The second record sits under the first, so it reads as support rather than a second headline. */
+.hw-proof__line--sub {
+  font-size: var(--text-body);
+  font-weight: 400;
+  color: var(--color-ink-muted);
 }
 @media (max-width: 639.98px) {
   .hw-proof {

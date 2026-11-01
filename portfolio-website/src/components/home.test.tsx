@@ -148,6 +148,13 @@ describe("Proof", () => {
     render(<Proof />);
     expect(screen.getByRole("link", { name: "See the full record" })).toHaveAttribute("href", "/about#qa-record");
   });
+
+  it("carries the CTF as a second outside record, linking to it on About", () => {
+    render(<Proof />);
+    expect(screen.getByText("Security CTF")).toBeInTheDocument();
+    expect(screen.getByText(/Solved all 18 flags, working solo/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "What the challenge was" })).toHaveAttribute("href", "/about#security");
+  });
 });
 
 describe("ContactSection", () => {

@@ -4,7 +4,7 @@ import { publishedProjects, getCaseStudy } from "@/content/case-studies";
 import { howItWorks } from "@/content/guide";
 import { isPlaceholder } from "@/content/placeholder";
 import { projects } from "@/content/projects";
-import { aiWorkflow, home, qaRecord, site, testimonial } from "@/content/site";
+import { aiWorkflow, ctfRecord, home, qaRecord, site, testimonial } from "@/content/site";
 import { aiSkills, frameworkSkills, languageSkills, type Skill } from "@/content/skills";
 import type { CaseStudySection, Content, Metric } from "@/content/types";
 import type { GuideChunk } from "./search";
@@ -65,6 +65,14 @@ export function buildChunks(): GuideChunk[] {
     qaRecord.line,
     qaRecord.description,
     `${qaRecord.company}, ${qaRecord.tier} tier, rating ${qaRecord.rating}: ${qaRecord.testCycles} test cycles, ${qaRecord.issuesReported} issues reported, ${qaRecord.testCasesRun} test cases run, ${qaRecord.productsTested} products tested.`,
+  ]);
+
+  add("security", `${about.security.heading}: ${ctfRecord.event}`, `${about.path}#${about.anchors.security}`, [
+    "Habib's security and capture-the-flag experience.",
+    ctfRecord.line,
+    ...about.security.body,
+    `Skills used: ${about.security.skills.join(", ")}.`,
+    `Hosted by ${ctfRecord.hosts}, ${ctfRecord.dates}. ${ctfRecord.flags} flags, ${ctfRecord.points} points, a ${ctfRecord.window} window, ${ctfRecord.teams} teams competing.`,
   ]);
 
   if (!isPlaceholder(testimonial.quote) && !isPlaceholder(testimonial.name)) {

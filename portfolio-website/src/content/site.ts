@@ -59,6 +59,8 @@ export const home = {
     eyebrow: "03 / Proof from others",
     qaHeading: "QA record",
     fullRecord: "See the full record",
+    ctfHeading: "Security CTF",
+    ctfMore: "What the challenge was",
   },
   stack: {
     eyebrow: "04 / Stack",
@@ -101,6 +103,32 @@ export const qaRecord = {
   description: "Freelance functional testing for well-known consumer and fintech clients.",
   /** One credibility line for Home (C16). */
   line: "Silver-rated QA tester at uTest since June 2024: 268 test cycles, 46 issues reported, 92.26% rating.",
+} as const;
+
+/**
+ * Operation Cymbal: Cold Room, the Google Cloud Security and Hack The Box incident-reconstruction
+ * CTF, 29 October to 1 November 2026. Facts come from the certificate of participation and the
+ * public event page: Jeopardy format, a maximum of one player per team (so this was solo),
+ * 3 scenarios across 3 categories, 18 flags, and a 72-hour window.
+ *
+ * The certificate also carries the finishing rank, 639th of 1,716, which orders entrants by solve
+ * time rather than by how much they solved. The site leads with the full clear, which is the fact
+ * worth stating, and links the certificate so the rank is there for anyone who opens it.
+ */
+export const ctfRecord = {
+  event: "Operation Cymbal: Cold Room",
+  hosts: "Google Cloud Security and Hack The Box",
+  dates: "29 October to 1 November 2026",
+  /** Max one player per team, per the event page, so "solo" is a fact and not a flourish. */
+  solo: true,
+  flags: "18/18",
+  points: "2,075",
+  window: "72 h",
+  teams: "1,716",
+  eventUrl: "https://ctf.hackthebox.com/event/details/operation-cymbal-cold-room-3631",
+  certificate: "/proof/operation-cymbal-cold-room-certificate.pdf",
+  /** One credibility line for Home (C16), next to the QA record. */
+  line: "Solved all 18 flags, working solo, in Operation Cymbal: Cold Room — the Google Cloud Security and Hack The Box incident-reconstruction CTF, October 2026.",
 } as const;
 
 /**

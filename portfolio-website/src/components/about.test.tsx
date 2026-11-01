@@ -27,7 +27,7 @@ describe("About", () => {
     const section = document.getElementById("journey")!;
     const list = within(section).getByRole("list", { name: "Journey" });
     const items = within(list).getAllByRole("listitem");
-    expect(items).toHaveLength(7);
+    expect(items).toHaveLength(8);
     expect(items[0]).toHaveTextContent("Jan 2023");
     expect(items[0]).toHaveTextContent("Tech Assistant, Upwork");
     expect(items.at(-1)).toHaveTextContent("Graduation");
@@ -45,6 +45,23 @@ describe("About", () => {
       expect(within(record).getByText(metric.label)).toBeInTheDocument();
     }
     expect(within(record).getByText("92.26%")).toBeInTheDocument();
+  });
+
+  it("shows the security record with its skills and both ways to check it", () => {
+    render(<About />);
+    const record = document.getElementById("security")!;
+    expect(within(record).getByRole("heading", { level: 2 })).toHaveTextContent("Security and CTFs");
+    expect(within(record).getByText(/all 18 flags, working solo/)).toBeInTheDocument();
+    for (const skill of about.security.skills) expect(within(record).getByText(skill)).toBeInTheDocument();
+    for (const metric of about.securityMetrics) expect(within(record).getByText(metric.label)).toBeInTheDocument();
+    expect(within(record).getByRole("link", { name: "Certificate of participation" })).toHaveAttribute(
+      "href",
+      "/proof/operation-cymbal-cold-room-certificate.pdf",
+    );
+    expect(within(record).getByRole("link", { name: "The event on Hack The Box" })).toHaveAttribute(
+      "href",
+      expect.stringContaining("ctf.hackthebox.com"),
+    );
   });
 
   it("ends with the CV and email", () => {

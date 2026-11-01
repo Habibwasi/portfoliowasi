@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { about, journeyDate } from "@/content/about";
-import { site } from "@/content/site";
-import { ActionButton, Button, Metric } from "./hw";
+import { ctfRecord, site } from "@/content/site";
+import { ActionButton, Button, Metric, Tags } from "./hw";
 
 /** Rendered width of each tile, so next/image picks a sensible size; the cards are ~380px wide. */
 const tileSizes = {
@@ -89,6 +89,39 @@ function QaRecord() {
   );
 }
 
+/**
+ * Security and CTFs (C16): the same evidence pattern as the QA record above it, with the
+ * certificate and the public event page as the two ways to check it.
+ */
+function SecurityRecord() {
+  const { security, securityMetrics, anchors } = about;
+  return (
+    <section id={anchors.security} className="hw-section hw-about__section hw-about__qa" aria-labelledby="security-heading">
+      <div className="hw-section-head__title">
+        <span className="hw-label">{security.subline}</span>
+        <h2 id="security-heading" className="hw-h2">
+          {security.heading}
+        </h2>
+        {security.body.map((paragraph) => (
+          <p key={paragraph} className="hw-about__qa-text">
+            {paragraph}
+          </p>
+        ))}
+      </div>
+      <Tags items={[...security.skills]} />
+      <div className="hw-metrics hw-about__metrics">
+        {securityMetrics.map((metric) => (
+          <Metric key={metric.label} metric={metric} />
+        ))}
+      </div>
+      <div className="hw-actions">
+        <Button href={ctfRecord.certificate}>{security.evidence.certificate}</Button>
+        <Button href={ctfRecord.eventUrl}>{security.evidence.event}</Button>
+      </div>
+    </section>
+  );
+}
+
 /** About (4.4, C18, C19): at the end of the flow, after the work. */
 export function About() {
   return (
@@ -101,6 +134,7 @@ export function About() {
       <Photos />
       <Journey />
       <QaRecord />
+      <SecurityRecord />
       <section className="hw-section hw-about__closing" aria-labelledby="closing-heading">
         <h2 id="closing-heading" className="hw-h2">
           {about.closing}

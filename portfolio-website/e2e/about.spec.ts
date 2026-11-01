@@ -48,7 +48,7 @@ test.describe("About", () => {
     );
 
     const journey = page.getByRole("list", { name: "Journey" });
-    await expect(journey.getByRole("listitem")).toHaveCount(7);
+    await expect(journey.getByRole("listitem")).toHaveCount(8);
     await journey.getByRole("link", { name: /Ridly/ }).click();
     await expect(page).toHaveURL(/\/work\/ridly$/);
   });
@@ -58,6 +58,18 @@ test.describe("About", () => {
     await page.getByRole("link", { name: "See the full record" }).click();
     await expect(page).toHaveURL(/\/about#qa-record$/);
     await expect(page.locator("#qa-record").getByRole("heading", { level: 2 })).toBeInViewport();
+  });
+
+  test("Home's proof links to the security record, and the certificate is downloadable", async ({ page, request }) => {
+    await page.goto("/#proof");
+    await page.getByRole("link", { name: "What the challenge was" }).click();
+    await expect(page).toHaveURL(/\/about#security$/);
+    const record = page.locator("#security");
+    await expect(record.getByRole("heading", { level: 2 })).toBeInViewport();
+    const certificate = await record.getByRole("link", { name: "Certificate of participation" }).getAttribute("href");
+    const file = await request.get(certificate!);
+    expect(file.status()).toBe(200);
+    expect(file.headers()["content-type"]).toContain("pdf");
   });
 
   test("has no horizontal scroll and no accessibility violations", async ({ page }) => {
