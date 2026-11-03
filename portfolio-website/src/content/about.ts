@@ -1,4 +1,4 @@
-import { qaRecord } from "./site";
+import { ctfRecord, qaRecord } from "./site";
 import type { Metric } from "./types";
 
 /**
@@ -30,6 +30,7 @@ export type Collage = {
 const anchors = {
   journey: "journey",
   qaRecord: "qa-record",
+  security: "security",
 } as const;
 
 export const about = {
@@ -86,6 +87,12 @@ export const about = {
       { month: "2026-03", title: "Validation Portal", line: "LLM-powered founder research tool, live on Vercel.", href: "/work/validation-portal" },
       { month: "2026-04", title: "Ridly", line: "Kotlin Multiplatform, built with my LangGraph HITL workflow.", href: "/work/ridly" },
       { month: "2026-09", title: "TopicTrail", line: "Bachelor project, in progress until January 2027: passive capture and RAG semantic search.", href: "/work/topictrail" },
+      {
+        month: "2026-10",
+        title: ctfRecord.event,
+        line: `${ctfRecord.hosts}: all 18 flags, solo, in 72 hours.`,
+        href: `#${anchors.security}`,
+      },
       { month: "2027-01", title: "Graduation, then the next role", line: "BSc in Software Engineering, SDU." },
     ] satisfies JourneyEntry[],
   },
@@ -100,6 +107,31 @@ export const about = {
     { value: String(qaRecord.testCasesRun), label: "Test cases run" },
     { value: String(qaRecord.productsTested), label: "Products tested" },
     { value: String(qaRecord.issuesReported), label: "Issues reported" },
+  ] satisfies Metric[],
+  /**
+   * Security and CTFs (C16): supporting evidence under the same "finds what breaks" thread as the
+   * QA record, not a fourth pillar. The stack on Home stays the languages and frameworks behind
+   * the projects, so these skills are named here, where they are scoped to the event that proves
+   * them.
+   */
+  security: {
+    heading: "Security and CTFs",
+    subline: `${ctfRecord.hosts}, October 2026`,
+    body: [
+      `${ctfRecord.event} was a 72-hour incident-reconstruction CTF: three breaches across one frozen environment, a marketing click, a developer tool doing work nobody asked for, and an account that belonged to someone else for about an hour. The work happened inside Google Security Operations, following evidence across identity, endpoints, cloud activity, mail and build systems, and telling attacker actions apart from legitimate maintenance running at the same time. I solved all 18 flags, working solo.`,
+      `I went in because I build the systems these attacks move through, and I wanted to see how they read from the other side.`,
+    ],
+    skills: ["Google SecOps", "Log analysis", "Incident reconstruction", "Threat hunting", "Cloud security"],
+    evidence: {
+      certificate: "Certificate of participation",
+      event: "The event on Hack The Box",
+    },
+  },
+  securityMetrics: [
+    { value: ctfRecord.flags, label: "Flags solved" },
+    { value: ctfRecord.points, label: "Points" },
+    { value: ctfRecord.window, label: "Window" },
+    { value: ctfRecord.teams, label: "Teams competing" },
   ] satisfies Metric[],
   closing: "The full story, on paper",
 } as const;

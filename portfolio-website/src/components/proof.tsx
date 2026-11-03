@@ -1,9 +1,12 @@
 import { about } from "@/content/about";
 import { anchors } from "@/content/anchors";
-import { home, qaRecord, testimonial } from "@/content/site";
+import { ctfRecord, home, qaRecord, testimonial } from "@/content/site";
 import { Testimonial } from "./hw";
 
-/** Trust signals on Home (C15, C16): one testimonial and the QA record in one line, linking to the full record on About. */
+/**
+ * Trust signals on Home (C15, C16): one testimonial, then two outside records in a column, each
+ * one line linking to the full version on About.
+ */
 export function Proof() {
   return (
     <section id={anchors.proof} className="hw-proof" aria-labelledby="proof-heading">
@@ -12,12 +15,21 @@ export function Proof() {
           {home.proof.eyebrow}
         </h2>
         <Testimonial testimonial={testimonial} />
-        <div className="hw-proof__qa">
-          <h3 className="hw-label">{home.proof.qaHeading}</h3>
-          <p className="hw-proof__line">{qaRecord.line}</p>
-          <a className="hw-btn hw-btn--text hw-proof__more" href={`${about.path}#${about.anchors.qaRecord}`}>
-            {home.proof.fullRecord}
-          </a>
+        <div className="hw-proof__records">
+          <div className="hw-proof__record">
+            <h3 className="hw-label">{home.proof.qaHeading}</h3>
+            <p className="hw-proof__line">{qaRecord.line}</p>
+            <a className="hw-btn hw-btn--text hw-proof__more" href={`${about.path}#${about.anchors.qaRecord}`}>
+              {home.proof.fullRecord}
+            </a>
+          </div>
+          <div className="hw-proof__record">
+            <h3 className="hw-label">{home.proof.ctfHeading}</h3>
+            <p className="hw-proof__line hw-proof__line--sub">{ctfRecord.line}</p>
+            <a className="hw-btn hw-btn--text hw-proof__more" href={`${about.path}#${about.anchors.security}`}>
+              {home.proof.ctfMore}
+            </a>
+          </div>
         </div>
       </div>
     </section>

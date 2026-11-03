@@ -60,6 +60,9 @@ describe("buildChunks", () => {
     expect(byId("journey")?.url).toBe("/about#journey");
     expect(byId("journey")?.text).toMatch(/uTest/);
     expect(byId("qa-record")?.url).toBe("/about#qa-record");
+    expect(byId("security")?.url).toBe("/about#security");
+    expect(byId("security")?.text).toMatch(/Google Security Operations/);
+    expect(byId("security")?.text).toMatch(/18 flags/);
   });
 
   it("indexes how to get around the site, so navigation requests reach the model (5.6)", () => {
